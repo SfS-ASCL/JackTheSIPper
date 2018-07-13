@@ -7,7 +7,6 @@ export function instantiateResourceProxyListInfo( file, name, size, type, checks
 	{  "ResourceProxyList" :
 	   {
 	       "cmd:ResourceProxy": {
-		   "id": "ID000",		   
 		   "cmd:ResourceType": {
                        "mimetype": type,       // <============
                        "content": "Metadata"   // <============ (todo)
@@ -17,9 +16,6 @@ export function instantiateResourceProxyListInfo( file, name, size, type, checks
 	   },
 	   
 	   "ResourceProxyListInfo" : {  
-               "xml:base": "http://www.oxygenxml.com/",
-               "cmd:ref": "ID000",
-               "cmd:ComponentId": "clarin.eu:cr1:c_1470820607607",
                "cmdp:ResourceProxyInfo": {
                    "xml:base": "http://www.oxygenxml.com/",
                    "cmd:ref": "ID000",
@@ -82,7 +78,9 @@ export function instantiateResourceProxyListInfo( file, name, size, type, checks
 }
 
 export function instantiateTextCorpusProfile( project, researcher, profile, license ) {
-    return ( function( resourceProxyList, resourceProxyListInfo) { return (
+    return ( function( resourceProxyList, resourceProxyListInfo) {
+	console.log('adding', resourceProxyList, resourceProxyListInfo);
+	return (
 {"cmd:CMD": {
     "xmlns:cmd": "http://www.clarin.eu/cmd/1",
     "xmlns:cue": "http://www.clarin.eu/cmdi/cues/1",
@@ -100,7 +98,7 @@ export function instantiateTextCorpusProfile( project, researcher, profile, lice
         "cmd:MdCollectionDisplayName": "MdCollectionDisplayName0"
     },
     "cmd:Resources": {
-        "cmd:ResourceProxyList": resourceProxyList,
+        "cmdp:ResourceProxyList": resourceProxyList,
         "cmd:JournalFileProxyList": {"cmd:JournalFileProxy": {"cmd:JournalFileRef": "http://www.oxygenxml.com/"}},
         "cmd:ResourceRelationList": {"cmd:ResourceRelation": {
             "cmd:RelationType": {

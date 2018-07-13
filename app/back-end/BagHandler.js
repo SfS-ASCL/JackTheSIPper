@@ -32,6 +32,7 @@ export default class BagHandler {
 
     }
 
+    // alternative: create /bag<uuid> directory with <uuid> newly generated for each bag
     deleteBagManifestFile()  {
 	var fs = require('fs');
 	console.log('BagHandler/deleteBagManifestFile')
@@ -71,7 +72,7 @@ export default class BagHandler {
     }
 
     // todo: gather file information for CMDI ResourceProxyInfo...
-    bagItHelper(bag, currentPath, [ head, ...tail ], cmdiFragment) {
+    bagItHelper(bag, currentPath, [ head, ...tail ], cmdiProxyListInfoFragment) {
 
 	if (head === undefined && !tail.length) {
 	    return [];
@@ -91,40 +92,37 @@ export default class BagHandler {
 		// process the directorys children (with new path)
 		bag.mkdir(filePath, function(){
 		    // and treat its children
-		    that.bagItHelper(bag, filePath, head.children, cmdiFragment);		    
+		    that.bagItHelper(bag, filePath, head.children, cmdiProxyListInfoFragment);		    
 		});
 
 	    } else {
 		fileReaderStream(head.file) // ;bag.createReadStream(head.file) fromBlob
 		    .pipe(bag.createWriteStream(filePath, {}, function() {
-			cmdiFragment.push( {path: filePath,
+			cmdiProxyListInfoFragment.push( {path: filePath,
 					    name: 'data/'+head.title,
 					    size: head.size,
 					    type: head.type });
-			that.bagItHelper(bag, currentPath, tail, cmdiFragment);
+			that.bagItHelper(bag, currentPath, tail, cmdiProxyListInfoFragment);
 		   }))
 	    }
 	} else {
 	    // only head there
 	    if (head.isDirectory) {
 		bag.mkdir(filePath, function(){
-		    that.bagItHelper(bag, filePath, head.children, cmdiFragment);
+		    that.bagItHelper(bag, filePath, head.children, cmdiProxyListInfoFragment);
 		});		
 	    } else {
 		fileReaderStream(head.file) // ;bag.createReadStream(head.file) fromBlob		
 		   .pipe(bag.createWriteStream(filePath,
 					       {},
 					       function() {
-						   cmdiFragment.push( {path: filePath,
+						   cmdiProxyListInfoFragment.push( {path: filePath,
 								       name: 'data/'+head.title,
 								       size: head.size,
 								       type: head.type });
 
 						   // at the very end, add the CMDI file to the bag
-						   // 1 first convert to CMDI
-						   let proxyListInfo = that.cmdiHandler.generateResourceProxyList(cmdiFragment);
-						   //console.log('Baghandler/proxyListInfo', proxyListInfo);
-						   let completeCMDI = that.cmdiHandler.finaliseCMDI(proxyListInfo);
+						   let completeCMDI = that.cmdiHandler.finaliseCMDI( cmdiProxyListInfoFragment );
 						   let cmdiFile = new File([completeCMDI], "cmdi.xml", {type: "application/xml"});
 						   // 2 second add to bag
 						   fileReaderStream(cmdiFile)
@@ -133,7 +131,8 @@ export default class BagHandler {
 										   function() {
 										       bag.finalize( function () {
 											   console.log('BagHandler/createBag: bag has been finalized', bag);
-											   that.generateZIP( bag, cmdiFragment ); // add cmdi to bag (and then generate ZIP)
+											   // add cmdi to bag (and then generate ZIP)
+											   that.generateZIP( bag, cmdiProxyListInfoFragment ); 
 											   // that.setState( state => ({
 											   // 	   "bag" : bag
 						       // }), () => { 
@@ -145,12 +144,12 @@ export default class BagHandler {
 	}
     }
 
-    generateZIP( bag, cmdiFragment ) {
+    generateZIP( bag, cmdiProxyListInfoFragment ) {
 
 	const that = this;
 	const zip = new JSZip();
 
-	console.log('BagHandler/generateZIP', bag, cmdiFragment);	
+	console.log('BagHandler/generateZIP', bag, cmdiProxyListInfoFragment);	
 
 	// use this, rather than the manifest file?
 	bag.readdir('', function(err, data) {
@@ -183,7 +182,7 @@ export default class BagHandler {
 	bag.readManifest( function(err, entries) {
 	    if (err) return console.log('Error reading manifest', err, bag)
 	    // zip each of the entries
-	    that.generateZIPHelper( zip, bag, entries, cmdiFragment )	    
+	    that.generateZIPHelper( zip, bag, entries, cmdiProxyListInfoFragment )	    
 	})
 
 	// test to generate md5
@@ -205,7 +204,7 @@ export default class BagHandler {
 	})	
     }
 	
-    generateZIPHelper(zip, bag, [ head, ...tail ], cmdiFragment) {
+    generateZIPHelper(zip, bag, [ head, ...tail ], cmdiProxyListInfoFragment) {
 
 	const that = this;
 	if (head === undefined && !tail.length) {
@@ -217,7 +216,7 @@ export default class BagHandler {
 	var c_binary = true;
 	let mimetype;
 	
-	// todo: may use mimetype in cmdiFragment structure
+	// todo: may use mimetype in cmdiProxyListInfoFragment structure
 	/*
 	if ( fileNameFullPath.includes('rtf') || fileNameFullPath.includes('txt') ) {
 	    encoding = 'utf-8';
@@ -225,7 +224,7 @@ export default class BagHandler {
 	}
 	*/
 	if (tail.length) {
-	    mimetype = that.getMimetype(head.name, cmdiFragment);
+	    mimetype = that.getMimetype(head.name, cmdiProxyListInfoFragment);
 	    if ( (! (mimetype == undefined)) && (mimetype.includes("text/"))) {
 		//console.log('BagHandler/generateZIPHandler: we have a textfile', mimetype);
 		encoding = 'utf-8';
@@ -236,36 +235,36 @@ export default class BagHandler {
 	    
 	    bag.readFileNoCheck(fileNameFullPath, encoding, function (err, data) {
 		if (err) return console.log('Error reading this file', err, fileNameFullPath, data, bag, c_binary);
-		cmdiFragment = that.addChecksum(head.checksum, head.name, cmdiFragment)
+		cmdiProxyListInfoFragment = that.addChecksum(head.checksum, head.name, cmdiProxyListInfoFragment)
 		zip.file(fileNameFullPath, data, {binary: c_binary});
-		that.generateZIPHelper(zip, bag, tail, cmdiFragment);
+		that.generateZIPHelper(zip, bag, tail, cmdiProxyListInfoFragment);
 	    })
 	} else {
 	    zip.generateAsync({type:"blob"}).then(function (blob) { 
-		console.log('Blob', blob, cmdiFragment);
+		console.log('Blob', blob, cmdiProxyListInfoFragment);
 		FileSaver.saveAs(blob, "projectName.zip");
 	    })
 	}
     }
 
-    getMimetype(fileNameFullPath, cmdiFragment)    {
-	for (var i = 0; i < cmdiFragment.length; i++) {
-	    if (cmdiFragment[i].name == fileNameFullPath) {
-		return cmdiFragment[i].type;
+    getMimetype(fileNameFullPath, cmdiProxyListInfoFragment)    {
+	for (var i = 0; i < cmdiProxyListInfoFragment.length; i++) {
+	    if (cmdiProxyListInfoFragment[i].name == fileNameFullPath) {
+		return cmdiProxyListInfoFragment[i].type;
 	    }
 	}
 	return undefined
     }
     
-    // enrich given element in cmdiFragment
-    addChecksum(checksum, fileNameFullPath, cmdiFragment) {
-	for (var i = 0; i < cmdiFragment.length; i++) {
-	    if (cmdiFragment[i].name == fileNameFullPath) {
-		cmdiFragment[i].sha256 = checksum;
+    // enrich given element in cmdiProxyListInfoFragment
+    addChecksum(checksum, fileNameFullPath, cmdiProxyListInfoFragment) {
+	for (var i = 0; i < cmdiProxyListInfoFragment.length; i++) {
+	    if (cmdiProxyListInfoFragment[i].name == fileNameFullPath) {
+		cmdiProxyListInfoFragment[i].sha256 = checksum;
 		break
 	    }
 	}
-	return cmdiFragment;
+	return cmdiProxyListInfoFragment;
     }
     
 }
