@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlwebpackPlugin = require('html-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 const merge = require('webpack-merge');
 
@@ -16,7 +17,19 @@ process.traceDeprecation = true;
 const webpack = require('webpack');
 
 const common = {
-    mode: 'production',    
+//    mode: 'production',
+    mode: 'development',    
+    optimization: {
+	minimizer: [
+	    new UglifyJSPlugin({
+		uglifyOptions: {
+		    compress: {
+			drop_console: true,
+		    }
+		}
+	    })
+	]
+    },    
   // Entry accepts a path or an object of entries.
   // The build chapter contains an example of the latter.
     entry: PATHS.app,
@@ -112,11 +125,12 @@ const common = {
 	}),
 	new webpack.DefinePlugin({
 	    'process.env': {
-                'NODE_ENV': JSON.stringify('production'),
+//                'NODE_ENV': JSON.stringify('production'),
+                'NODE_ENV': JSON.stringify('development'),		
 		'VERSION'     : JSON.stringify('v0.0.1'),
 		'CONTACT'     : JSON.stringify('claus.zinn@uni-tuebingen.de'),
-		'B2DROP_USER' : JSON.stringify('sfb833_admin'),
-		'B2DROP_PASS' : JSON.stringify('JackTheSIPper')
+		'NC_USER' : JSON.stringify('sfb833_admin'),
+		'NC_PASS' : JSON.stringify('JackTheSIPper')
 	    }
 	}),
 

@@ -1,5 +1,5 @@
-export const b2drop_user         = process.env.B2DROP_USER;
-export const b2drop_pass         = process.env.B2DROP_PASS;
+export const ncUser         = process.env.NC_USER;
+export const ncPass         = process.env.NC_PASS;
 export const softwareVersion     = process.env.VERSION;
 export const emailContact        = process.env.CONTACT;
 export const emailContactCommand = "mailto:"+emailContact+"?subject=SFB833 - Jack the SIPper";

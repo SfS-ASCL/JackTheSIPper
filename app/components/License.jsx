@@ -10,10 +10,7 @@ export default class License extends React.Component {
 	this.state = {
 	    searchable: true,
 	    clearable: true,
-	    selectValue: 'clarin_pub_by'
 	}
-
-	this.updateValue = this.updateValue.bind(this);
     }
 
     updateValue(newValue) {
@@ -25,6 +22,7 @@ export default class License extends React.Component {
     
     render() {
 
+	const {license, ...props} = this.props.license;	
 	const choices = [
 	    { value: 'clarin_pub_by',              label: 'CLARIN PUB+BY'},
 	    { value: 'clarin_pub_by_sa',           label: 'CLARIN PUB+BY+SA'},
@@ -40,7 +38,7 @@ export default class License extends React.Component {
    	        clearable={this.state.clearable}
 	        options={choices}
 	        value={this.props.license}
-	        onChange={this.updateValue}
+	        onChange={this.props.updateLicense}
 	      />
 	    </div>
 	);

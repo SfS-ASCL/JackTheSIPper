@@ -1,115 +1,91 @@
 import xmlbuilder from 'xmlbuilder';
+import {instantiateTextCorpusProfile,
+	instantiateResourceProxyListInfo} from '../templates/TextCorpusProfile-CMDI1.2_template.js';
 
-export default class CmdiHandler {
-    constructor( projectId ) {
+export default class CMDIHandler {
+    constructor( project, researcher, profile, license, researchData ) {
 
-	projectName = projectId;
-	var cmdi = xmlbuilder.create(c_projectCMD, { encoding: 'utf-8' })
-	console.log(cmdi.end({ pretty: true }));
+	this.processManifest  = this.processManifest.bind(this);
+	this.generateResourceProxyList = this.generateResourceProxyList.bind(this);
+	this.createCMDI = this.createCMDI.bind(this);
+	
+	this.cmdiGenFinalise = this.createCMDI( project, researcher, profile, license);
+//	console.log('CmdiHandler/constructor', this.cmdiGenFinalise);
+    }
+	
+    createCMDI( project, researcher, profile, license ){
+	const jsonCMDI_fun = instantiateTextCorpusProfile( project, researcher, profile, license );
+	return jsonCMDI_fun
     }
 
-    c_resourceProxyList(landingPage, resourceList) {
-	var template = 
-	{
-	    "ResourceProxyList": [
-		{
-		    "@id": "GermaNet_resLP",
-		    "ResourceType": "LandingPage",
-		    "ResourceRef": "http://www.sfs.uni-tuebingen.de/GermaNet"
-		},
-		{
-		    "@id": "GermaNet_res6",
-		    "ResourceType": "Resource",
-		    "ResourceRef": "http://hdl.handle.net/11858/00-1778-0000-0005-896E-B@ds2"
-		},
-	    ],
-	    "JournalFileProxyList": [],
-	    "ResourceRelationList": []
+    finaliseCMDI( proxyListInfo ) {
+	if (this.cmdiGenFinalise == undefined) return
+
+	const result = this.cmdiGenFinalise( proxyListInfo[0].ResourceProxyList,       // todo, only taking first.
+					     proxyListInfo[0].ResourceProxyListInfo );
+
+	return xmlbuilder.create(result, { encoding: 'utf-8' }).end({ pretty: true });
+    }
+	
+	
+    // generates both ResourceProxyList and ResourceProxyListInfo
+    generateResourceProxyList( fileInfo ) {
+	const that = this;
+	let result = [];
+	
+	for (var i = 0; i < fileInfo.length; i++) {
+	    result.push(
+		instantiateResourceProxyListInfo(fileInfo[i].name,
+						 fileInfo[i].name, // <======= todo
+						 fileInfo[i].size,
+						 fileInfo[i].type,
+						 fileInfo[i].checksum)
+	    )
 	}
 
-	return undefined;
+	return result;
+	// return xmlbuilder.create(result, { encoding: 'utf-8' }).end({ pretty: true });
+	
     }
+	    
+    // deprecated, iteration now in BagHandler
+    processManifest( file ) {
 
-    c_resourceProxyListInfo(reference, itemName, fileName, fileSize, sizeInfoSize, sizeInfoSizeUnit) {
-	var template =
-	{
-	    "ResourceProxyInfo": {
-		"@ref": reference,
-		"ResProxItemName": itemName,
-		"ResProxFileName": fileName,
-		"FileSize": fileSize,
-		"SizeInfo": {
-		    "TotalSize": {
-			"Size": sizeInfoSize,
-			"SizeUnit": sizeInfoSizeUnit
-		    }
-		}
-	    }
-	}
-	return undefined;
-    }
+	const reader = new FileReader();
 
-    c_generalInfo( resourceName, resourceTitle, resourceClass, resourceDescription) {
-	var template = 
-	{
-	    "ResourceName": resourceName,
-	    "ResourceTitle": {
-		"@lang": "de",
-		"#text": resourceTitle
-	    },
-	    "ResourceClass": resourceClass,
-	    "PublicationDate": "",
-	    "LastUpdate": "",
-	    "TimeCoverage": {},
-	    "LegalOwner": [
-		{
-		    "@lang": "en",
-		    "#text": "University of Tübingen"
-		}
-	    ],
-	    "Genre": [],
-	    "Location": {
-		"Address": "Seminar für Sprachwissenschaft, Wilhelmstr. 19, D-72074 Tübingen",
-		"Country": {
-		    "CountryName": {
-			"@lang": "de",
-			"#text": "Deutschland"
-		    },
-		    "CountryCoding": "DE"
-		}
-	    },
-	    "Descriptions": [
-		{
-		    "@lang": "en",
-		    "#text": resourceDescription
-		}
-	    ],
-	    "tags": [],
-
-	    "ModalityInfo": {
-		"Modalities": "",
-		"Descriptions": {
-		    "Description": []
-		}
-	    }
+	reader.onload = (event) => {
+            const file = event.target.result;
+            const allLines = file.split(/\r\n|\n/);
+            // Reading line by line
+            allLines.forEach((line) => {
+		console.log(line);
+            });
 	};
 	
-	return undefined;
-    }
+	reader.onerror = (event) => {
+            alert(event.target.error.name);
+	};
+	
+	reader.readAsText(file);
+    }    
 
-    c_projectCMD( projectName, projectTitle, projectPersonFirstName, projectPersonLastName, projectRole) {
-	var template = 
-	{
-	    "ProjectName": projectName,
-	    "ProjectTitle": projectTitle,
+
+    CMDI_template_Project( project,  researcher) {
+	var template =
+	    { "projectInfo" :
+	      {
+	    "ProjectName": project.name,
+	    "ProjectTitle": project.name,
 	    "Url": [],
 	    "Funder": {
 		"fundingAgency": []
 	    },
+
+	    // prefilled
 	    "Institution": {
-		"Department": [],
-		"Url": [],
-		"Organisation": [],
+		"Department": ["Seminar für Sprachwissenschaft, Universität Tübingen"],
+		"Url": ["www.sfs.uni-tuebingen.de"],
+		"Organisation": ["Universität Tübingen"],
 		"Descriptions": {
 		    "Description": []
 		}
@@ -121,16 +97,65 @@ export default class CmdiHandler {
 		}
 	    },
 	    "Person": {
-		"firstName": projectPersonFirstName,
-		"lastName": projectPersonLastName,
-		"Role": projectRole
+		"firstName": researcher.firstName,
+		"lastName": researcher.lastName,
+		"Role": researcher.status
 	    },
 	    "Descriptions": {
-		"Description": []
+		"Description": [ project.description]
 	    },
 	    "Duration": []
-	};
+	      }};
 	
+	return template;
+    }
+
+    CMDI_template_ResourceProxyList(landingPage, resourceList) {
+	var template = 
+	{
+	    "ResourceProxyList": [
+		{
+		    "@id": "GermaNet_resLP",
+		    "ResourceType": "LandingPage",
+		    "@mimetype":    "application/xml",
+		    "ResourceRef": "http://www.sfs.uni-tuebingen.de/GermaNet"
+		},
+		{
+		    "@id": "GermaNet_res6",
+		    "ResourceType": "Resource",
+		    "@mimetype":    "application/pdf",
+		    "ResourceRef": "http://hdl.handle.net/11858/00-1778-0000-0005-896E-B @ ds2" // PID @ filename
+		},
+	    ],
+	    "JournalFileProxyList": [],
+	    "ResourceRelationList": []
+	}
+
 	return undefined;
     }
+
+    CMDI_template_ResourceProxyListInfo(reference, fileName, fileSize, sizeInfoSize, sizeInfoSizeUnit) {
+	var template =
+	{
+	    "ResourceProxyInfo": {
+		"@ref": reference, // referring to the corresponding item in the list
+		"ResProxItemName": undefined, // usually empty
+		"ResProxFileName": fileName,
+		"FileSize": fileSize,
+		"SizeInfo": {
+		    "TotalSize": {
+			"Size": sizeInfoSize,
+			"SizeUnit": sizeInfoSizeUnit
+		    }
+		},
+		"Checksums" : {
+		    "md5": "md5_value",
+		    "sha1": "sha1_value"
+		}
+	    }
+	}
+	return undefined;
+    }
+
+
 }

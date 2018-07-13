@@ -1,0 +1,49 @@
+{"cmd:CMD": {
+    "xmlns:dcr": "http://www.isocat.org/ns/dcr",
+    "xmlns:cmd": "http://www.clarin.eu/cmd/1",
+    "xmlns:vc": "http://www.w3.org/2007/XMLSchema-versioning",
+    "xmlns:cue": "http://www.clarin.eu/cmdi/cues/1",
+    "xmlns:cmdp": "http://www.clarin.eu/cmd/1/profiles/clarin.eu:cr1:p_1524652309874",
+    "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+    "xsi:schemaLocation": "http://www.clarin.eu/cmd/1 file:/Users/zinn/Projects/SFB833/code/jack/profiles/TextCorpusProfile-CMDI1.2.xsd",
+    "CMDVersion": 1.2,
+    "cmd:Header": {"cmd:MdProfile": "http://www.oxygenxml.com/"},
+    "cmd:Resources": {
+        "cmd:ResourceProxyList": "",
+        "cmd:JournalFileProxyList": "",
+        "cmd:ResourceRelationList": ""
+    },
+    "cmd:Components": {"cmdp:TextCorpusProfile": {
+        "cmdp:GeneralInfo": {
+            "cmdp:ResourceClass": "Lexicon",
+            "cmdp:FieldOfResearch": "FieldOfResearch0",
+            "cmdp:Location": {"cmdp:Country": {
+                "cmdp:CountryName": "CountryName0",
+                "cmdp:CountryCoding": "AD"
+            }},
+            "cmdp:ModalityInfo": ""
+        },
+        "cmdp:Creation": {"cmdp:Creators": {"cmdp:Descriptions": {"cmdp:Description": "Description0"}}},
+        "cmdp:TextCorpusContext": {
+            "cmdp:CorpusType": "comparable corpus",
+            "cmdp:ValidationGrp": {"cmdp:Validation": false},
+            "cmdp:SubjectLanguages": {
+                "cmdp:NumberOfLanguages": 0,
+                "cmdp:SubjectLanguage": {"cmdp:Language": {
+                    "cmdp:LanguageName": "LanguageName0",
+                    "cmdp:ISO639": {"cmdp:iso-639-3-code": "aaa"}
+                }}
+            }
+        },
+        "cmdp:Access": {"cmdp:Contact": {
+            "cmdp:email": "email0",
+            "cmdp:role": "role0",
+            "cmdp:Address": {
+                "cmdp:street": "street0",
+                "cmdp:ZIPCode": "ZIPCode0",
+                "cmdp:city": "city0"
+            }
+        }},
+        "cmdp:ResourceProxyListInfo": ""
+    }}
+}}

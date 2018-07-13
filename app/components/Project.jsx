@@ -19,7 +19,7 @@ export default class Project extends React.Component {
 	    },
 	];
 
-	const {projectName, projectContext, projectStatus, projectDescription, ...props} = this.props.project;
+	const {name, context, status, description, ...props} = this.props.project;
 
 	return (
 <div>
@@ -28,10 +28,10 @@ export default class Project extends React.Component {
     <form onSubmit={formApi.submitForm} id="form2">
       <div>
         <label htmlFor="projectName" className="d-block">Project Name: </label>
-        <Text field="projectName" id="projectName" className="textBox" defaultValue={projectName}  style={{width: 400}}/>
+        <Text field="projectName" id="projectName" className="textBox" defaultValue={name}  style={{width: 400}}/>
       </div>
       <div>
-        <RadioGroup field="projectContext" defaultValue={projectContext}>
+        <RadioGroup field="projectContext" defaultValue={context}>
           <label htmlFor="sfb833" className="mr-2">SFB 833</label>
           <Radio value="sfb833" id="sfb833" className="mr-3 d-inline-block" />
           <label htmlFor="sfb441" className="mr-2">SFB 441</label>
@@ -41,11 +41,11 @@ export default class Project extends React.Component {
       <div>
         <label htmlFor="projectStatus" className="d-block">Status: </label>
         <Select field="projectStatus" id="projectStatus"
-	        options={statusOptions} className="mb-4" defaultValue={projectStatus} />
+	        options={statusOptions} className="mb-4" defaultValue={status} />
       </div>
       
       <label htmlFor="projectDescription">Short Project Description: </label>
-      <TextArea field="projectDescription" id="projectDescription" defaultValue={projectDescription} style={{width: 500}} />
+      <TextArea field="projectDescription" id="projectDescription" defaultValue={description} style={{width: 500}} />
        
       <button type="submit" className="mb-4 btn btn-primary">
         Submit

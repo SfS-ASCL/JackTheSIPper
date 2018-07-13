@@ -70,13 +70,16 @@ BagIt.prototype._writeBagInfo = function (opts, cb) {
 
   var self = this
   var data = Object.keys(info).map(function (key) {
-    return `${key}: ${info[key]}`
+      return `${key}: ${info[key]}`
   }).join('\n')
-  fs.writeFile(path.join(self.dir, 'bag-info.txt'), data, cb)
+
+    //console.log('BagIt/_writeBagInfo', this.bagInfo, self.dir, data);
+    fs.writeFile(path.join(self.dir, 'bag-info.txt'), data, cb)
+//    fs.appendFile(path.join(self.dir, 'bag-info.txt'), data, cb)
 }
 
 BagIt.prototype.readFileNoCheck = function (name, opts, cb) {
-    console.log('readFileNoCheck', name, opts, cb);
+    //console.log('readFileNoCheck', name, opts, cb);
 
     var encoding = 'binary';
     if ( name.includes('rtf') || name.includes('txt') ) {
@@ -84,7 +87,7 @@ BagIt.prototype.readFileNoCheck = function (name, opts, cb) {
     }
     
     fs.readFile(name, encoding, function (err, data) {
-	console.log('!!! readFileNoCheck', data.length);
+	//console.log('!!! readFileNoCheck', data.length);
 	if (err) return cb(err)
 	cb(null, data)
     })
@@ -128,8 +131,6 @@ BagIt.prototype.readFile = function (name, opts, cb) {
       if (!entry) return cb(new Error('File not found in manifest.'))
       hash = digest.digest('hex')
 	if (hash !== entry.checksum) {
-	    console.log('hash', hash);
-	    console.log('entry.checksum', entry.checksum);
 	    return cb(new Error('File does not match manifest checksum value.'))
 	}
       cb(null, result)
@@ -174,7 +175,7 @@ BagIt.prototype.createReadStream = function (name, opts) {
 }
 
 BagIt.prototype.createReadStreamFromBlob = function (blob, opts) {
-    console.log('createReadStreamFromBlob', blob, blob.name);
+    //console.log('createReadStreamFromBlob', blob, blob.name);
     name = path.join(this.dataDir, blob.name)
     // TODO: opts.verify - check checksum while reading
     var rtn = fileReaderStream(blob);
@@ -201,7 +202,7 @@ BagIt.prototype._createWriteStreamHelper = function (name, opts) {
 
 BagIt.prototype.createWriteStream = function (name, opts, cb) {
 
-    console.log('BagIt/createWriteStream', name, opts, cb);
+  //    console.log('BagIt/createWriteStream', name, opts, cb);
   // TODO: support writing to fetch.txt + manifest but not data/
   var self = this
 
@@ -216,7 +217,7 @@ BagIt.prototype.createWriteStream = function (name, opts, cb) {
     
     var stream = through(
 	function (chunk, enc, cb) {
-	    console.log('through', chunk, enc);
+	    //console.log('through', chunk, enc);
 	    digest.update(chunk)
 	    cb(null, chunk)
 	},
@@ -224,7 +225,7 @@ BagIt.prototype.createWriteStream = function (name, opts, cb) {
 	    hash = digest.digest('hex')
 	    // TODO: check if old file hash is in manifest
 	    var data = `${hash} ${path.relative(self.dir, name).split(path.sep).join('/')}\n`
-	    console.log('through/cb', data);
+	    //console.log('through/cb', data, self.manifest);
 	    fs.appendFile(self.manifest, data, cb)
 	}
     )
@@ -248,7 +249,7 @@ BagIt.prototype.lstat = function (name, cb) {
 
 BagIt.prototype.readdir = function (name, cb) {
     name = path.join(this.dataDir, name)
-    console.log('my-bag-it/readdir', name);
+    //console.log('my-bag-it/readdir', name, fs.readdir("/bag", cb));
     return fs.readdir(name, cb)  // fixed, was: fs.lstat(name, cb)  
 }
 

@@ -48,6 +48,7 @@
     "filereader-stream": "^1.0.0",
     "history": "^3.0.0",
     "jszip": "^3.1.5",
+    "md5": "^2.2.1",
     "minimist": "1.2.0",
     "mirror-folder": "1.2.2",
     "mkdirp": "0.5.1",
@@ -63,8 +64,9 @@
     "react-dom": "^15.6.1",
     "react-dropzone": "^3.6.0",
     "react-form": "^3.5.3",
+    "react-json-viewer": "^1.7.1",
     "react-loader": "^2.4.0",
-    "react-modal-dialog": "~3.0.2",
+    "react-modal-dialog": "^3.0.2",
     "react-radio-buttons": "^1.2.1",
     "react-select": "^1.2.1",
     "react-selectize": "^2.0.0",
@@ -73,6 +75,7 @@
     "react-toggle": "^2.1.0",
     "stream-collector": "1.0.1",
     "through2": "2.0.3",
+    "uglifyjs-webpack-plugin": "^1.2.7",
     "url-loader": "^1.0.1",
     "xmlbuilder": "^10.0.0"
   }

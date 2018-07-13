@@ -17,6 +17,8 @@ export default class DropArea extends React.Component {
 	this.saveItem    = this.saveItem.bind(this);
 	
 	this.state = {
+
+	    // locally needed, but clarify
 	    treeData: [{ title: 'SIP', isDirectory: true, isRoot: true}],	    
 	    currentNode: {
 		file: "",
@@ -35,13 +37,15 @@ export default class DropArea extends React.Component {
 
    
     onDrop(files) {
+	this.props.parent.setState( (state) => {
+	    return { sipClearedP: false };
+	});
+	
 	const getNodeKey = ({ treeIndex }) => treeIndex;	
-	this.props.clearDropzoneFun();
-
 	var parentKey = this.state.parentKey;
 	for (var i=0; i<files.length; i++) {
 
-	    console.log('files[i]', files[i]);
+	    console.log('DropArea/onDrop: files[i]', files[i]);
 	    const file = files[i];
 	    const name = files[i].name;
 	    const size = files[i].size;
@@ -94,7 +98,7 @@ export default class DropArea extends React.Component {
 	
 	let dropzoneRef;
 	const getNodeKey = ({ treeIndex }) => treeIndex;	
-        var style1 = {
+        var dropzoneStyle = {
 	    display: 'none',
             borderWidth: 2,
             borderColor: 'black',
@@ -109,7 +113,7 @@ export default class DropArea extends React.Component {
 //	    display:'inline-block'
         };
 
-        var activeStyle = {
+        var dropzoneActiveStyle = {
 	    display: 'none',
             borderStyle: 'solid',
             backgroundColor: '#eee',
@@ -122,12 +126,13 @@ export default class DropArea extends React.Component {
   <div>
     <Dropzone ref={(node) => { dropzoneRef = node; }}
 	    onDrop={this.onDrop}
-	    style={style1}
-	    activeStyle={activeStyle} >
+	    style={dropzoneStyle}
+	    activeStyle={dropzoneActiveStyle} >
       Drop your file, or click to select the file to upload.
 	    </Dropzone>
 
     <table style={{height: 600, width: 1000}} >
+    <tbody>
       <tr>
 	<td>
 	  <div style={{ float: "left", height: 600, width: 700 }}>
@@ -303,6 +308,7 @@ export default class DropArea extends React.Component {
 	  <Resource fileInfo={ this.state.currentNode } style={{ float: "left" }}/>
 	</td>	
       </tr>
+    </tbody>
     </table>	  
   </div>
 	)
