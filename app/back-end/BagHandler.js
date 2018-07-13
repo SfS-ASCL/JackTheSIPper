@@ -32,6 +32,21 @@ export default class BagHandler {
 
     }
 
+    deleteBagManifestFile()  {
+	var fs = require('fs');
+	console.log('BagHandler/deleteBagManifestFile')
+	fs.stat('/bag/manifest-sha256.txt', function (err, stats) {
+	    console.log(stats);//here we got all information of file in stats variable
+	    if (err) {
+		return console.error(err);
+	    }
+	    fs.unlink('/bag/manifest-sha256.txt',function(err){
+		if(err) return console.log(err);
+		console.log('file deleted successfully');
+	    });  
+	});
+    }
+	
     // see https://github.com/jvilk/BrowserFS
     createBag() {
 	const that = this;
@@ -46,7 +61,8 @@ export default class BagHandler {
 		throw e;
 	    } else {
 		// todo: create CMDI (passed on to this.state)
-		
+		console.log('BagHandler/createBag');
+		that.deleteBagManifestFile( );
     		var bag = BagIt('/bag', 'sha256', {'Contact-Name': 'Claus Zinn'});
 		var entryPoints = that.state.researchData[0].node.children; // all childrens of the SIP root node
 		that.bagItHelper( bag, '', entryPoints, [] );     // bagDirectory at root ''

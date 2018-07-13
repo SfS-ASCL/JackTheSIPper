@@ -232,7 +232,7 @@ BagIt.prototype.createWriteStream = function (name, opts, cb) {
     stream.pipe(ws)
     stream.on('finish', function () {
 	cb();
-	console.log('my-bag-it/index.js: --> finished writing', name);
+	console.log('my-bag-it/index.js: --> createWriteStream: finished writing', name);
     });
     return stream
 }
