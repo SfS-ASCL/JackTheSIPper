@@ -279,11 +279,11 @@ export default class DropArea extends React.Component {
 				size: node.size,
 				type: node.type,
 				date: node.date,
-				license: "to be requested"
+				licence: "to be requested"
 			    }}))
 		    }}
 		    >
-		    License
+		    Licence
 		    </button>,
 
 		]}

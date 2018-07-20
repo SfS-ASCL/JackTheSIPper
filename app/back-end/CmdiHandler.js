@@ -3,15 +3,14 @@ import {instantiateTextCorpusProfile,
 	instantiateResourceProxyListInfo} from '../templates/TextCorpusProfile-CMDI1.2_template.js';
 
 export default class CMDIHandler {
-    constructor( project, researcher, profile, license, researchData ) {
+    constructor( project, researcher, profile, licence ) {
 	if (profile == "textCorpus") {
-	    this.cmdiInstance = instantiateTextCorpusProfile( project, researcher, profile, license );
+	    this.cmdiInstance = instantiateTextCorpusProfile( project, researcher, profile, licence );
 	} else {
 	    alert('No CMDI support for profile', profile, 'yet.');
 	}
     }
 	
-    // called from BagHandler
     finaliseCMDI( proxyListInfoArray ) {
 	if (this.cmdiInstance == undefined) return
 
@@ -21,6 +20,17 @@ export default class CMDIHandler {
 
 	console.log('result before generating', result);
 	return xmlbuilder.create(result, { encoding: 'utf-8' }).end({ pretty: true });
+    }
+
+    finaliseCMDI_JSON( proxyListInfoArray ) {
+	if (this.cmdiInstance == undefined) return
+
+	const lists  = this.generateResourceProxyLists( proxyListInfoArray );
+	const result = this.cmdiInstance( [], //lists.ResourceProxyList,         
+					  [] ); // lists.ResourceProxyListInfo
+
+	console.log('result before generating', result);
+	return result;
     }
     
     generateResourceProxyLists( fileInfo ) {

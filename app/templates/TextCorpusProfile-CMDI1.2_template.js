@@ -77,7 +77,8 @@ export function instantiateResourceProxyListInfo( file, name, size, type, checks
     )
 }
 
-export function instantiateTextCorpusProfile( project, researcher, profile, license ) {
+export function instantiateTextCorpusProfile( project, researcher, profile, licence ) {
+    console.log('instantiateTextCorpusProfile', project, researcher, profile, licence );
     return ( function( resourceProxyList, resourceProxyListInfo) {
 	console.log('adding', resourceProxyList, resourceProxyListInfo);
 	return (
@@ -253,7 +254,7 @@ export function instantiateTextCorpusProfile( project, researcher, profile, lice
                 "xml:base": "http://www.oxygenxml.com/",
                 "cmd:ref": "ID000",
                 "cmd:ComponentId": "clarin.eu:cr1:c_1442920133047",
-                "cmdp:fundingAgency": "fundingAgency0",
+                "cmdp:fundingAgency": project.context, // <============
                 "cmdp:fundingReferenceNumber": "fundingReferenceNumber0",
                 "cmdp:AuthoritativeIDs": {
                     "xml:base": "http://www.oxygenxml.com/",
@@ -345,14 +346,14 @@ export function instantiateTextCorpusProfile( project, researcher, profile, lice
                 "cmdp:Description": {
                     "type": "short",
                     "xml:lang": "en-US",
-                    "content": "someDescription" // todo
+                    "content": project.description // <============
                 }
             },
             "cmdp:Duration": {
                 "xml:base": "http://www.oxygenxml.com/",
                 "cmd:ref": "ID000",
                 "cmd:ComponentId": "clarin.eu:cr1:c_1271859438116",
-                "cmdp:StartYear": "StartYear0",
+                "cmdp:StartYear": project.status, // <============
                 "cmdp:CompletionYear": "CompletionYear0"
             }
         },
@@ -777,7 +778,7 @@ export function instantiateTextCorpusProfile( project, researcher, profile, lice
             "cmdp:Licence": {
                 "src": "http://www.oxygenxml.com/",
                 "xml:lang": "en-US",
-                "content": license  // <============
+                "content": licence  // <============
             },
             "cmdp:Contact": {
                 "xml:base": "http://www.oxygenxml.com/",

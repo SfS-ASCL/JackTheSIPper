@@ -1,26 +1,26 @@
 import React from 'react';
-import LicenseMenu from './LicenseMenu.jsx';
+import LicenceMenu from './LicenceMenu.jsx';
 
 export default class Resource extends React.Component {
     constructor(props) {
 	super(props);
 
-	this.setLicense             = this.setLicense.bind(this);	
+	this.setLicence             = this.setLicence.bind(this);	
 
 	this.state = {
-	    license : {
-		license : "MIT License",
+	    licence : {
+		licence : "MIT Licence",
 		threeLetterCode: "mit"
 	    }
 	}
     }
 
-    setLicense( license ) {
+    setLicence( licence ) {
 
 	this.setState(state => ({ 	
-	    license : {
-		license : license.label,
-		threeLetterCode: license.value
+	    licence : {
+		licence : licence.label,
+		threeLetterCode: licence.value
 	    }}));
     }
     

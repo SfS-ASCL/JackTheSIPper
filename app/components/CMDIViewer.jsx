@@ -6,6 +6,7 @@ import JSONViewer from 'react-json-viewer';
 export default class CMDIViewer extends React.Component {
 
     constructor(props) {
+	console.log('CMDIViewer/constructor', props);
 	super(props)
     }
     
@@ -45,7 +46,6 @@ class CMDIViewerText extends React.Component {
 	    <ModalDialog onClose={this.props.onClose} className="systemAlertDialog"  width={400}>
 		<h2>CMDI Content</h2>
 		<JSONViewer json={cmdiContentJSON}></JSONViewer>
-		{cmdiContent}
             </ModalDialog>
 	</ModalContainer>
 	);

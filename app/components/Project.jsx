@@ -6,6 +6,10 @@ export default class Project extends React.Component {
 	super(props);
     }
 
+    shouldComponentUpdate() {
+        return true;
+    }
+    
     render() {
 
 	const statusOptions = [
@@ -27,11 +31,11 @@ export default class Project extends React.Component {
     {formApi => (
     <form onSubmit={formApi.submitForm} id="form2">
       <div>
-        <label htmlFor="projectName" className="d-block">Project Name: </label>
-        <Text field="projectName" id="projectName" className="textBox" defaultValue={name}  style={{width: 400}}/>
+        <label htmlFor="name" className="d-block">Project Name: </label>
+        <Text field="name" id="name" className="textBox" defaultValue={name}  style={{width: 400}}/>
       </div>
       <div>
-        <RadioGroup field="projectContext" defaultValue={context}>
+        <RadioGroup field="context" defaultValue={context}>
           <label htmlFor="sfb833" className="mr-2">SFB 833</label>
           <Radio value="sfb833" id="sfb833" className="mr-3 d-inline-block" />
           <label htmlFor="sfb441" className="mr-2">SFB 441</label>
@@ -39,13 +43,13 @@ export default class Project extends React.Component {
         </RadioGroup>
       </div>
       <div>
-        <label htmlFor="projectStatus" className="d-block">Status: </label>
-        <Select field="projectStatus" id="projectStatus"
+        <label htmlFor="status" className="d-block">Status: </label>
+        <Select field="status" id="status"
 	        options={statusOptions} className="mb-4" defaultValue={status} />
       </div>
       
-      <label htmlFor="projectDescription">Short Project Description: </label>
-      <TextArea field="projectDescription" id="projectDescription" defaultValue={description} style={{width: 500}} />
+      <label htmlFor="description">Short Project Description: </label>
+      <TextArea field="description" id="projectDescription" defaultValue={description} style={{width: 500}} />
        
       <button type="submit" className="mb-4 btn btn-primary">
         Submit
