@@ -275,9 +275,8 @@ export default class App extends React.Component {
 							   licence:    result.licence,
 							   zip: bagFile.name,
 							   showBagLoaderViewer: true}));
-				console.log('before force update');
+
 				that.forceUpdate();
-				console.log('after force update');				
 			    },
 			    function(error) {
 				console.log('App/onDrop: error case', error);
@@ -422,8 +421,8 @@ export default class App extends React.Component {
             borderRadius: 0 // 8
         };
 
-      const project=this.state.project;
-      const researcher=this.state.researcher;
+      let project=this.state.project;
+      let researcher=this.state.researcher;
       
       console.log('App/render', this.state, project, researcher);
       
