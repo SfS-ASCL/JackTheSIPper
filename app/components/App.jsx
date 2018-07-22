@@ -43,6 +43,9 @@ import {getFlatDataFromTree} from 'react-sortable-tree';
 import BagSaver from '../back-end/BagSaver';
 import BagLoaderViewer from './BagLoaderViewer';
 
+// uploading to NC
+import Uploader from '../back-end/Uploader';
+
 export default class App extends React.Component {
 
     constructor(props) {
@@ -65,6 +68,7 @@ export default class App extends React.Component {
 	this.updateResearcher = this.updateResearcher.bind(this);	
 	this.updateProfile    = this.updateProfile.bind(this);
 	this.updateLicence    = this.updateLicence.bind(this);
+	this.updateZip        = this.updateZip.bind(this);	
 
 	this.setStateForZip = this.setStateForZip.bind(this);	
 	
@@ -273,7 +277,7 @@ export default class App extends React.Component {
 							   researcher: result.researcher,
 							   project:    result.project,
 							   licence:    result.licence,
-							   zip: bagFile.name,
+							   zip:        bagFile,
 							   showBagLoaderViewer: true}));
 
 				that.forceUpdate();
@@ -285,9 +289,6 @@ export default class App extends React.Component {
 	    }})
     };
 	
-    setStateForZip(zip) {
-	this.setState( state => ({ zip: zip }));
-    }
     
     /* todo: this should clear the entire SIP information, including personal, project and licence data */
     clearSIP() {
@@ -315,14 +316,28 @@ export default class App extends React.Component {
 		researchData: flattenedFileTree
 	    }), () => { 
 		// create the bag; pass down entire state
-		const bagSaver = new BagSaver( this.state ); 
+		const bagSaver = new BagSaver( this.state, this.updateZip ); //this.setStateForZip
 		bagSaver.createBag();
 	    })
 	}
     }
 
     submitSIP() {
-	console.log('submitSIP', this.state);
+	let blob = this.state.zip.zip;
+	let file = new File([blob], 'newBag.zip', { lastModified: new Date(0), 
+						  type: "application/zip" });
+
+	console.log('submitSIP', this.state, blob, file);
+	
+	let uploader = new Uploader( file );
+	let promiseUpload = uploader.uploadFile();
+	promiseUpload.then(
+	    function(resolve) {
+		alert('The SIP has been submitted');
+	    },
+	    function(reject) {
+		console.log('DropArea.jsx/upload failed', reject);
+	    });	
     }
     
     showCMDIViewer() {
@@ -374,6 +389,17 @@ export default class App extends React.Component {
 	}));
     }
 
+    updateZip = (zip) => {
+	console.log('zip has been changed to ', zip);
+	this.setState( state => ({
+	    "zip" : zip
+	}));
+    }
+
+    setStateForZip(zip) {
+	this.setState( state => ({ zip: zip }));
+    }
+    
     // N.B. DropArea is given a link to its parent to manipulate state.
     
     componentDidMount() {

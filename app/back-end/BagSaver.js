@@ -15,9 +15,10 @@ var fileReaderStream = require('filereader-stream')
 
 export default class BagSaver {
 
-    constructor( state ) {
+    constructor( state, parentSetState ) {
 
 	this.state = state;
+	this.parentSetState = parentSetState;
 
 	this.bagItHelper = this.bagItHelper.bind(this);
 	this.generateZIP = this.generateZIP.bind(this);
@@ -246,6 +247,7 @@ export default class BagSaver {
 	} else {
 	    zip.generateAsync({type:"blob"}).then(function (blob) { 
 		console.log('Blob', blob, cmdiProxyListInfoFragment);
+		that.parentSetState( { zip: blob } );
 		FileSaver.saveAs(blob, "projectName.zip");
 	    })
 	}

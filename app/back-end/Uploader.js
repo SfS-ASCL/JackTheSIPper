@@ -12,7 +12,7 @@ export default class Uploader {
 
     uploadFile() {
 	let that = this;
-	
+	console.log('***', that.file, that.file.name);
 	return new Promise(function(resolve, reject) {
 	    // 1a. store in NEXTCLOUD
 	    Request
