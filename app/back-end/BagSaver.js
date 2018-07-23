@@ -3,15 +3,11 @@ import CMDIHandler from './CMDIHandler';
 import crypto from 'crypto';
 import md5 from 'md5';
 import shajs from 'sha.js';
-
-//import BagIt from 'bagit-fs';
 import path from 'path';
-
 import JSZip from 'jszip';
+
 var FileSaver = require('file-saver');
 var fileReaderStream = require('filereader-stream')
-
-// import fetch from 'node-fetch';
 
 export default class BagSaver {
 
@@ -165,48 +161,32 @@ export default class BagSaver {
 	// zip manifest file
 	bag.readFileNoCheck( bag.manifest, 'utf-8', function(err, data) {
 	    if (err) return console.log('Error reading manifest', err, bag)
-	    console.log('zipping manifest file', bag.manifest, data);
 	    zip.file(bag.manifest, data);
 	})
 
 	// zip bag-info.txt file
 	bag.readFileNoCheck( '/bag/bag-info.txt', 'utf-8', function(err, data) {
 	    if (err) return console.log('Error reading bag-info.txt file', err, bag)
-	    console.log('zipping bag-info.txt file', '/bag/bag-info.txt', data);
 	    zip.file('/bag/bag-info.txt', data);
 	})
 
 	// zip bag.it.txt file
 	bag.readFileNoCheck( '/bag/bagit.txt', 'utf-8', function(err, data) {
 	    if (err) return console.log('Error reading bagit.txt file', err, bag)
-	    console.log('zipping bag-it.txt file', '/bag/bagit.txt', data);
 	    zip.file('/bag/bag-it.txt', data);
 	})
 
-	// process content of manifest file 
+	// zip all files mentioned in the manifest file 
 	bag.readManifest( function(err, entries) {
 	    if (err) return console.log('Error reading manifest', err, bag)
-	    // zip each of the entries
-	    that.generateZIPHelper( zip, bag, entries, cmdiProxyListInfoFragment )	    
+	    that.generateZIPHelper( zip, bag, entries, cmdiProxyListInfoFragment );
 	})
-
-	// test to generate md5
+	
+	// test to generate md5, sha256 with external libs.
 	bag.readFileNoCheck( '/bag/bagit.txt', 'utf-8', function(err, data) {
 	    if (err) return console.log('Error reading bagit.txt file', err, bag)
-	    console.log('md5-ing bag-it.txt file', '/bag/bagit.txt', md5(data));
+	    console.log('md5-ing bag-it.txt file', '/bag/bagit.txt', md5(data),  shajs('sha256').update(data).digest('hex'));
 	})
-
-	// test to generate sha on binary file (todo, need to check accuracy for binary files)
-	bag.readFileNoCheck( '/bag/data/germanText.docx', 'utf-8', function(err, data) {
-	    if (err) return console.log('Error reading file', err, bag)
-	    console.log('sha-ing bag/data/germanText.docx file', '/bag/data/germanText.docx', shajs('sha256').update(data).digest('hex'));
-	})
-
-	// test to generate sha on text file	
-	bag.readFileNoCheck( '/bag/data/germanText.txt', 'utf-8', function(err, data) {
-	    if (err) return console.log('Error reading file', err, bag)
-	    console.log('sha-ing bag/data/germanText.txt file', '/bag/data/germanText.txt', shajs('sha256').update(data).digest('hex'));
-	})	
     }
 	
     generateZIPHelper(zip, bag, [ head, ...tail ], cmdiProxyListInfoFragment) {

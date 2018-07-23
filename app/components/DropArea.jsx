@@ -1,6 +1,5 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
-import FileSaver from 'file-saver';
 import Resource from './Resource.jsx';
 import SortableTree, {
     getNodeAtPath,
@@ -14,11 +13,8 @@ export default class DropArea extends React.Component {
 	super(props);
 
 	this.onDrop      = this.onDrop.bind(this);
-	this.saveItem    = this.saveItem.bind(this);
 	
 	this.state = {
-
-	    // locally needed, but clarify
 	    treeData: [{ title: 'SIP', isDirectory: true, isRoot: true}],	    
 	    currentNode: {
 		file: "",
@@ -30,12 +26,6 @@ export default class DropArea extends React.Component {
 	};
     }
 
-    saveItem( file, title) {
-	return;
-	FileSaver.saveAs(file, title);
-    }
-
-   
     onDrop(files) {
 	this.props.parent.setState( (state) => {
 	    return { sipClearedP: false };

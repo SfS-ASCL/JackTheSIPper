@@ -323,6 +323,11 @@ export default class App extends React.Component {
     }
 
     submitSIP() {
+	if (this.state.zip == undefined) {
+	    alert("Please define and save your SIP first, before submitting it.");
+	    return
+	}
+
 	let blob = this.state.zip.zip;
 	let file = new File([blob], 'newBag.zip', { lastModified: new Date(0), 
 						  type: "application/zip" });
