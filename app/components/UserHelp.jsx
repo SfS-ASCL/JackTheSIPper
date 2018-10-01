@@ -3,13 +3,14 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: UserHelp.jsx
-// Time-stamp: <2018-07-19 14:39:42 (zinn)>
+// Time-stamp: <2018-09-28 14:43:35 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
 import PropTypes from 'prop-types';
 import {ModalContainer, ModalDialog} from 'react-modal-dialog';
 import {emailContactCommand} from './../back-end/util';
+import { Button, ButtonToolbar } from 'react-bootstrap';
 
 export default class UserHelp extends React.Component {
   static propTypes = {
@@ -25,12 +26,14 @@ export default class UserHelp extends React.Component {
     this.setState({showModal: false});
   }
   render() {
-    return <a className={this.props.className} onClick={this.openModal}>
-      -Help-
-      {this.state.showModal ?
+    return(
+      <Button onClick={this.openModal} bsStyle="primary">
+        Help
+	{this.state.showModal ?
         <UserHelpText onClose={this.closeModal}/>
-      : null}
-    </a>;
+	: null}
+      </Button>
+      );
   }
 }
 
@@ -38,24 +41,12 @@ class UserHelpText extends React.Component {
   static propTypes = {
     onClose: PropTypes.func,
   }
-  state = {
-    showSecondModal: false
-  }
-  openModal = () => {
-    this.setState({showSecondModal: true});
-  }
-  closeModal = () => {
-    this.setState({showSecondModal: false});
-  }
+
   render() {
     return <ModalContainer onClose={this.props.onClose}>
         <ModalDialog onClose={this.props.onClose} className="userHelpDialog"  width={800}>
-          {this.state.showSecondModal ?
-            <SecondModal onClose={this.closeModal}/>
-          : null}
 
 	    <h2>How to use Jack The SIPper</h2>
-	    <center><p><small><b><em>Leave Help with ESC</em></b></small></p></center>
 	  <p>You have research data that you would like to archive. Jack The SIPper helps you organising your data by describing it with some simple metadata and by packaging it into a SIP [...]
           </p>
 
@@ -88,16 +79,3 @@ class UserHelpText extends React.Component {
   }
 }
 
-class SecondModal extends React.Component {
-  static propTypes = {
-    onClose: PropTypes.func,
-  }
-  render() {
-    return <ModalContainer onClose={this.props.onClose}>
-      <ModalDialog onClose={this.props.onClose} width={350} className="userHelpDialog">
-        <h1>Second Dialog</h1>
-        <p>When you hit esc, only this one will close</p>
-      </ModalDialog>
-    </ModalContainer>;
-  }
-}

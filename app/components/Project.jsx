@@ -35,11 +35,30 @@ export default class Project extends React.Component {
         <Text field="name" id="name" className="textBox" defaultValue={name}  style={{width: 400}}/>
       </div>
       <div>
+        <label htmlFor="affiliation" className="d-block">Project Affiliation: </label>
         <RadioGroup field="context" defaultValue={context}>
-          <label htmlFor="sfb833" className="mr-2">SFB 833</label>
-          <Radio value="sfb833" id="sfb833" className="mr-3 d-inline-block" />
-          <label htmlFor="sfb441" className="mr-2">SFB 441</label>
-          <Radio value="sfb441" id="sfb441" className="d-inline-block" />
+	  <table >
+	    <tbody>
+	      <tr>
+		<td>
+		  <label htmlFor="sfb833" className="mr-2">SFB 833</label>
+		  <Radio value="sfb833" id="sfb833" className="mr-3 d-inline-block" />
+		</td>
+		<td>
+		  <label htmlFor="sfb441" className="mr-2">SFB 441</label>
+		  <Radio value="sfb441" id="sfb441" className="d-inline-block" />
+		</td>
+		<td>
+		  <label htmlFor="internal" className="mr-2">internal (EKUT)</label>
+		  <Radio value="internal" id="internal" className="d-inline-block" />
+		</td>
+		<td>
+		  <label htmlFor="external" className="mr-2">external</label>
+		  <Radio value="external" id="external" className="d-inline-block" />
+		</td>
+	      </tr>
+	    </tbody>
+	  </table>
         </RadioGroup>
       </div>
       <div>

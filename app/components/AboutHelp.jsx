@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: AboutHelp.jsx
-// Time-stamp: <2018-07-19 14:38:41 (zinn)>
+// Time-stamp: <2018-09-28 15:02:47 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -26,7 +26,7 @@ export default class AboutHelp extends React.Component {
   }
   render() {
     return <a className={this.props.className} onClick={this.openModal}>
-      -About-
+      About
       {this.state.showModal ?
         <AboutHelpText onClose={this.closeModal}/>
       : null}
@@ -44,7 +44,6 @@ class AboutHelpText extends React.Component {
           <div className="content" id="about">
 	  
             <h2>About</h2>
-	    <center><p><small><b><em>Leave Help with ESC</em></b></small></p></center>
             <p>
               Jack The SIPper is being developed 
               within the <a href="http://www.clarin.eu/">SFB 833</a> project

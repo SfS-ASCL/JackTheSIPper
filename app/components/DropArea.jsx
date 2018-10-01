@@ -41,8 +41,8 @@ export default class DropArea extends React.Component {
 	    const size = files[i].size;
 	    const type = files[i].type;
 	    const date = files[i].lastModified.toString();
-	    const dateReadable = new Date(files[i].lastModified);
-	    console.log('date', dateReadable);
+	    const dateReadable = new Date(files[i].lastModified).toDateString();
+				      // console.log('date', dateReadable, dateReadable.toDateString(), dateReadable.toISOString());
 	    this.props.parent.setState( (state) => {
 		return {treeData : addNodeUnderParent({ treeData: state.treeData,
 							parentKey: parentKey,
@@ -121,15 +121,15 @@ export default class DropArea extends React.Component {
       Drop your file, or click to select the file to upload.
 	    </Dropzone>
 
-    <table style={{height: 600, width: 1000}} >
-    <tbody>
-      <tr>
-	<td>
-	  <div style={{ float: "left", height: 600, width: 700 }}>
-	    <SortableTree
-	    treeData={fileTree} 
-	    canDrop={canDrop}
-	    onChange={treeData => this.props.parent.setState({ treeData })}
+    <table style={{height: 600, width: 600}} >
+      <tbody>
+	<tr>
+	  <td>
+	    <div style={{ float: "left", height: 600, width: 600 }}>
+	      <SortableTree
+		treeData={fileTree} 
+		canDrop={canDrop}
+		onChange={treeData => this.props.parent.setState({ treeData })}
             generateNodeProps={ ( {node, path} ) => {
 		var buttons = undefined;
 
@@ -278,7 +278,7 @@ export default class DropArea extends React.Component {
 
 		]}
 
-		// all directories (except root) get a "Remove file(s) button.
+		// all directories (except root) get a "Remove file(s) button."
 		if (node.isDirectory) {
 		    buttons.push(removeFilesButton);
 		}
@@ -294,8 +294,8 @@ export default class DropArea extends React.Component {
 	    />
 	  </div>
 	</td>
-	<td>
-	  <Resource fileInfo={ this.state.currentNode } style={{ float: "left" }}/>
+	<td  style={{ verticalAlign: "top" }}>
+	  <Resource fileInfo={ this.state.currentNode }/>
 	</td>	
       </tr>
     </tbody>

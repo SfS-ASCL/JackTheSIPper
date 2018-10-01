@@ -12,7 +12,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Button, ButtonToolbar } from 'react-bootstrap';
 
 import CMDIHandler from '../back-end/CMDIHandler';
-import { sleep, readCMDI } from '../back-end/util';
+import { softwareVersion, sleep, readCMDI } from '../back-end/util';
 import JSZip from 'jszip';
 import AboutHelp from './AboutHelp.jsx';
 import UserHelp from './UserHelp.jsx';
@@ -450,7 +450,11 @@ export default class App extends React.Component {
             borderStyle: 'solid',
             backgroundColor: '#eee',
             borderRadius: 0 // 8
-        };
+  };
+
+      const tabStyle = {
+	  height: 548
+      }
 
       let project=this.state.project;
       let researcher=this.state.researcher;
@@ -471,23 +475,22 @@ export default class App extends React.Component {
 	</div>
 	<div style={{margin: 10}}>
 	  <ButtonToolbar >
-	  <Button onClick={!sipClearedP ? this.clearSIP : null} bsStyle="primary" disabled={sipClearedP}>Clear SIP</Button>
-   	  <Button onClick={this.loadSIP} bsStyle="primary">Load SIP
-	        <Dropzone ref={(node) => { this.dropzoneRef = node; }}
-         	    onDrop={this.onDrop}
-		    accept="application/zip"
-		    multiple={false}
-	            style={style1}
-	            activeStyle={activeStyle} >	    
-		</Dropzone>
-	  </Button>
-	  <Button onClick={this.saveSIP} bsStyle="primary">Save SIP</Button>
-  	  <Button onClick={!sipSubmittedP ? this.submitSIP   : null} bsStyle="primary" disabled={!sipGeneratedP}>Submit SIP</Button>
-    	      <Button onClick={this.showCMDIViewer} bsStyle="primary">Inspect CMDI</Button>
-	      </ButtonToolbar>
-	      <AboutHelp className="header-link" />
-	      <UserHelp className="header-link" />	      	      
-	      </div>			
+	    <Button onClick={!sipClearedP ? this.clearSIP : null} bsStyle="primary" disabled={sipClearedP}>Clear SIP</Button>
+   	    <Button onClick={this.loadSIP} bsStyle="primary">Load SIP
+	      <Dropzone ref={(node) => { this.dropzoneRef = node; }}
+         	onDrop={this.onDrop}
+		accept="application/zip"
+		multiple={false}
+	        style={style1}
+	        activeStyle={activeStyle} >	    
+	      </Dropzone>
+	    </Button>
+	    <Button onClick={this.saveSIP} bsStyle="primary">Save SIP</Button>
+  	    <Button onClick={!sipSubmittedP ? this.submitSIP   : null} bsStyle="primary" disabled={!sipGeneratedP}>Submit SIP</Button>
+    	    <Button onClick={this.showCMDIViewer} bsStyle="primary">Inspect CMDI</Button>
+	    <UserHelp  />	      	      
+	  </ButtonToolbar>
+	</div>			
       </div>			
     </div>
   </header>
@@ -499,7 +502,7 @@ export default class App extends React.Component {
     {this.state.showBagLoaderViewer ?
      <BagLoaderViewer bagName={this.state.zip} unmount={this.unshowBagLoaderViewer} />
     : null }	  
-    <Tabs
+    <Tabs style={tabStyle}
       selectedIndex={this.state.selectedIndex}
       onSelect={ (selectedIndex) => {this.setState({ selectedIndex })}}
     >
@@ -513,19 +516,19 @@ export default class App extends React.Component {
       
       <TabPanel>
 	<h2>Project information</h2>
-	<div style={{height: 600}} >	    	    	    
+	<div>	    	    	    
 	  <Project project={project} updateProject={this.updateProject}/>
 	</div>
       </TabPanel>
       <TabPanel>
         <h2>Contact Details</h2>
-	<div style={{height: 600}} >	    	    
+	<div>	    	    
 	  <Researcher researcher={researcher} updateResearcher={this.updateResearcher}/>
         </div>
       </TabPanel>
       <TabPanel>
 	    <h2>Profile Selection</h2>
-	<div style={{height: 600}} >	    
+	<div>	    
 	    <ProfileSelection style={{ float: "left" }}
 	        updateProfile={this.updateProfile}
     	        selectedProfile={this.state.profile} />
@@ -534,12 +537,15 @@ export default class App extends React.Component {
       <TabPanel>
 	<h2>Licence Selection</h2>
 	<p>
-	Please select the preferred licence for your research data. It
-	will be applied to all parts of your research data, but exceptions can be marked when you
-	package your research data into a Submission Information Package (last step).
+  	  Please select the preferred licence for your research data. It
+	  will be applied to all parts of your research data, but exceptions can be marked when you
+	  package your research data into a Submission Information Package (last step). 
+	</p>
+  	  Please consult the <a href="http://ufal.github.io/public-license-selector/">licence selector</a>.
+	<p>	
 	</p>
 
-	<div style={{height: 600}} >
+	<div>
             <Licence licence={this.state.licence} updateLicence={this.updateLicence} />
 	</div>
       </TabPanel>
@@ -568,11 +574,20 @@ export default class App extends React.Component {
           </div>
         </div>
         <div className="col-sm-3 col-sm-pull-6 col-xs-12">
+    	  <AboutHelp className="header-link" />	      
           <div className="version-info text-center-xs">
+	    {softwareVersion}
           </div>
         </div>
         <div className="col-sm-3 text-right">
-		<a href='mailto:claus.zinn@uni-tuebingen.de?subject=Jack The SIPper'>Contact</a>
+	  <a href='mailto:claus.zinn@uni-tuebingen.de?subject=Jack The SIPper'>Contact</a>
+	  <div>
+	    <a href="https://talar.sfb833.uni-tuebingen.de/help/" target="_blank">
+	      <span>
+		Help Desk
+	      </span>
+	    </a>
+	  </div>
         </div>
       </div>
     </div>
