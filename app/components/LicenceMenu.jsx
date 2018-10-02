@@ -30,7 +30,6 @@ export default class LicenceMenu extends React.Component {
 	    <SimpleSelect
 	      options = {options}
               defaultValue  = {that.props.defaultValue}
-              value  = {that.props.defaultValue}
    	      placeholder = "Select licence"
               renderValue = {function(item){
 		var exists = options.map(function(option){

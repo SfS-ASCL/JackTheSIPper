@@ -7,7 +7,6 @@ import SortableTree, {
     addNodeUnderParent,
     removeNodeAtPath } from 'react-sortable-tree';
 
-
 export default class DropArea extends React.Component {
     constructor(props) {
 	super(props);
@@ -15,14 +14,15 @@ export default class DropArea extends React.Component {
 	this.onDrop      = this.onDrop.bind(this);
 	
 	this.state = {
-	    treeData: [{ title: 'SIP', isDirectory: true, isRoot: true}],	    
+	    treeData: [{ name: 'SIP', isDirectory: true, isRoot: true}],
 	    currentNode: {
 		file: "",
-		title: "SIP",
+		name: "SIP",
 		size: 0,
 		type: "root",
 		date: "noDate"
-	    }
+	    },
+	    counter : 0
 	};
     }
 
@@ -42,15 +42,17 @@ export default class DropArea extends React.Component {
 	    const type = files[i].type;
 	    const date = files[i].lastModified.toString();
 	    const dateReadable = new Date(files[i].lastModified).toDateString();
-				      // console.log('date', dateReadable, dateReadable.toDateString(), dateReadable.toISOString());
-	    this.props.parent.setState( (state) => {
+	    
+	    // console.log('date', dateReadable, dateReadable.toDateString(), dateReadable.toISOString());
+	    
+	    this.setState( (state) => {
 		return {treeData : addNodeUnderParent({ treeData: state.treeData,
 							parentKey: parentKey,
 							expandParent: true,
 							getNodeKey,
 							newNode: {
 							    file: file,
-							    title: name,
+							    name: name,
 							    isDirectory: false,
 							    size: size,
 							    type: type,
@@ -85,41 +87,20 @@ export default class DropArea extends React.Component {
 
 	    return true;
 	};
+
 	
 	let dropzoneRef;
-	const getNodeKey = ({ treeIndex }) => treeIndex;	
-        var dropzoneStyle = {
-	    display: 'none',
-            borderWidth: 2,
-            borderColor: 'black',
-            borderStyle: 'dashed',
-            borderRadius: 4,
-            margin: 10,
-            padding: 10,
-            width: 20, // do not display, that is, shrink ten-fold
-	    height:10,
-	    resize: 'none',
-	    transition: 'all 0.5s',
-//	    display:'inline-block'
-        };
-
-        var dropzoneActiveStyle = {
-	    display: 'none',
-            borderStyle: 'solid',
-            backgroundColor: '#eee',
-            borderRadius: 0 // 8
-        };
-
-	const fileTree = this.props.parent.state.treeData
+	const getNodeKey = ({ treeIndex }) => treeIndex;
+	
+        var dropzoneStyle = { display: 'none' };
 
 	return (
   <div>
-    <Dropzone ref={(node) => { dropzoneRef = node; }}
-	    onDrop={this.onDrop}
-	    style={dropzoneStyle}
-	    activeStyle={dropzoneActiveStyle} >
+    <Dropzone ref  = {(node) => { dropzoneRef = node; }}
+	    onDrop = {this.onDrop}
+	    style  = {dropzoneStyle} >
       Drop your file, or click to select the file to upload.
-	    </Dropzone>
+    </Dropzone>
 
     <table style={{height: 600, width: 600}} >
       <tbody>
@@ -127,170 +108,129 @@ export default class DropArea extends React.Component {
 	  <td>
 	    <div style={{ float: "left", height: 600, width: 600 }}>
 	      <SortableTree
-		treeData={fileTree} 
+	        treeData={this.state.treeData} 
 		canDrop={canDrop}
-		onChange={treeData => this.props.parent.setState({ treeData })}
-            generateNodeProps={ ( {node, path} ) => {
-		var buttons = undefined;
+		onChange={treeData => this.setState({ treeData })}
+                generateNodeProps={ ( {node, path} ) => {
 
-		// the infoButton that comes with each node
-		var infoButton =
-		<button onClick={() => {
-		    this.setState(state => ({
-			currentNode: {
-			    file: node.file,
-			    title: node.title,
-			    size: node.size,
-			    type: node.type,
-			    date: node.date
-			}})) 
+		    const getNodeKey = ({ treeIndex }) => treeIndex;
+		    var title = (
+			    <input
+				 style={{ fontSize: '1.1rem' }}
+				 value={node.name}
+				 onChange={event => {
+				     const name = event.target.value;
+				     
+				     this.setState(state => ({
+					 treeData: changeNodeAtPath({
+					     treeData: state.treeData,
+					     path,
+					     getNodeKey,
+					     newNode: { ...node, name },
+					 }),
+				     }));
+				 }}
+				     />
+		    );
+		    
+		    var buttons = undefined;
+
+		    // the infoButton that comes with each file node
+		    var infoButton =
+			<button onClick={() => {
+			    this.setState(state => ({
+				currentNode: {
+				    file: node.file,
+				    title: node.name,
+				    size: node.size,
+				    type: node.type,
+				    date: node.date
+				}})) 
 			}}
 			>
 			Info
-		</button>;
+		    </button>;
 
-		var removeFilesButton =
-		<button onClick={() =>
-		    this.props.parent.setState(state => ({
-			treeData: removeNodeAtPath({
-			    treeData: state.treeData,
-			    path,
-			    getNodeKey,
-			}),
-		    }))
-		}
-		>
-			Remove file(s)
-		</button>;
-		    
-		if ((node.isRoot) || (node.isDirectory) ) {
-		    buttons =
-		    [
-			<button
-			onClick={() => {
+		    var licenseButton =
+			<button onClick={() => {
+			    this.setState(state => ({
+				currentNode: {
+				    title: node.name,
+				    size: node.size,
+				    type: node.type,
+				    date: node.date,
+				    licence: "to be requested"
+				}}))
+			}}
+			>
+			Licence
+		    </button>;
 
-			    // first, add the node with dummy title
-			    var result = addNodeUnderParent({
-				treeData: this.props.parent.state.treeData,
-				parentKey: path[path.length - 1],
-				expandParent: true,
-				getNodeKey,
-				newNode: {
-				    title: "Please Edit", 
-				    isDirectory: true
-				    }
-			    });
+		    var removeFolder =
+			<button onClick={() =>
+					 this.setState(state => ({
+					     treeData: removeNodeAtPath({
+						 treeData: state.treeData,
+						 path,
+						 getNodeKey,
+					     }),
+					 }))
+					}
+			>
+			Remove Folder
+		    </button>;
 
-			    // The tree index at which the node was inserted
-			    var treeIndex = result.treeIndex;
-			    
-			    // The updated tree data
-			    var localTreeData = result.treeData;   
-			    var newPath = path.concat([treeIndex]);
+		    var addFolder = 
+			<button onClick={() => {
+			                const getNodeKey = ({ treeIndex }) => treeIndex;
+					this.setState(state => ({
+					    treeData: addNodeUnderParent({
+						treeData: state.treeData,
+						parentKey: path[path.length - 1],
+						expandParent: true,
+						getNodeKey,
+						newNode: {
+						    name: "Please-edit-me",
+						    isDirectory: true
+						},
+					    }).treeData,
+					}))}
+				       }
+			> Add Folder </button>;
 
-			    // second, get the node just added
-			    var node = getNodeAtPath({
-				treeData: localTreeData,
-				path: newPath,
-				getNodeKey: getNodeKey,
-				ignoreCollapsed: false});
-
-			    this.props.parent.setState(state => ({
-				treeData: localTreeData
-				}));
-			    
-			    // third, replace dummy title with input field
-			    this.props.parent.setState(state => ({
-				treeData: changeNodeAtPath({
-				    treeData: localTreeData, 
-				    path: newPath,
-				    getNodeKey,
-				    newNode: {
-					title: (
-					<input
-					style={{ fontSize: '1.1rem' }}
-					value={node.title}
-					onChange={event => {
-					    const newValue = event.target.value;
-					    
-					    var node = getNodeAtPath({
-						 treeData: this.props.parent.state.treeData, 
-						 path: newPath,
-						 getNodeKey: getNodeKey,
-						 ignoreCollapsed: false});
-
-					    var nnode = node.node;
-					    nnode.title.props.value = newValue;
-					    this.props.parent.setState(state => ({
-						treeData: changeNodeAtPath({
-						    treeData: state.treeData, 
-						    path: newPath,
-						    getNodeKey,
-						    newNode: {...nnode, value:newValue}
-						}),
-					    }));
-					}}
-					/>
-				    ),
-				    isDirectory: true
-				}
-			    })}));
-			} }
-			    >
-			Add Folder
-		        </button>,
-			
+		    var addFiles =
 			<button onClick= { () =>
-			{ this.setState({ parentKey: path[path.length - 1] }); dropzoneRef.open( ) } } >
+					   { this.setState({ parentKey: path[path.length - 1] });
+					     dropzoneRef.open( ) } } >
 			Add file(s)
-		        </button>,
-		    ]
-		} else {
-		    buttons =
-		[
-		    <button
-		    onClick={() =>
-			this.props.parent.setState(state => ({
-			    treeData: removeNodeAtPath({
-				treeData: state.treeData,
-				path,
-				getNodeKey,
-			    }),
-			}))
+		    </button>			
+
+		    var removeFile =
+			<button onClick={() =>
+					 this.setState(state => ({
+					     treeData: removeNodeAtPath({
+						 treeData: state.treeData,
+						 path,
+						 getNodeKey,
+					     }),
+					 }))
+					}
+			>
+			Remove file
+		    </button>;
+		    
+		    if ((node.isRoot) || (node.isDirectory) ) {
+			buttons =
+			    [ addFolder, addFiles, removeFolder ];
+		    } else {
+			buttons =
+			    [ removeFile, infoButton, licenseButton ]
 		    }
-		    >
-		    Remove file
-		    </button>,
-		    <button
-		    onClick={() => {
-			this.setState(state => ({
-			    currentNode: {
-				title: node.title,
-				size: node.size,
-				type: node.type,
-				date: node.date,
-				licence: "to be requested"
-			    }}))
-		    }}
-		    >
-		    Licence
-		    </button>,
-
-		]}
-
-		// all directories (except root) get a "Remove file(s) button."
-		if (node.isDirectory) {
-		    buttons.push(removeFilesButton);
-		}
-
-		// all nodes get an INFO box
-		buttons.push(infoButton);
-		
-		return {
-		    buttons: buttons
-		}
-	    }}
-         
+		    
+		    return { buttons: buttons,
+			     title: title
+			   }
+		}}
 	    />
 	  </div>
 	</td>

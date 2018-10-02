@@ -97,7 +97,7 @@ export default class App extends React.Component {
 
 	    licence: "clarin_pub_by",
 
-	    treeData: [{ title: 'SIP', isDirectory: false, isRoot: true}],
+	    treeData: [{ name: 'SIP', isDirectory: false, isRoot: true}],
 
 	    researchData: undefined,   // holds tree structure from packing
 	    metadata: undefined,       // holds entire metadata (CMDIHandler)
@@ -234,7 +234,7 @@ export default class App extends React.Component {
 		// first, reset the filetree
     		that.setState( (state) => (
 		    {
-			treeData: [{ title: 'SIP', isDirectory: false, isRoot: true}]
+			treeData: [{ name: 'SIP', isDirectory: false, isRoot: true}]
 		    },
 		    function() {console.log('Have initialised filetree')}));
 		
@@ -293,7 +293,7 @@ export default class App extends React.Component {
     /* todo: this should clear the entire SIP information, including personal, project and licence data */
     clearSIP() {
 	this.setState( state => ({ sipClearedP: true }));
-	this.setState( state => ({ treeData: [{ title: 'SIP', isDirectory: false, isRoot: true}]})); 
+	this.setState( state => ({ treeData: [{ name: 'SIP', isDirectory: false, isRoot: true}]})); 
 	console.log('App/clearSIP');
     }
 
