@@ -178,10 +178,12 @@ optgroup {
     font-weight: bold
 }
 
+/*
 table {
     border-collapse: separate;
     border-spacing: 12px
 }
+*/
 
 td, th {
     padding: 6

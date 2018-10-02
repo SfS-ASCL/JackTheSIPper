@@ -73,6 +73,7 @@
     "react-sortable-tree": "^2.2.0",
     "react-tabs": "^2.2.2",
     "react-toggle": "^2.1.0",
+    "react-tooltip": "^3.8.4",
     "stream-collector": "1.0.1",
     "superagent": "^3.8.3",
     "through2": "2.0.3",

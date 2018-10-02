@@ -36,7 +36,7 @@ export default class Resource extends React.Component {
             padding: 10,
 	    marginLeft: 20,
             width: 400,
-	    height:160,
+	    height:120,
 	    resize: 'none',
 	    transition: 'all 0.5s',
 	    display:'inline-block',

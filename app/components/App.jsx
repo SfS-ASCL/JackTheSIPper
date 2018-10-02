@@ -430,31 +430,8 @@ export default class App extends React.Component {
 
   render() {
       const { sipClearedP, sipLoadedP, sipSavedP, sipSubmittedP, sipGeneratedP } = this.state;
-      var style1 = {
-	    display: 'none',
-            borderWidth: 2,
-            borderColor: 'black',
-            borderStyle: 'dashed',
-            borderRadius: 4,
-            margin: 10,
-            padding: 10,
-            width: 20, // do not display, that is, shrink ten-fold
-	    height:10,
-	    resize: 'none',
-	    transition: 'all 0.5s',
-//	    display:'inline-block'
-        };
-
-        var activeStyle = {
-	    display: 'none',
-            borderStyle: 'solid',
-            backgroundColor: '#eee',
-            borderRadius: 0 // 8
-  };
-
-      const tabStyle = {
-	  height: 548
-      }
+      const style1 = { display: 'none' };
+      const tabStyle = { height: 548 };
 
       let project=this.state.project;
       let researcher=this.state.researcher;
@@ -481,8 +458,7 @@ export default class App extends React.Component {
          	onDrop={this.onDrop}
 		accept="application/zip"
 		multiple={false}
-	        style={style1}
-	        activeStyle={activeStyle} >	    
+	        style={style1} >	    
 	      </Dropzone>
 	    </Button>
 	    <Button onClick={this.saveSIP} bsStyle="primary">Save SIP</Button>
