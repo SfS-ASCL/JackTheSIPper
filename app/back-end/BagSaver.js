@@ -26,8 +26,10 @@ export default class BagSaver {
 					    this.state.licence,
 					    this.state.researchData);
 
+	console.log('BagSaver', this.state);
     }
 
+    
     // alternative: create /bag<uuid> directory with <uuid> newly generated for each bag
     deleteBagManifestFile()  {
 	var fs = require('fs');
@@ -35,6 +37,7 @@ export default class BagSaver {
 	fs.stat('/bag/manifest-sha256.txt', function (err, stats) {
 	    console.log(stats);//here we got all information of file in stats variable
 	    if (err) {
+		console.log("Could not delete /bag/manifest-sha256.txt");
 		return console.error(err);
 	    }
 	    fs.unlink('/bag/manifest-sha256.txt',function(err){
@@ -51,7 +54,10 @@ export default class BagSaver {
 	
 	var Buffer = BrowserFS.BFSRequire('buffer').Buffer;
 	BrowserFS.configure({
-	    fs: "LocalStorage",
+	    // fs: "LocalStorage",
+	    // fs: "HTML5FS",
+	    // fs: "IndexedDB",
+	    fs: "InMemory", 
 	    options: {}
 	}, function(e) {
 	    if (e) {
@@ -59,7 +65,7 @@ export default class BagSaver {
 	    } else {
 		// todo: create CMDI (passed on to this.state)
 		console.log('BagSaver/createBag');
-		that.deleteBagManifestFile( );
+		that.deleteBagManifestFile();
     		var bag = BagIt('/bag', 'sha256', {'Contact-Name': 'Claus Zinn'});
 		var entryPoints = that.state.researchData[0].node.children; // all childrens of the SIP root node
 		that.bagItHelper( bag, '', entryPoints, [] );     // bagDirectory at root ''
@@ -70,33 +76,30 @@ export default class BagSaver {
     // todo: gather file information for CMDI ResourceProxyInfo...
     bagItHelper(bag, currentPath, [ head, ...tail ], cmdiProxyListInfoFragment) {
 
+//	console.log('BagSaver/bagItHelper', bag, '<', currentPath, '>', head, tail, cmdiProxyListInfoFragment);
+	console.log('BagSaver/bagItHelper', head, '*', tail, '*');
 	if (head === undefined && !tail.length) {
 	    return [];
 	}
 	
-	var filePath
-	var that = this;
-	if (head.isDirectory) {
-	    filePath = path.join(currentPath, head.value);
-	} else {
-	    filePath = path.join(currentPath, head.title);
-	}
+	const that = this;
 	
 	if (tail.length) {
 	    // process head
 	    if (head.isDirectory) {
 		// process the directorys children (with new path)
-		bag.mkdir(filePath, function(){
-		    // and treat its children
-		    that.bagItHelper(bag, filePath, head.children, cmdiProxyListInfoFragment);		    
+		bag.mkdir(path.join(currentPath, head.name), function(){
+		    // and treat its children// tree recursion // todo
+		    that.bagItHelper(bag, path.join(currentPath, head.name), head.children, cmdiProxyListInfoFragment);
+		    that.bagItHelper(bag, currentPath, tail, cmdiProxyListInfoFragment);
 		});
 
 	    } else {
 		fileReaderStream(head.file) // ;bag.createReadStream(head.file) fromBlob
-		    .pipe(bag.createWriteStream(filePath, {}, function() {
-			cmdiProxyListInfoFragment.push( {path: filePath,
-							 //name: 'data/'+head.title,
-							 name: head.title,
+		    .pipe(bag.createWriteStream(path.join(currentPath, head.name), {}, function() {
+			cmdiProxyListInfoFragment.push( {path: path.join(currentPath, head.name),
+							 //name: 'data/'+head.name,
+							 name: head.name,
 							 size: head.size,
 							 type: head.type });
 			that.bagItHelper(bag, currentPath, tail, cmdiProxyListInfoFragment);
@@ -105,18 +108,18 @@ export default class BagSaver {
 	} else {
 	    // only head there
 	    if (head.isDirectory) {
-		bag.mkdir(filePath, function(){
-		    that.bagItHelper(bag, filePath, head.children, cmdiProxyListInfoFragment);
+		bag.mkdir(path.join(currentPath, head.name), function(){
+		    that.bagItHelper(bag, path.join(currentPath, head.name), head.children, cmdiProxyListInfoFragment);
 		});		
 	    } else {
 		fileReaderStream(head.file) // ;bag.createReadStream(head.file) fromBlob		
 		    .pipe(bag.createWriteStream(
-			filePath,
+			path.join(currentPath, head.name),
 			{},
 			function() {
-			    cmdiProxyListInfoFragment.push( {path: filePath,
-							     //name: 'data/'+head.title,
-							     name: head.title,							     
+			    cmdiProxyListInfoFragment.push( {path: path.join(currentPath, head.name),
+							     //name: 'data/'+head.name,
+							     name: head.name,							     
 							     size: head.size,
 							     type: head.type });
 			    
@@ -226,7 +229,6 @@ export default class BagSaver {
 	    })
 	} else {
 	    zip.generateAsync({type:"blob"}).then(function (blob) { 
-		console.log('Blob', blob, cmdiProxyListInfoFragment);
 		that.parentSetState( { zip: blob } );
 		FileSaver.saveAs(blob, "projectName.zip");
 	    })

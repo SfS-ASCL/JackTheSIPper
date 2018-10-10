@@ -1,3 +1,11 @@
+// -------------------------------------------
+// Jack The SIPper
+// 2018- Claus Zinn, University of Tuebingen
+// 
+// File: Resource.jsx
+// Time-stamp: <2018-10-09 09:02:38 (zinn)>
+// -------------------------------------------
+
 import React from 'react';
 import LicenceMenu from './LicenceMenu.jsx';
 

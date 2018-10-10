@@ -1,3 +1,11 @@
+// -------------------------------------------
+// Jack The SIPper
+// 2018- Claus Zinn, University of Tuebingen
+// 
+// File: DropArea.jsx
+// Time-stamp: <2018-10-09 09:03:31 (zinn)>
+// -------------------------------------------
+
 import React from 'react';
 import Dropzone from 'react-dropzone';
 import Resource from './Resource.jsx';
@@ -14,10 +22,12 @@ export default class DropArea extends React.Component {
     constructor(props) {
 	super(props);
 	this.onDrop      = this.onDrop.bind(this);
+	this.dropzoneRef = undefined;		
     }
 
     onDrop(files) {
 
+	console.log('DropArea/onDrop', files);
 	const that = this.props.parent;
 	
 	that.setState( (state) => {
@@ -25,7 +35,7 @@ export default class DropArea extends React.Component {
 	});
 	
 	const getNodeKey = ({ treeIndex }) => treeIndex;	
-	var parentKey = this.state.parentKey;
+	var parentKey = that.state.parentKey;
 	for (var i=0; i<files.length; i++) {
 
 	    const file = files[i];
@@ -62,8 +72,14 @@ export default class DropArea extends React.Component {
 
     render() {
 	const that = this.props.parent;
-	console.log('DropArea/render', that);
+	const tthis = this;
 	const canDrop = ({ node, nextParent, prevPath, nextPath }) => {
+
+	    console.log('DropArea/canDrop', node, nextParent, prevPath, nextPath);
+
+	    if (nextParent && (nextParent.isRoot)) {
+		return true
+	    }
 	    // node is node to be dropped, nextParent must be directory
 	    if (nextParent && (! nextParent.isDirectory)) {
 		return false;
@@ -75,14 +91,16 @@ export default class DropArea extends React.Component {
 	    return true;
 	};
 	
-	let dropzoneRef;
         var dropzoneStyle = { display: 'none' };
 	const getNodeKey = ({ treeIndex }) => treeIndex;
+
+	console.log('DropArea/render', that, tthis, canDrop);
+	
 	return (
   <div>
-    <Dropzone ref  = {(node) => { dropzoneRef = node; }}
-	    onDrop = {this.onDrop}
-	    style  = {dropzoneStyle} >
+    <Dropzone ref    = {(node) => { tthis.dropzoneRef = node; }}
+	    onDrop   = {tthis.onDrop}
+	    style    = {dropzoneStyle} >
       Drop your file, or click to select the file to upload.
     </Dropzone>
 
@@ -179,8 +197,9 @@ export default class DropArea extends React.Component {
 	    
 	    var addFiles =
 		<button onClick= { () =>
-				   { that.setState({ parentKey: path[path.length - 1] });
-				     dropzoneRef.open( ) } } >
+				   { that.setState({ parentKey: path[path.length - 1] },
+						   function() { tthis.dropzoneRef.open( ) });
+				      } } >
 		Add file(s)
 	    </button>			
 		

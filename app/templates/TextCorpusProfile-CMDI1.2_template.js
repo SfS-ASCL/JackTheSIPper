@@ -77,8 +77,8 @@ export function instantiateResourceProxyListInfo( file, name, size, type, checks
     )
 }
 
-export function instantiateTextCorpusProfile( project, researcher, profile, licence ) {
-    console.log('instantiateTextCorpusProfile', project, researcher, profile, licence );
+export function instantiateTextCorpusProfile( project, researchers, profile, licence ) {
+    console.log('instantiateTextCorpusProfile', project, researchers, profile, licence );
     return ( function( resourceProxyList, resourceProxyListInfo) {
 	console.log('adding', resourceProxyList, resourceProxyListInfo);
 	return (
@@ -324,9 +324,9 @@ export function instantiateTextCorpusProfile( project, researcher, profile, lice
                 "xml:base": "http://www.oxygenxml.com/",
                 "cmd:ref": "ID000",
                 "cmd:ComponentId": "clarin.eu:cr1:c_1447674760335",
-                "cmdp:firstName": researcher.firstName,  // <============
-                "cmdp:lastName":  researcher.lastName,   // <============
-                "cmdp:role": researcher.status,
+                "cmdp:firstName": researchers[0].firstName,  // <============
+                "cmdp:lastName":  researchers[0].lastName,   // <============
+                "cmdp:role": researchers[0].status,
                 "cmdp:AuthoritativeIDs": {
                     "xml:base": "http://www.oxygenxml.com/",
                     "cmd:ref": "ID000",
@@ -784,11 +784,11 @@ export function instantiateTextCorpusProfile( project, researcher, profile, lice
                 "xml:base": "http://www.oxygenxml.com/",
                 "cmd:ref": "ID000",
                 "cmd:ComponentId": "clarin.eu:cr1:c_1442920133041",
-                "cmdp:firstname": researcher.firstname,    // <============
-                "cmdp:lastname":  researcher.lastname,     // <============
-                "cmdp:email": researcher.email,            // <============
-                "cmdp:telephoneNumber": researcher.phone,  // <============
-                "cmdp:role": researcher.status,            // <============
+                "cmdp:firstname": researchers[0].firstname,    // <============
+                "cmdp:lastname":  researchers[0].lastname,     // <============
+                "cmdp:email": researchers[0].email,            // <============
+                "cmdp:telephoneNumber": researchers[0].phone,  // <============
+                "cmdp:role": researchers[0].status,            // <============
                 "cmdp:Address": {
                     "xml:base": "http://www.oxygenxml.com/",
                     "cmd:ref": "ID000",

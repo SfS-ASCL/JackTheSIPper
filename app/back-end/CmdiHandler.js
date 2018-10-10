@@ -3,9 +3,9 @@ import {instantiateTextCorpusProfile,
 	instantiateResourceProxyListInfo} from '../templates/TextCorpusProfile-CMDI1.2_template.js';
 
 export default class CMDIHandler {
-    constructor( project, researcher, profile, licence ) {
+    constructor( project, researchers, profile, licence ) {
 	if (profile == "textCorpus") {
-	    this.cmdiInstance = instantiateTextCorpusProfile( project, researcher, profile, licence );
+	    this.cmdiInstance = instantiateTextCorpusProfile( project, researchers, profile, licence );
 	} else {
 	    alert('No CMDI support for profile', profile, 'yet.');
 	}

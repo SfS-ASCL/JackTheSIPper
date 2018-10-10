@@ -1,3 +1,11 @@
+// -------------------------------------------
+// Jack The SIPper
+// 2018- Claus Zinn, University of Tuebingen
+// 
+// File: ProfileSelection.jsx
+// Time-stamp: <2018-10-09 09:03:55 (zinn)>
+// -------------------------------------------
+
 'use strict';
 
 import React from 'react';

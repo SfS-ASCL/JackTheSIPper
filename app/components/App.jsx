@@ -1,6 +1,10 @@
-// -- C. Zinn, claus.zinn@uni-tuebingen.de
-// -- SFB, Jack
-// -- Spring 2018
+// -------------------------------------------
+// Jack The SIPper
+// 2018- Claus Zinn, University of Tuebingen
+// 
+// File: App.jsx
+// Time-stamp: <2018-10-09 21:49:25 (zinn)>
+// -------------------------------------------
 
 'use strict';
 
@@ -21,6 +25,8 @@ import SortableTree, {addNodeUnderParent} from 'react-sortable-tree';
 import BagIt from '../my-bag-it/index.js';
 var Readable = require('stream').Readable
 
+import uuid from 'uuid';
+
 import '../css/react-tabs.css';
 import '../css/react-select.css';
 import '../css/react-form-styles.css';
@@ -30,11 +36,12 @@ import '../css/ionicons.min.css';
 
 import '../css/vlo.css';
 import '../css/font-awesome.min.css';
-
+import '../css/fancy-example.css';
+import '../css/react-tabs2.css';
 
 import DropArea from './DropArea.jsx';
 import Project from './Project.jsx';
-import Researcher from './Researcher.jsx';
+import Researchers from './Researchers.jsx';
 import Licence from './Licence.jsx';
 import CMDIViewer from './CMDIViewer.jsx';
 import ProfileSelection from './ProfileSelection.jsx';
@@ -65,26 +72,29 @@ export default class App extends React.Component {
 	this.unshowBagLoaderViewer = this.unshowBagLoaderViewer.bind(this);
 	
 	this.updateProject    = this.updateProject.bind(this);
-	this.updateResearcher = this.updateResearcher.bind(this);	
+	this.updateResearcher = this.updateResearcher.bind(this);
+	this.duplicateResearcher = this.duplicateResearcher.bind(this);
+	this.removeResearcher = this.removeResearcher.bind(this);		
 	this.updateProfile    = this.updateProfile.bind(this);
 	this.updateLicence    = this.updateLicence.bind(this);
 	this.updateZip        = this.updateZip.bind(this);	
 
 	this.setStateForZip = this.setStateForZip.bind(this);	
 	
-	this.dropzoneRef      = undefined;	
+	this.dropzoneReference      = undefined;	
 
 	this.state = {
 
 	    showCMDIViewer: false,
 	    showBagLoaderViewer: false,	    
-	    researcher: {
+	    researchers: [ {
+		id : uuid.v4(),
 		firstName : "Max",
 		lastName: "Mustermann",
 		email: "max.mustermann@uni-tuebingen.de",
 		phone: "+49 (0) 7071-29 73968",
 		status: "researcher"
-	    },
+	    } ],
 	    
 	    project: {
 		name : "Second Language Acquisition in Parrots",
@@ -98,6 +108,7 @@ export default class App extends React.Component {
 	    licence: "clarin_pub_by",
 
 	    treeData: [{ name: 'SIP', isDirectory: false, isRoot: true}],
+	    parentKey: undefined,
 
 	    researchData: undefined,   // holds tree structure from packing
 	    metadata: undefined,       // holds entire metadata (CMDIHandler)
@@ -117,7 +128,7 @@ export default class App extends React.Component {
 	};
 
 	this.cmdiHandler = new CMDIHandler( this.state.project,
-					    this.state.researcher,
+					    this.state.researchers,
 					    this.state.profile,
 					    this.state.licence);
 	
@@ -156,7 +167,7 @@ export default class App extends React.Component {
 							    getNodeKey,
 							    newNode: {
 								file: "readFromSIP", // needs to be fetched from bag
-								title: fileName,
+								name: fileName,
 								isDirectory: false, 
 								size: fileSize,
 								type: fileType,
@@ -171,6 +182,7 @@ export default class App extends React.Component {
     // for each file in the zip, add it to the bag
     bagItHelper(zip, bag, [ head, ...tail ]) {
 
+	console.log('App/bagItHelper', zip, bag, head, tail);
 	if (head === undefined && !tail.length) {
 	    return [];
 	}
@@ -237,7 +249,8 @@ export default class App extends React.Component {
 			treeData: [{ name: 'SIP', isDirectory: false, isRoot: true}]
 		    },
 		    function() {console.log('Have initialised filetree')}));
-		
+
+		// todo. read manifest
 		// re-create the bag
     		var bag = BagIt('/bag', 'sha256', {'Contact-Name': 'Claus Zinn'});	
 		JSZip.loadAsync(bagFile)                                  
@@ -245,13 +258,10 @@ export default class App extends React.Component {
 			const dateAfter = new Date();		
 			console.log("(loaded in " + (dateAfter - dateBefore) + "ms)");
 
-			
-			// here, we need to fill state.treedata using addNodeUnderParent({})
-
 			// timing issues, need recursion with call backs
 			let entries = []
 			zip.forEach(function (relativePath, zipEntry) { 
-			    console.log('zip entry', zipEntry.name);
+			    console.log('zip entry', relativePath, zipEntry, zipEntry.name);
 			    if (zipEntry.name.includes("/data/")) {
 				console.log('processing research data', zipEntry.name);
 				// hack
@@ -273,11 +283,11 @@ export default class App extends React.Component {
 				that.onDropHelper( result.resourceProxyList, result.resourceProxyListInfo ); // populate the file tree
 				
 				console.log('App/onDrop should have called onDropHelper');			
-				that.setState( state => ({ profile:    result.profile,
-							   researcher: result.researcher,
-							   project:    result.project,
-							   licence:    result.licence,
-							   zip:        bagFile,
+				that.setState( state => ({ profile:     result.profile,
+							   researchers: result.researchers,
+							   project:     result.project,
+							   licence:     result.licence,
+							   zip:         bagFile,
 							   showBagLoaderViewer: true}));
 
 				that.forceUpdate();
@@ -299,15 +309,19 @@ export default class App extends React.Component {
 
     loadSIP() {
 	console.log('loadSIP');
-	this.dropzoneRef.open( )
+	this.dropzoneReference.open( )
     }
 
     saveSIP() {
-	const getNodeKey = ({ treeIndex }) => treeIndex;		
+	const getNodeKey = ({ treeIndex }) => treeIndex;
 	var flattenedFileTree = getFlatDataFromTree(
 	    { treeData: this.state.treeData,
 	      getNodeKey: getNodeKey
 	    });
+
+	const that = this;
+
+	console.log('App/saveSIP', flattenedFileTree);
 
 	if ( (flattenedFileTree === undefined) || (flattenedFileTree.length == 1) ) {
 	    alert("Please add at least a single file to the research data package!")
@@ -316,7 +330,7 @@ export default class App extends React.Component {
 		researchData: flattenedFileTree
 	    }), () => { 
 		// create the bag; pass down entire state
-		const bagSaver = new BagSaver( this.state, this.updateZip ); //this.setStateForZip
+		const bagSaver = new BagSaver( that.state, that.updateZip ); //this.setStateForZip
 		bagSaver.createBag();
 	    })
 	}
@@ -375,9 +389,60 @@ export default class App extends React.Component {
 	this.setState( project );
     }
 
+    duplicateResearcher = (id) => {
+	console.log('App/duplicateResearcher', id);
+	var researchers = this.state.researchers;
+	var newResearchers = [];
+
+	for (var i = 0; i < researchers.length; i++) {
+	    if (id == researchers[i].id) {
+		newResearchers.push(researchers[i]);		
+		newResearchers.push( {
+		    id : uuid.v4(),
+		    firstName : researchers[i].firstName + "(copy)",
+		    lastName:   researchers[i].lastName + "(copy)",
+		    email:      researchers[i].email + "(copy)",
+		    phone:      researchers[i].phone + "(copy)",
+		    status: "researcher"
+		} );
+	    } else {
+		newResearchers.push(researchers[i]);
+	    }
+	}
+	this.setState( { researchers : newResearchers } );	
+    }
+
+    removeResearcher = (id) => {
+
+	var researchers = this.state.researchers;
+	console.log('App/removeResearcher', id, researchers);
+
+	var newResearchers = [];
+
+	for (var i = 0; i < researchers.length; i++) {
+	    if (id == researchers[i].id) {
+		console.log('App.jsx/removeResearcher', id);
+	    } else {
+		newResearchers.push(researchers[i]);
+	    }
+	}
+	this.setState( { researchers : newResearchers } );
+    }
+    
     updateResearcher = (researcher) => {
+
 	console.log('App/updateResearcher', researcher);
-	this.setState( researcher );
+	var researchers = this.state.researchers;
+	var newResearchers = [];
+
+	for (var i = 0; i < researchers.length; i++) {
+	    if (researcher.id == researchers[i].id) {
+		newResearchers.push(researcher);
+	    } else {
+		newResearchers.push(researchers[i]);
+	    }
+	}
+	this.setState( { researchers : newResearchers } );
     }
 
     updateProfile(value) {
@@ -434,9 +499,9 @@ export default class App extends React.Component {
       const tabStyle = { height: 548 };
 
       let project=this.state.project;
-      let researcher=this.state.researcher;
+      let researchers=this.state.researchers;
       
-      console.log('App/render', this.state, project, researcher);
+      console.log('App/render', this.state, project, researchers);
       
       return (
 
@@ -454,7 +519,7 @@ export default class App extends React.Component {
 	  <ButtonToolbar >
 	    <Button onClick={!sipClearedP ? this.clearSIP : null} bsStyle="primary" disabled={sipClearedP}>Clear SIP</Button>
    	    <Button onClick={this.loadSIP} bsStyle="primary">Load SIP
-	      <Dropzone ref={(node) => { this.dropzoneRef = node; }}
+	      <Dropzone ref={(node) => { this.dropzoneReference = node; }}
          	onDrop={this.onDrop}
 		accept="application/zip"
 		multiple={false}
@@ -484,7 +549,7 @@ export default class App extends React.Component {
     >
       <TabList>
 	<Tab>Project</Tab>
-	<Tab>Researcher</Tab>
+        <Tab>Researcher(s)</Tab>
 	<Tab>Profile</Tab>
 	<Tab>Licence</Tab>
 	<Tab>Packaging</Tab>
@@ -497,9 +562,12 @@ export default class App extends React.Component {
 	</div>
       </TabPanel>
       <TabPanel>
-        <h2>Contact Details</h2>
 	<div>	    	    
-	  <Researcher researcher={researcher} updateResearcher={this.updateResearcher}/>
+	      <Researchers
+		researchers         = {researchers}
+		updateResearcher    = {this.updateResearcher}
+		removeResearcher    = {this.removeResearcher}		
+		duplicateResearcher = {this.duplicateResearcher}/>
         </div>
       </TabPanel>
       <TabPanel>

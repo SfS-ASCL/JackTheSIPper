@@ -186,7 +186,20 @@ BagIt.prototype._createWriteStreamHelper = function (name, opts) {
     var ws = new stream.Writable();
     ws.writable = true;
     ws.bytes = 0;    
-    
+
+    /*
+    ws.write = function(buf) {
+	ws.bytes += buf.length;
+    }
+
+    ws.end = function(buf) {
+	if (buf && buf.length) ws.write(buf);
+	ws.writable = false;
+
+	console.log('bytes length: ' + ws.bytes);
+    }
+    */
+
     ws._write = function (chunk, encoding, done) {
 	ws.bytes += chunk.length;	
 	fs.writeFile(name, chunk, encoding);	
@@ -194,8 +207,9 @@ BagIt.prototype._createWriteStreamHelper = function (name, opts) {
     };
 
     ws.end = function(buf) {
-	console.log('bytes total: ' + ws.bytes + ' for ' + name );
+	console.log('_createWriteStreamHelper/bytes total: ' + ws.bytes + ' for ' + name );
     }
+
 
     return ws;
 }

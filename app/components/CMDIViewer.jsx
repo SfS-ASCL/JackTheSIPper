@@ -1,3 +1,11 @@
+// -------------------------------------------
+// Jack The SIPper
+// 2018- Claus Zinn, University of Tuebingen
+// 
+// File: CMDIViewer.jsx
+// Time-stamp: <2018-10-09 09:03:24 (zinn)>
+// -------------------------------------------
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {ModalContainer, ModalDialog} from 'react-modal-dialog';

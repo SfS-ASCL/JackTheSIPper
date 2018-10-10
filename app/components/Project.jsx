@@ -1,3 +1,11 @@
+// -------------------------------------------
+// Jack The SIPper
+// 2018- Claus Zinn, University of Tuebingen
+// 
+// File: Project.jsx
+// Time-stamp: <2018-10-09 09:04:01 (zinn)>
+// -------------------------------------------
+
 import React from 'react';
 import { Form, Text, TextArea, Radio, RadioGroup, Select, Checkbox } from 'react-form';
 
@@ -68,10 +76,13 @@ export default class Project extends React.Component {
       </div>
       
       <label htmlFor="description">Short Project Description: </label>
-      <TextArea field="description" id="projectDescription" defaultValue={description} style={{width: 500}} />
+      <TextArea field="description"
+		id="projectDescription"
+		defaultValue={description}
+	style={{width: 500, height: 120}} />
        
       <button type="submit" className="mb-4 btn btn-primary">
-        Submit
+        Save
       </button>
     </form>
     )}
