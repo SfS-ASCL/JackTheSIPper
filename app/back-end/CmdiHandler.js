@@ -1,13 +1,24 @@
+// -------------------------------------------
+// Jack The SIPper
+// 2018- Claus Zinn, University of Tuebingen
+// 
+// File: CMDIHandler.jsx
+// Time-stamp: <2018-10-10 13:17:54 (zinn)>
+// -------------------------------------------
+
 import xmlbuilder from 'xmlbuilder';
 import {instantiateTextCorpusProfile,
 	instantiateResourceProxyListInfo} from '../templates/TextCorpusProfile-CMDI1.2_template.js';
 
 export default class CMDIHandler {
-    constructor( project, researchers, profile, licence ) {
-	if (profile == "textCorpus") {
-	    this.cmdiInstance = instantiateTextCorpusProfile( project, researchers, profile, licence );
+    constructor( state ) {
+	if (state.profile == "textCorpus") {
+	    this.cmdiInstance = instantiateTextCorpusProfile( state.project,
+							      state.researchers,
+							      state.profile,
+							      state.licence );
 	} else {
-	    alert('No CMDI support for profile', profile, 'yet.');
+	    alert('No CMDI support for profile', state.profile, 'yet.');
 	}
     }
 	

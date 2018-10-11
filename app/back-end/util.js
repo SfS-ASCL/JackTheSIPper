@@ -1,3 +1,11 @@
+// -------------------------------------------
+// Jack The SIPper
+// 2018- Claus Zinn, University of Tuebingen
+// 
+// File: util.jsx
+// Time-stamp: <2018-10-10 11:46:00 (zinn)>
+// -------------------------------------------
+
 export const ncUser         = process.env.NC_USER;
 export const ncPass         = process.env.NC_PASS;
 export const softwareVersion     = process.env.VERSION;

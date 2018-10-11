@@ -1,3 +1,11 @@
+// -------------------------------------------
+// Jack The SIPper
+// 2018- Claus Zinn, University of Tuebingen
+// 
+// File: Uploader.jsx
+// Time-stamp: <2018-10-10 11:45:54 (zinn)>
+// -------------------------------------------
+
 /* Uploads a file to the Nextcloud space. */
 
 import Request from 'superagent';

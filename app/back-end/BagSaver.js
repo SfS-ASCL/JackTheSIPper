@@ -1,3 +1,11 @@
+// -------------------------------------------
+// Jack The SIPper
+// 2018- Claus Zinn, University of Tuebingen
+// 
+// File: BagSaver.jsx
+// Time-stamp: <2018-10-11 09:12:20 (zinn)>
+// -------------------------------------------
+
 import BagIt from '../my-bag-it/index.js';
 import CMDIHandler from './CMDIHandler';
 import crypto from 'crypto';
@@ -5,6 +13,9 @@ import md5 from 'md5';
 import shajs from 'sha.js';
 import path from 'path';
 import JSZip from 'jszip';
+import uuid from 'uuid';
+import {softwareVersion} from 'util';
+import {getFlatDataFromTree} from 'react-sortable-tree';
 
 var FileSaver = require('file-saver');
 var fileReaderStream = require('filereader-stream')
@@ -19,39 +30,56 @@ export default class BagSaver {
 	this.bagItHelper = this.bagItHelper.bind(this);
 	this.generateZIP = this.generateZIP.bind(this);
 	this.generateZIPHelper = this.generateZIPHelper.bind(this);
-
-	this.cmdiHandler = new CMDIHandler( this.state.project,
-					    this.state.researcher,
-					    this.state.profile,
-					    this.state.licence,
-					    this.state.researchData);
-
-	console.log('BagSaver', this.state);
+	this.bagCMDI = this.bagCMDI.bind(this);
+	this.bagSize = this.bagSize.bind(this);
+	this.bagDate = this.bagDate.bind(this);	
     }
 
+    bagSize() {
+	return "260 GB";
+    }
+
+    bagDate() {
+	return "10.10.2018";
+    }    
     
-    // alternative: create /bag<uuid> directory with <uuid> newly generated for each bag
-    deleteBagManifestFile()  {
-	var fs = require('fs');
-	console.log('BagSaver/deleteBagManifestFile')
-	fs.stat('/bag/manifest-sha256.txt', function (err, stats) {
-	    console.log(stats);//here we got all information of file in stats variable
-	    if (err) {
-		console.log("Could not delete /bag/manifest-sha256.txt");
-		return console.error(err);
-	    }
-	    fs.unlink('/bag/manifest-sha256.txt',function(err){
-		if(err) return console.log(err);
-		console.log('file deleted successfully');
-	    });  
-	});
+    bagCMDI( bag, cmdiProxyListInfoFragment ) {
+	// generate CMDI file 
+	const cmdiHandler = new CMDIHandler( this.state );
+	const cmdi        = cmdiHandler.finaliseCMDI( cmdiProxyListInfoFragment );
+	const cmdiFile    = new File([cmdi], "cmdi.xml", {type: "application/xml"});
+	const that = this;
+	// add CMDI file to the bag
+	fileReaderStream(cmdiFile)
+	    .pipe(bag.createWriteStream(
+		"cmdi.xml",
+		{},
+		function() {
+		    // add .profile file to the bag
+		    let profileFile = new File([that.state.profile], ".profile", {type: "text/plain"});
+		    fileReaderStream(profileFile)
+			.pipe(bag.createWriteStream(".profile",
+						    {},
+						    function() {
+							// finalize bag file
+							bag.finalize( function () {
+							    console.log('BagSaver/saveBag: bag has been finalized', bag);
+							    // add cmdi to bag (and then generate ZIP)
+							    that.generateZIP( bag, cmdiProxyListInfoFragment ); 
+							})}));
+		}))
     }
 	
-    // see https://github.com/jvilk/BrowserFS
-    createBag() {
+    saveBag() {
 	const that = this;
-	if (this.state.researchData == undefined) return;
-	
+	const getNodeKey = ({ treeIndex }) => treeIndex;
+	const flattenedFileTree = getFlatDataFromTree(
+	    { treeData: that.state.treeData,
+	      getNodeKey: getNodeKey
+	    });
+	const id = uuid.v4();
+
+	// see https://github.com/jvilk/BrowserFS
 	var Buffer = BrowserFS.BFSRequire('buffer').Buffer;
 	BrowserFS.configure({
 	    // fs: "LocalStorage",
@@ -59,49 +87,65 @@ export default class BagSaver {
 	    // fs: "IndexedDB",
 	    fs: "InMemory", 
 	    options: {}
-	}, function(e) {
-	    if (e) {
-		throw e;
+	}, function(error) {
+	    if (error) {
+		throw error;
 	    } else {
-		// todo: create CMDI (passed on to this.state)
-		console.log('BagSaver/createBag');
-		that.deleteBagManifestFile();
-    		var bag = BagIt('/bag', 'sha256', {'Contact-Name': 'Claus Zinn'});
-		var entryPoints = that.state.researchData[0].node.children; // all childrens of the SIP root node
-		that.bagItHelper( bag, '', entryPoints, [] );     // bagDirectory at root ''
+    		var bag = BagIt('bag-'+id, // use relative path (no leading /)
+				'sha256',
+				{ 'Source-Organization': 'Tuebingen University',
+				  'Organization-Address': 'Wilhelmstrasse 19, 72074 Tuebingen, Germany',
+				  'Contact-Phone': '+1 408-555-1212',
+				  'Contact-Email': 'claus.zinn@uni-tuebingen.de',
+				  'Bagging-Date' : that.bagDate(),
+				  'Contact-Name' : 'Claus Zinn',
+				  'Generated-By' : 'JackTheSIPper ' + softwareVersion,
+				  'Bag-Size'     : that.bagSize()
+				});
+		
+		console.log('BagSaver/saveBag', flattenedFileTree);
+		if ( !(flattenedFileTree[0].node.children === undefined)) {
+		    var entryPoints = flattenedFileTree[0].node.children; // all childrens of the SIP root node
+		    if (entryPoints.length > 0)
+			that.bagItHelper( bag, '', entryPoints, [] );         // bagDirectory at root ''
+		} else {
+		    console.log('No files have been added to SIP');
+		    that.bagCMDI( bag, [] ) 
+		}
 	    }
 	})
     }
 
-    // todo: gather file information for CMDI ResourceProxyInfo...
     bagItHelper(bag, currentPath, [ head, ...tail ], cmdiProxyListInfoFragment) {
 
-//	console.log('BagSaver/bagItHelper', bag, '<', currentPath, '>', head, tail, cmdiProxyListInfoFragment);
-	console.log('BagSaver/bagItHelper', head, '*', tail, '*');
-	if (head === undefined && !tail.length) {
-	    return [];
-	}
-	
 	const that = this;
 	
+	if (head === undefined && !tail.length) {
+	    return;
+	}
+
+	// there is a tail
 	if (tail.length) {
 	    // process head
 	    if (head.isDirectory) {
-		// process the directorys children (with new path)
-		bag.mkdir(path.join(currentPath, head.name), function(){
-		    // and treat its children// tree recursion // todo
+		// make a new directory
+		bag.mkdir(path.join(currentPath, head.name), function() {
+		    // process the directory's children
 		    that.bagItHelper(bag, path.join(currentPath, head.name), head.children, cmdiProxyListInfoFragment);
+		    // process the tail
 		    that.bagItHelper(bag, currentPath, tail, cmdiProxyListInfoFragment);
 		});
-
 	    } else {
+		// read the head and pipe it into the bag stream
 		fileReaderStream(head.file) // ;bag.createReadStream(head.file) fromBlob
 		    .pipe(bag.createWriteStream(path.join(currentPath, head.name), {}, function() {
+			// update the CMDI helper structure
 			cmdiProxyListInfoFragment.push( {path: path.join(currentPath, head.name),
 							 //name: 'data/'+head.name,
 							 name: head.name,
 							 size: head.size,
 							 type: head.type });
+			// process the tail (with update CMDI helper structure
 			that.bagItHelper(bag, currentPath, tail, cmdiProxyListInfoFragment);
 		   }))
 	    }
@@ -122,32 +166,15 @@ export default class BagSaver {
 							     name: head.name,							     
 							     size: head.size,
 							     type: head.type });
-			    
-			    // at the very end, add the CMDI file to the bag
-			    let completeCMDI = that.cmdiHandler.finaliseCMDI( cmdiProxyListInfoFragment );
-			    let cmdiFile = new File([completeCMDI], "cmdi.xml", {type: "application/xml"});
-			    // 2 second add to bag
-			    fileReaderStream(cmdiFile)
-				.pipe(bag.createWriteStream(
-				    "cmdi.xml",
-				    {},
-				    function() {
-					let profileFile = new File([that.state.profile], ".profile", {type: "text/plain"});
-					fileReaderStream(profileFile)
-					    .pipe(bag.createWriteStream(".profile",
-									{},
-									function() {
-									    bag.finalize( function () {
-										console.log('BagSaver/createBag: bag has been finalized', bag);
-										// add cmdi to bag (and then generate ZIP)
-										that.generateZIP( bag, cmdiProxyListInfoFragment ); 
-									    })}));
-				    }))
-			}))
+
+			    that.bagCMDI( bag, cmdiProxyListInfoFragment );
+			}
+		    ))
 	    }
 	}
     }
 
+    //
     generateZIP( bag, cmdiProxyListInfoFragment ) {
 
 	const that = this;
@@ -168,15 +195,15 @@ export default class BagSaver {
 	})
 
 	// zip bag-info.txt file
-	bag.readFileNoCheck( '/bag/bag-info.txt', 'utf-8', function(err, data) {
+	bag.readFileNoCheck( bag.dir+'/bag-info.txt', 'utf-8', function(err, data) {
 	    if (err) return console.log('Error reading bag-info.txt file', err, bag)
-	    zip.file('/bag/bag-info.txt', data);
+	    zip.file(bag.dir+'/bag-info.txt', data);
 	})
 
 	// zip bag.it.txt file
-	bag.readFileNoCheck( '/bag/bagit.txt', 'utf-8', function(err, data) {
+	bag.readFileNoCheck( bag.dir+'/bagit.txt', 'utf-8', function(err, data) {
 	    if (err) return console.log('Error reading bagit.txt file', err, bag)
-	    zip.file('/bag/bag-it.txt', data);
+	    zip.file(bag.dir+'/bag-it.txt', data);
 	})
 
 	// zip all files mentioned in the manifest file 
@@ -186,7 +213,7 @@ export default class BagSaver {
 	})
 	
 	// test to generate md5, sha256 with external libs.
-	bag.readFileNoCheck( '/bag/bagit.txt', 'utf-8', function(err, data) {
+	bag.readFileNoCheck( bag.dir+'/bagit.txt', 'utf-8', function(err, data) {
 	    if (err) return console.log('Error reading bagit.txt file', err, bag)
 	    console.log('md5-ing bag-it.txt file', '/bag/bagit.txt', md5(data),  shajs('sha256').update(data).digest('hex'));
 	})
