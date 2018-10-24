@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-10-24 11:44:52 (zinn)>
+// Time-stamp: <2018-10-24 13:02:24 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -159,7 +159,7 @@ export default class App extends React.Component {
 	    return
 	}
 
-	let blob = this.state.zip;
+	let blob = this.state.zip.zip;
 	let file = new File([blob],
 			    this.state.researchers[0].lastName + ".zip",
 			    {
