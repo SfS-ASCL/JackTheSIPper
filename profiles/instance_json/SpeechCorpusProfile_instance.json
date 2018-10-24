@@ -1,0 +1,264 @@
+{"cmd:CMD": {
+    "xmlns:cmd": "http://www.clarin.eu/cmd/1",
+    "xmlns:cue": "http://www.clarin.eu/cmdi/cues/1",
+    "xmlns:cmdp": "http://www.clarin.eu/cmd/1/profiles/clarin.eu:cr1:p_1524652309878",
+    "xmlns:dcr": "http://www.isocat.org/ns/dcr",
+    "xmlns:vc": "http://www.w3.org/2007/XMLSchema-versioning",
+    "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+    "xsi:schemaLocation": "http://www.clarin.eu/cmd/1 file:/Users/zinn/Projects/SFB833/code/jack/profiles/orig/SpeechCorpusProfile.xsd",
+    "CMDVersion": 1.2,
+    "cmd:Header": {
+        "cmd:MdCreator": "MdCreator0",
+        "cmd:MdCreationDate": "2006-05-04",
+        "cmd:MdSelfLink": "http://www.oxygenxml.com/",
+        "cmd:MdProfile": "http://www.oxygenxml.com/",
+        "cmd:MdCollectionDisplayName": "MdCollectionDisplayName0"
+    },
+    "cmd:Resources": {
+        "cmd:ResourceProxyList": {"cmd:ResourceProxy": {
+            "id": "ID000",
+            "cmd:ResourceType": "Metadata",
+            "cmd:ResourceRef": "http://www.oxygenxml.com/"
+        }},
+        "cmd:JournalFileProxyList": {"cmd:JournalFileProxy": {"cmd:JournalFileRef": "http://www.oxygenxml.com/"}},
+        "cmd:ResourceRelationList": {"cmd:ResourceRelation": {
+            "cmd:RelationType": "RelationType0",
+            "cmd:Resource": [
+                {
+                    "ref": "ID000",
+                    "cmd:Role": "Role0"
+                },
+                {
+                    "ref": "ID000",
+                    "cmd:Role": "Role1"
+                }
+            ]
+        }}
+    },
+    "cmd:IsPartOfList": {"cmd:IsPartOf": "http://www.oxygenxml.com/"},
+    "cmd:Components": {"cmdp:SpeechCorpusProfile": {
+        "cmdp:GeneralInfo": {
+            "cmdp:ResourceName": "ResourceName0",
+            "cmdp:ResourceTitle": "ResourceTitle0",
+            "cmdp:ResourceClass": "Lexicon",
+            "cmdp:Version": "Version0",
+            "cmdp:LifeCycleStatus": "planned",
+            "cmdp:StartYear": 2006,
+            "cmdp:CompletionYear": 2006,
+            "cmdp:PublicationDate": "PublicationDate0",
+            "cmdp:LastUpdate": "LastUpdate0",
+            "cmdp:TimeCoverage": "TimeCoverage0",
+            "cmdp:LegalOwner": "LegalOwner0",
+            "cmdp:Genre": "Genre0",
+            "cmdp:FieldOfResearch": "FieldOfResearch0",
+            "cmdp:Location": {
+                "cmdp:Address": "Address0",
+                "cmdp:Region": "Region0",
+                "cmdp:Country": {
+                    "cmdp:CountryName": "CountryName0",
+                    "cmdp:CountryCoding": "AD"
+                },
+                "cmdp:AuthoritativeIDs": {"cmdp:AuthoritativeID": {
+                    "cmdp:id": "http://www.oxygenxml.com/",
+                    "cmdp:issuingAuthority": "VIAF"
+                }}
+            },
+            "cmdp:Descriptions": {"cmdp:Description": "Description0"},
+            "cmdp:tags": {"cmdp:tag": "tag0"},
+            "cmdp:ModalityInfo": {
+                "cmdp:Modalities": "spoken",
+                "cmdp:Descriptions": {"cmdp:Description": "Description1"}
+            }
+        },
+        "cmdp:Project": {
+            "cmdp:ProjectName": "ProjectName0",
+            "cmdp:ProjectTitle": "ProjectTitle0",
+            "cmdp:ProjectID": "ProjectID0",
+            "cmdp:Url": "http://www.oxygenxml.com/",
+            "cmdp:Funder": {
+                "cmdp:fundingAgency": "fundingAgency0",
+                "cmdp:fundingReferenceNumber": "fundingReferenceNumber0",
+                "cmdp:AuthoritativeIDs": {"cmdp:AuthoritativeID": {
+                    "cmdp:id": "http://www.oxygenxml.com/",
+                    "cmdp:issuingAuthority": "VIAF"
+                }}
+            },
+            "cmdp:Institution": {
+                "cmdp:Department": "Department0",
+                "cmdp:Url": "Url0",
+                "cmdp:Organisation": "",
+                "cmdp:Descriptions": {"cmdp:Description": "Description2"}
+            },
+            "cmdp:Cooperations": {
+                "cmdp:Descriptions": {"cmdp:Description": "Description3"},
+                "cmdp:Cooperation": {
+                    "cmdp:CooperationPartner": "CooperationPartner0",
+                    "cmdp:Organisation": "Organisation0"
+                }
+            },
+            "cmdp:Person": {
+                "cmdp:firstName": "firstName0",
+                "cmdp:lastName": "lastName0",
+                "cmdp:role": "role0",
+                "cmdp:AuthoritativeIDs": {"cmdp:AuthoritativeID": {
+                    "cmdp:id": "http://www.oxygenxml.com/",
+                    "cmdp:issuingAuthority": "VIAF"
+                }}
+            },
+            "cmdp:Descriptions": {"cmdp:Description": "Description4"},
+            "cmdp:Duration": {
+                "cmdp:StartYear": "StartYear0",
+                "cmdp:CompletionYear": "CompletionYear0"
+            }
+        },
+        "cmdp:Publications": {
+            "cmdp:Publication": {
+                "cmdp:PublicationTitle": "PublicationTitle0",
+                "cmdp:resolvablePID": "resolvablePID0",
+                "cmdp:Author": "",
+                "cmdp:Descriptions": {"cmdp:Description": "Description5"}
+            },
+            "cmdp:Descriptions": {"cmdp:Description": "Description6"}
+        },
+        "cmdp:Creation": {
+            "cmdp:Topic": "Topic0",
+            "cmdp:Creators": {
+                "cmdp:Person": {
+                    "cmdp:firstName": "firstName1",
+                    "cmdp:lastName": "lastName1",
+                    "cmdp:role": "role1"
+                },
+                "cmdp:Descriptions": {"cmdp:Description": "Description7"}
+            },
+            "cmdp:CreationToolInfo": {
+                "cmdp:CreationTool": "CreationTool0",
+                "cmdp:ToolType": "ToolType0",
+                "cmdp:Version": "Version1",
+                "cmdp:Url": "http://www.oxygenxml.com/",
+                "cmdp:Descriptions": {"cmdp:Description": "Description8"}
+            },
+            "cmdp:Annotation": {
+                "cmdp:AnnotationMode": "AnnotationMode0",
+                "cmdp:AnnotationStandoff": "AnnotationStandoff0",
+                "cmdp:InterannotatorAgreement": "InterannotatorAgreement0",
+                "cmdp:AnnotationFormat": "AnnotationFormat0",
+                "cmdp:SegmentationUnits": {"cmdp:SegmentationUnit": "grapheme"},
+                "cmdp:AnnotationTypes": {"cmdp:AnnotationType": {"cmdp:AnnotationLevelType": "AnnotationLevelType0"}},
+                "cmdp:AnnotationToolInfo": "",
+                "cmdp:Descriptions": {"cmdp:Description": "Description9"}
+            },
+            "cmdp:Source": {
+                "cmdp:OriginalSource": "OriginalSource0",
+                "cmdp:SourceType": "SourceType0",
+                "cmdp:MediaFiles": {"cmdp:MediaFile": {
+                    "cmdp:CatalogueLink": "CatalogueLink0",
+                    "cmdp:Type": "Unknown",
+                    "cmdp:Quality": 1,
+                    "cmdp:RecordingConditions": "RecordingConditions0",
+                    "cmdp:Position": {
+                        "cmdp:PositionType": "PositionType0",
+                        "cmdp:StartPosition": "StartPosition0",
+                        "cmdp:EndPosition": "EndPosition0"
+                    },
+                    "cmdp:Access": {"cmdp:Contact": {
+                        "cmdp:email": "email0",
+                        "cmdp:role": "role2",
+                        "cmdp:Address": {
+                            "cmdp:street": "street0",
+                            "cmdp:ZIPCode": "ZIPCode0",
+                            "cmdp:city": "city0"
+                        }
+                    }}
+                }},
+                "cmdp:Derivation": "",
+                "cmdp:Descriptions": {"cmdp:Description": "Description10"}
+            },
+            "cmdp:Descriptions": {"cmdp:Description": "Description11"}
+        },
+        "cmdp:Documentations": {
+            "cmdp:Documentation": {
+                "cmdp:DocumentationType": "DocumentationType0",
+                "cmdp:FileName": "FileName0",
+                "cmdp:Url": "Url1",
+                "cmdp:DocumentationLanguages": {"cmdp:DocumentationLanguage": {"cmdp:Language": {
+                    "cmdp:LanguageName": "LanguageName0",
+                    "cmdp:ISO639": {"cmdp:iso-639-3-code": "aaa"}
+                }}},
+                "cmdp:Descriptions": {"cmdp:Description": "Description12"}
+            },
+            "cmdp:Descriptions": {"cmdp:Description": "Description13"}
+        },
+        "cmdp:SpeechCorpusContext": {
+            "cmdp:Modalities": "speech",
+            "cmdp:MediaType": "MediaType0",
+            "cmdp:SpeechCorpus": {
+                "cmdp:DurationOfEffectiveSpeech": "DurationOfEffectiveSpeech0",
+                "cmdp:DurationOfFullDatabase": "DurationOfFullDatabase0",
+                "cmdp:NumberOfSpeakers": 0,
+                "cmdp:RecordingEnvironment": "home/office",
+                "cmdp:SpeakerDemographics": "SpeakerDemographics0",
+                "cmdp:Quality": 1,
+                "cmdp:RecordingPlatformHardware": "RecordingPlatformHardware0",
+                "cmdp:RecordingPlatformSoftware": "RecordingPlatformSoftware0",
+                "cmdp:SpeechTechnicalMetadata": ""
+            },
+            "cmdp:Multilinguality": {"cmdp:Multilinguality": "Monolingual"},
+            "cmdp:AnnotationTypes": {
+                "cmdp:AnnotationType": {"cmdp:AnnotationType": "Unknown"},
+                "cmdp:Description": {"cmdp:Description": "Description14"}
+            },
+            "cmdp:SubjectLanguages": {
+                "cmdp:NumberOfLanguages": 0,
+                "cmdp:SubjectLanguage": {"cmdp:Language": {
+                    "cmdp:LanguageName": "LanguageName1",
+                    "cmdp:ISO639": {"cmdp:iso-639-3-code": "aaa"}
+                }},
+                "cmdp:Descriptions": {"cmdp:Description": "Description15"}
+            },
+            "cmdp:TypeSpecificSizeInfo": {"cmdp:TypeSpecificSize": ""}
+        },
+        "cmdp:Access": {
+            "cmdp:Availability": "Availability0",
+            "cmdp:DistributionMedium": "DistributionMedium0",
+            "cmdp:CatalogueLink": "http://www.oxygenxml.com/",
+            "cmdp:Price": "Price0",
+            "cmdp:Licence": "Licence0",
+            "cmdp:Contact": {
+                "cmdp:firstname": "firstname0",
+                "cmdp:lastname": "lastname0",
+                "cmdp:email": "email1",
+                "cmdp:telephoneNumber": "telephoneNumber0",
+                "cmdp:role": "role3",
+                "cmdp:Address": {
+                    "cmdp:street": "street1",
+                    "cmdp:ZIPCode": "ZIPCode1",
+                    "cmdp:city": "city1"
+                }
+            },
+            "cmdp:DeploymentToolInfo": {
+                "cmdp:DeploymentTool": "DeploymentTool0",
+                "cmdp:ToolType": "ToolType1",
+                "cmdp:Version": "Version2",
+                "cmdp:Url": "http://www.oxygenxml.com/",
+                "cmdp:Descriptions": {"cmdp:Description": "Description16"}
+            },
+            "cmdp:Descriptions": {"cmdp:Description": "Description17"}
+        },
+        "cmdp:ResourceProxyListInfo": {"cmdp:ResourceProxyInfo": {
+            "cmdp:ResProxItemName": "ResProxItemName0",
+            "cmdp:ResProxFileName": "ResProxFileName0",
+            "cmdp:CharacterEncoding": "CharacterEncoding0",
+            "cmdp:FileSize": "FileSize0",
+            "cmdp:SizeInfo": {"cmdp:TotalSize": {
+                "cmdp:Size": 0,
+                "cmdp:SizeUnit": "B"
+            }},
+            "cmdp:Descriptions": {"cmdp:Description": "Description18"},
+            "cmdp:LanguageScripts": {"cmdp:LanguageScriptGrp": {
+                "cmdp:ScriptName": "ScriptName0",
+                "cmdp:LanguageScript": "LanguageScript0"
+            }},
+            "cmdp:Checksums": ""
+        }}
+    }}
+}}

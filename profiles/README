@@ -1,4 +1,4 @@
-- get latest CMDI 1.2 schema from CLARIN component registry
-- open in Oxygen to generate sample XM file (with or without optionals
+- get latest CMDI 1.2 schema from CLARIN component registry (XSD)
+- open in Oxygen to generate sample XM file (with optionals)
 - then use Oxygen to generate JSON for sample XML file
 - repeat prior steps for all NaLiDa profiles; name them according to directory naming schema
