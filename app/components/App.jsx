@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-10-11 10:18:50 (zinn)>
+// Time-stamp: <2018-10-11 16:14:50 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -130,7 +130,7 @@ export default class App extends React.Component {
 			treeData: [{ name: 'SIP', isDirectory: false, isRoot: true}]
 		    },
 	    function() {
-		const bagLoader = new BagLoader( that.setState ); 
+		const bagLoader = new BagLoader( that ); 
 		bagLoader.loadBag( bagFile );
 	    }
 	)

@@ -3,11 +3,11 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagSaver.jsx
-// Time-stamp: <2018-10-11 09:12:20 (zinn)>
+// Time-stamp: <2018-10-15 14:12:00 (zinn)>
 // -------------------------------------------
 
 import BagIt from '../my-bag-it/index.js';
-import CMDIHandler from './CMDIHandler';
+import CMDIProducer from './CMDIProducer.js';
 import crypto from 'crypto';
 import md5 from 'md5';
 import shajs from 'sha.js';
@@ -15,7 +15,6 @@ import path from 'path';
 import JSZip from 'jszip';
 import uuid from 'uuid';
 import {softwareVersion} from 'util';
-import {getFlatDataFromTree} from 'react-sortable-tree';
 
 var FileSaver = require('file-saver');
 var fileReaderStream = require('filereader-stream')
@@ -27,7 +26,6 @@ export default class BagSaver {
 	this.state = state;
 	this.parentSetState = parentSetState;
 
-	this.bagItHelper = this.bagItHelper.bind(this);
 	this.generateZIP = this.generateZIP.bind(this);
 	this.generateZIPHelper = this.generateZIPHelper.bind(this);
 	this.bagCMDI = this.bagCMDI.bind(this);
@@ -44,9 +42,11 @@ export default class BagSaver {
     }    
     
     bagCMDI( bag, cmdiProxyListInfoFragment ) {
+
+	console.log('BagSaver/bagCMDI', bag, cmdiProxyListInfoFragment);
 	// generate CMDI file 
-	const cmdiHandler = new CMDIHandler( this.state );
-	const cmdi        = cmdiHandler.finaliseCMDI( cmdiProxyListInfoFragment );
+	const cmdiProducer = new CMDIProducer( this.state );
+	const cmdi        = cmdiProducer.finaliseCMDI( cmdiProxyListInfoFragment );
 	const cmdiFile    = new File([cmdi], "cmdi.xml", {type: "application/xml"});
 	const that = this;
 	// add CMDI file to the bag
@@ -73,10 +73,6 @@ export default class BagSaver {
     saveBag() {
 	const that = this;
 	const getNodeKey = ({ treeIndex }) => treeIndex;
-	const flattenedFileTree = getFlatDataFromTree(
-	    { treeData: that.state.treeData,
-	      getNodeKey: getNodeKey
-	    });
 	const id = uuid.v4();
 
 	// see https://github.com/jvilk/BrowserFS
@@ -103,84 +99,100 @@ export default class BagSaver {
 				  'Bag-Size'     : that.bagSize()
 				});
 		
-		console.log('BagSaver/saveBag', flattenedFileTree);
-		if ( !(flattenedFileTree[0].node.children === undefined)) {
-		    var entryPoints = flattenedFileTree[0].node.children; // all childrens of the SIP root node
-		    if (entryPoints.length > 0)
-			that.bagItHelper( bag, '', entryPoints, [] );         // bagDirectory at root ''
-		} else {
-		    console.log('No files have been added to SIP');
-		    that.bagCMDI( bag, [] ) 
-		}
+		console.log('BagSaver/saveBag tree', that.state.treeData);
+		const entryPoints = ( (that.state.treeData[0].children === undefined) ? [] : that.state.treeData[0].children );
+		const cmdiProxyListInfoFragment =  that.flattenTree('', entryPoints, []);
+		console.log('constructing', bag, '', cmdiProxyListInfoFragment);
+		that.bagHelper( bag,
+				cmdiProxyListInfoFragment,
+				cmdiProxyListInfoFragment);
 	    }
 	})
     }
 
-    bagItHelper(bag, currentPath, [ head, ...tail ], cmdiProxyListInfoFragment) {
+    /* flatten the SIP tree
+       - use own variant rather than method 'getFlatDataFromTree' provided by react-sortable-tree
+       - returns flat list with 'proper' path information
+    */
+    
+    flattenTree(currentPath, [ head, ...tail ], cmdiProxyListInfoFragment) {
 
+	if (head === undefined && !(tail.length)) {
+	    return cmdiProxyListInfoFragment;
+	} else if (head.isDirectory) {
+	    cmdiProxyListInfoFragment.push( {path: path.join(currentPath, head.name),
+					     isDirectory: true,
+					     name: head.name,
+					     size: head.size,
+					     type: head.type });	    	    	    
+	    return this.flattenTree(currentPath,
+				    tail,
+				    this.flattenTree(path.join(currentPath, head.name),
+						     head.children,
+						     cmdiProxyListInfoFragment));
+	    
+	} else {
+	    cmdiProxyListInfoFragment.push( {path: path.join(currentPath, head.name),
+					     isDirectory: false,
+					     file: head.file,
+					     name: head.name,
+					     size: head.size,
+					     type: head.type });
+	    return this.flattenTree(currentPath,
+				    tail,	    
+				    cmdiProxyListInfoFragment);
+	}
+    }
+    
+    bagHelper(bag, cmdiProxyListInfoFragment, [ head, ...tail ]) {
 	const that = this;
 	
 	if (head === undefined && !tail.length) {
-	    return;
-	}
-
-	// there is a tail
-	if (tail.length) {
-	    // process head
-	    if (head.isDirectory) {
-		// make a new directory
-		bag.mkdir(path.join(currentPath, head.name), function() {
-		    // process the directory's children
-		    that.bagItHelper(bag, path.join(currentPath, head.name), head.children, cmdiProxyListInfoFragment);
-		    // process the tail
-		    that.bagItHelper(bag, currentPath, tail, cmdiProxyListInfoFragment);
-		});
-	    } else {
-		// read the head and pipe it into the bag stream
-		fileReaderStream(head.file) // ;bag.createReadStream(head.file) fromBlob
-		    .pipe(bag.createWriteStream(path.join(currentPath, head.name), {}, function() {
-			// update the CMDI helper structure
-			cmdiProxyListInfoFragment.push( {path: path.join(currentPath, head.name),
-							 //name: 'data/'+head.name,
-							 name: head.name,
-							 size: head.size,
-							 type: head.type });
-			// process the tail (with update CMDI helper structure
-			that.bagItHelper(bag, currentPath, tail, cmdiProxyListInfoFragment);
-		   }))
-	    }
+	    that.bagCMDI( bag, cmdiProxyListInfoFragment );
+	} else if (head.isDirectory) {
+	    //console.log('head I', head);	    
+	    bag.mkdir(head.path, function() {
+		that.bagHelper(bag, cmdiProxyListInfoFragment, tail)
+	    })
 	} else {
-	    // only head there
-	    if (head.isDirectory) {
-		bag.mkdir(path.join(currentPath, head.name), function(){
-		    that.bagItHelper(bag, path.join(currentPath, head.name), head.children, cmdiProxyListInfoFragment);
-		});		
-	    } else {
-		fileReaderStream(head.file) // ;bag.createReadStream(head.file) fromBlob		
-		    .pipe(bag.createWriteStream(
-			path.join(currentPath, head.name),
-			{},
-			function() {
-			    cmdiProxyListInfoFragment.push( {path: path.join(currentPath, head.name),
-							     //name: 'data/'+head.name,
-							     name: head.name,							     
-							     size: head.size,
-							     type: head.type });
-
-			    that.bagCMDI( bag, cmdiProxyListInfoFragment );
-			}
-		    ))
-	    }
+	    //console.log('head II', head);
+	    fileReaderStream(head.file) // ;bag.createReadStream(head.file) fromBlob
+		.pipe(bag.createWriteStream(head.path, {}, function() {	    
+		    that.bagHelper(bag,
+				   cmdiProxyListInfoFragment,
+				   tail);
+		}))
 	}
     }
+    
 
-    //
+    /* this is the continuation-passing-style of the tree-recursive subst function
+       the same principle will be applied above
+
+       example call with identity function: 
+              subst( 6, 99, [1,2,3,[4,5], 6, 7, [8,9]], (v) => v);
+    */
+    subst( s1, s2, term, newTerm ) {
+	const loop = (s, k) => {
+	    if (s == s1) {
+		return k(s2);
+	    } else if ((s === undefined) || (s.length == 0) || typeof(s) == 'number') {
+		return k(s);
+	    } else {
+		return loop( s[0], v1 => loop(s.slice(1), v2 => k( [v1].concat(v2) )))
+	    }
+	}
+	return loop(term, newTerm);
+    }
+
     generateZIP( bag, cmdiProxyListInfoFragment ) {
+
+	// this.subst( 6, 99, [1,2,3,[4,5], 6], (v) => v);
 
 	const that = this;
 	const zip = new JSZip();
 
-	console.log('BagSaver/generateZIP', bag, cmdiProxyListInfoFragment);	
+	//console.log('BagSaver/generateZIP', bag, cmdiProxyListInfoFragment);	
 
 	// use this, rather than the manifest file?
 	bag.readdir('', function(err, data) {
@@ -238,6 +250,9 @@ export default class BagSaver {
 	    c_binary = false;
 	}
 	*/
+	/* TODO INCOMPLETE!" */
+	/* ----------------- */
+	
 	if (tail.length) {
 	    mimetype = that.getMimetype(head.name, cmdiProxyListInfoFragment);
 	    if ( (! (mimetype == undefined)) && (mimetype.includes("text/"))) {
@@ -257,7 +272,7 @@ export default class BagSaver {
 	} else {
 	    zip.generateAsync({type:"blob"}).then(function (blob) { 
 		that.parentSetState( { zip: blob } );
-		FileSaver.saveAs(blob, "projectName.zip");
+		FileSaver.saveAs(blob, that.state.researchers[0].lastName + ".zip");
 	    })
 	}
     }

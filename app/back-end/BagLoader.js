@@ -3,15 +3,14 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagLoader.jsx
-// Time-stamp: <2018-10-11 10:20:13 (zinn)>
+// Time-stamp: <2018-10-12 11:15:17 (zinn)>
 // -------------------------------------------
 
-import JSZip from 'jszip';
+
+
 import { readCMDI } from '../back-end/util';
 import BagIt from '../my-bag-it/index.js';
-import SortableTree, {addNodeUnderParent} from 'react-sortable-tree';
-var fileReaderStream = require('filereader-stream');
-
+import SortableTree, {addNodeUnderParent, find} from 'react-sortable-tree';
 
     /* User loaded single application/zip file that contains a bag
        Given the bag's information, it is required to:
@@ -30,53 +29,9 @@ var fileReaderStream = require('filereader-stream');
 
 export default class BagLoader {
 
-    constructor(setStateFun) {
-	this.setStateFun = setStateFun;
-	this.onDropBagFileHelper  = this.onDropBagFileHelper.bind(this);
-	this.loadBag              = this.loadBag.bind(this);
-    }
-
-    onDropBagFileHelper( resourceProxyList, resourceProxyListInfo ) {
-	const getNodeKey = ({ treeIndex }) => treeIndex;
-	var parentKey = this.state.parentKey;
-
-	console.log('App/onDropBagFileHelper', resourceProxyList, resourceProxyListInfo,
-		    resourceProxyList.length, resourceProxyListInfo.length );
-	
-	if (! (resourceProxyList.length == resourceProxyListInfo.length) ) {
-	    alert("Conflict in ResourceProxy information");
-	} else {
-	    for (var i=0; i<resourceProxyList.length; i++) {
-		console.log('App/onDropBagFileHelper',
-			    resourceProxyList[i]["cmd:ResourceProxy"]["cmd:ResourceRef"]["_text"], '::',
-			    resourceProxyList[i]["cmd:ResourceProxy"]["cmd:ResourceType"]["mimetype"]["_text"],'::',
-			    
-			    resourceProxyListInfo[i]["cmdp:ResourceProxyInfo"]["cmdp:FileSize"]["_text"],'::',
-			    resourceProxyListInfo[i]["cmdp:ResourceProxyInfo"]["cmdp:ResProxFileName"]["_text"],'::',
-			    resourceProxyListInfo[i]["cmdp:ResourceProxyInfo"]["cmdp:ResProxItemName"]["_text"] );
-
-		let fileSize = resourceProxyListInfo[i]["cmdp:ResourceProxyInfo"]["cmdp:FileSize"]["_text"];
-		let fileName = resourceProxyListInfo[i]["cmdp:ResourceProxyInfo"]["cmdp:ResProxFileName"]["_text"];
-		let fileType = resourceProxyList[i]["cmd:ResourceProxy"]["cmd:ResourceType"]["mimetype"]["_text"]
-
-		fileName = fileName.replace('data/', ''); 
-    		this.setStateFun( (state) => {
-		    return {treeData : addNodeUnderParent({ treeData: state.treeData,
-							    parentKey: parentKey,
-							    expandParent: true,
-							    getNodeKey,
-							    newNode: {
-								file: "readFromSIP", // needs to be fetched from bag
-								name: fileName,
-								isDirectory: false, 
-								size: fileSize,
-								type: fileType,
-								date: "no one cares"
-							    },
-							  }).treeData
-			   };
-		})
-	    }}
+    constructor(parentState) {
+	console.log('BagLoader/constructor', parentState);
+	this.parentState = parentState;
     }
 
     /* loads the bag into the browser's state so that UI forms get set to the resp. values
@@ -94,6 +49,8 @@ export default class BagLoader {
     */
 
     loadBag(zipFile) {
+
+	const that = this;
 	var output = undefined;
 	var data = undefined;
 	var array = undefined;
@@ -120,38 +77,186 @@ export default class BagLoader {
 			}
 		    },
 		}
-	    }, function(e) {
-		if (e) {
+	    }, function(error) {
+		if (error) {
 		    // An error occurred.
-		    throw e;
+		    console.log("AN ERROR HAS OCCURED");
+		    throw error;
+		} else {
+		    // file system is ready to use.
+		    var fs = BrowserFS.BFSRequire('fs');
+		    fs.readdir('/zip', function(e, contents) {
+			if (e) {
+			    console.log("ERROR when reading zip directory", contents);
+			} else {
+			    console.log('SUCCESS when reading zip directory', contents);
+			    that.readProfileFromZip(fs, contents[0]);
+			    that.readCMDIFromZip(fs, contents[0]);
+			    that.readFileTreeFromZip(fs, contents[0]);
+			}
+		    });
 		}
-		var fs = BrowserFS.BFSRequire('fs');
-		fs.readdir('/zip/bag-d8abf2f5-6301-43d1-ac2e-4ba840f85a0c/data', function(e, contents) {
-		    console.log('reading /zip/bag-d8abf2f5-6301-43d1-ac2e-4ba840f85a0c/data', contents);
-		});		// Otherwise, BrowserFS is ready to use!
 	    })
 	}
 
 	fr.readAsArrayBuffer(zipFile);
     }
-	
-    populateFileTree() {
-    	var bag = BagIt('/bag', 'sha256', {'Contact-Name': 'Claus Zinn'}); // 
-	that.bagItHelper(zip, bag, entries);
-	
-	let cmdiFilePromise = zip.file("/bag/data/cmdi.xml").async("string") // arraybuffer
-	cmdiFilePromise.then(
-	    function(cmdiData) {
-		let result = readCMDI(cmdiData);
-		console.log('BagLoader/loadBag', result, that.setStateFun); // 
-		console.log('App/onDropBagFile', result, that);
-		that.onDropBagFileHelper( result.resourceProxyList, result.resourceProxyListInfo ); // populate the file tree
-		
-		
-		setParentState(			
-		    state => ({ profile: result.profile }));
-	    },
-	    function(error) {
-		console.log('BagLoader/loadBag: error case', error);
-	    });
+
+    // read data/.profile
+    readProfileFromZip(fs, bagDir) {
+	fs.readFile('/zip/'+bagDir+'/data/.profile', function(err, contents) {
+	    console.log('BagLoader/readProfileFromZip', contents.toString());
+	})
     }
+
+    // read data/cmdi.xml 
+    readCMDIFromZip(fs, bagDir) {
+	fs.readFile('/zip/'+bagDir+'/data/cmdi.xml', function(err, contents) {
+	    var parseString = require('xml2js').parseString;
+	    parseString(contents, function (err, result) {
+		console.log(result);
+	    });
+
+	    // alternatively
+	    const relCMDI = readCMDI(contents);
+	    console.log('relCMDI', relCMDI);
+	})
+    }
+
+    // read file structure, using manifest file
+    readFileTreeFromZip(fs, bagDir) {
+
+    	var bag = BagIt('/zip/'+bagDir, 'sha256');
+	const that = this;
+	bag.readFileNoCheck( bag.manifest, 'utf-8', function(err, data) {
+	    if (err) {
+		return console.log('Error reading manifest', err, bag);
+	    } else {
+		console.log('entire file:', data);
+		var lines = data.split('\n');
+		var files = [];
+		for(var i = 0;i < lines.length;i++){
+		    if (lines[i] == "") {
+			console.log('empty line', lines[i]);
+		    } else {
+			var lineInfo = lines[i].split(' data/');
+			console.log('line', i, lineInfo[1]);
+			files.push( lineInfo[1] );
+		    }
+		}
+		// sort the files alphabetically
+		files = files.sort();
+		console.log('BagLoader/readFileTreeFromZip', files);	    
+		that.readFileTreeFromZipHelper(fs, bagDir, files);
+	    }
+	})
+    }
+
+    ignoreFile( file ) {
+	return ( ( file == "cmdi.xml") ||
+		 ( file == ".profile" ) )
+    }
+
+    isDirectory( file ) {
+	return file.substr(-1) == "/";
+    }
+
+    findNode( nodeName ) {
+	const keyFromTreeIndex = ({ treeIndex }) => treeIndex;
+	const keyFromKey = ({ node }) => node.key;
+	const commonArgs = {
+	    searchQuery: nodeName,
+	    searchMethod: ({ node, searchQuery }) => node.name === searchQuery,
+	    expandAllMatchPaths: false,
+	    expandFocusMatchPaths: true,
+	    getNodeKey: keyFromTreeIndex,
+	    searchFocusOffset: 0,
+	};
+
+	const treeData = this.parentState.state.treeData;
+	const results = find({ ...commonArgs, treeData });
+	if (results.matches.length) {
+	    return results.matches[0];
+	} else {
+	    return undefined;
+	}
+    }
+    
+    // reading from the zip file does not give us a file's date or mimetype
+    // for this, we might need to consult the cmdi.xml
+    readFileTreeFromZipHelper(fs, bagDir, [ head, ...tail ]) {
+	const that = this;
+	const getNodeKey = ({ treeIndex }) => treeIndex;
+	const parentKey = that.findNode("experiments");
+
+	console.log('BagLoader/readFileTreeFromZipHelper ==>', parentKey);
+	
+	if (tail.length) {
+	    // process head
+	    fs.readFile('/zip/'+bagDir+'/data/'+head, function(err, data) {
+		if (err) {
+		    console.log('readFileTreeFromZipHelper: error in reading', '/zip/'+bagDir+'/data/'+head, err);
+		} else {
+		    console.log('readFileTreeFromZipHelper: success in reading', head, data, data.length);
+		    if ( ! that.ignoreFile( head )  ) {
+			that.parentState.setState( (state) => {
+			  return {treeData : addNodeUnderParent({ treeData: state.treeData,
+								  parentKey: parentKey,
+								  expandParent: true,
+								  getNodeKey,
+								  newNode: {
+								      file: (that.isDirectory(head) ? null : data) ,
+								      name: head,
+								      isDirectory: that.isDirectory(head),
+								      size: (that.isDirectory(head) ? 0 : data.length),
+								      type: "unknown",
+								      date: "no one cares"
+								  },
+								}).treeData
+				 };
+			})
+		    }
+		    // recur on tail
+		    that.readFileTreeFromZipHelper(fs, bagDir, tail);
+		}
+	    })
+	} else {
+	    // process head (tail is nil)
+	    fs.readFile('/zip/'+bagDir+'/data/'+head, function(err, data) {
+		if (err) {
+		    console.log('readFileTreeFromZipHelper/term: error in reading', '/zip/'+bagDir+'/data/'+head, err);
+		} else {
+		    console.log('readFileTreeFromZipHelper/term: success in reading', head, data, data.length);
+		    if ( ! that.ignoreFile( head )  ) {		    
+			that.parentState.setState( (state) => {
+			    return {treeData : addNodeUnderParent({ treeData: state.treeData,
+								    parentKey: parentKey,
+								    expandParent: true,
+								    getNodeKey,
+								    newNode: {
+									file: (that.isDirectory(head) ? null : data),
+									name: head,
+									isDirectory: that.isDirectory(head),
+									size: (that.isDirectory(head) ? 0 : data.length),
+									type: "unknown",
+									date: "no one cares"
+								    },
+								  }).treeData
+				   };			
+			})
+		    }
+		}
+	    })
+	}
+    }
+
+
+
+	// zip bag-info.txt file
+	/*
+	bag.readFileNoCheck( bag.dir+'/bag-info.txt', 'utf-8', function(err, data) {
+	    if (err) return console.log('Error reading bag-info.txt file', err, bag)
+	    console.log('bag-info', data);
+	})
+	*/
+}

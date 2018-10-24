@@ -2,15 +2,15 @@
 // Jack The SIPper
 // 2018- Claus Zinn, University of Tuebingen
 // 
-// File: CMDIHandler.jsx
-// Time-stamp: <2018-10-10 13:17:54 (zinn)>
+// File: CMDIProducer.jsx
+// Time-stamp: <2018-10-15 18:08:25 (zinn)>
 // -------------------------------------------
 
 import xmlbuilder from 'xmlbuilder';
 import {instantiateTextCorpusProfile,
 	instantiateResourceProxyListInfo} from '../templates/TextCorpusProfile-CMDI1.2_template.js';
 
-export default class CMDIHandler {
+export default class CMDIProducer {
     constructor( state ) {
 	if (state.profile == "textCorpus") {
 	    this.cmdiInstance = instantiateTextCorpusProfile( state.project,
@@ -23,6 +23,7 @@ export default class CMDIHandler {
     }
 	
     finaliseCMDI( proxyListInfoArray ) {
+	console.log('CMDIProducer/finaliseCMDI', proxyListInfoArray);
 	if (this.cmdiInstance == undefined) return
 
 	const lists  = this.generateResourceProxyLists( proxyListInfoArray );
@@ -50,6 +51,7 @@ export default class CMDIHandler {
 	let resourceProxyLists = [];
 	let resourceProxyListInfos = [];		
 
+	if (fileInfo === undefined) return;
 	// 1. collect all json structures
 	for (var i = 0; i < fileInfo.length; i++) {
 	    intermediateResult.push(
@@ -63,8 +65,8 @@ export default class CMDIHandler {
 
 	// 2. reshuffle to correct place
 	for (var i = 0; i < intermediateResult.length; i++) {
-	    console.log('pushing list', intermediateResult[i].ResourceProxyList);
-	    console.log('pushing info', intermediateResult[i].ResourceProxyListInfo);	    
+	    //console.log('pushing list', intermediateResult[i].ResourceProxyList);
+	    //console.log('pushing info', intermediateResult[i].ResourceProxyListInfo);	    
 	    resourceProxyLists.push(    intermediateResult[i].ResourceProxyList);
 	    resourceProxyListInfos.push(intermediateResult[i].ResourceProxyListInfo);
 	}
@@ -74,7 +76,7 @@ export default class CMDIHandler {
 	    ResourceProxyListInfo: resourceProxyListInfos
 	};
 	
-	console.log('CMDIHandler/generateResourceProxyLists', result);
+	console.log('CMDIProducer/generateResourceProxyLists', result);
 	
 	return result;
     }
