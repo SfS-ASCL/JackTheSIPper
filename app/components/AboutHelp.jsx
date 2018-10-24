@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: AboutHelp.jsx
-// Time-stamp: <2018-09-28 15:02:47 (zinn)>
+// Time-stamp: <2018-10-24 10:25:02 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -40,7 +40,7 @@ class AboutHelpText extends React.Component {
   }
   render() {
     return <ModalContainer onClose={this.props.onClose}>
-        <ModalDialog onClose={this.props.onClose} className="devHelpDialog" width={800} top={100}>
+        <ModalDialog onClose={this.props.onClose} className="devHelpDialog" width={800} top={100} margin={50}>
           <div className="content" id="about">
 	  
             <h2>About</h2>
