@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-10-24 13:02:24 (zinn)>
+// Time-stamp: <2018-10-25 12:22:50 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -15,11 +15,9 @@ import PropTypes from 'prop-types';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Button, ButtonToolbar } from 'react-bootstrap';
 
-import { softwareVersion, sleep, readCMDI } from '../back-end/util';
+import { softwareVersion, readCMDI } from '../back-end/util';
 import AboutHelp from './AboutHelp.jsx';
 import UserHelp from './UserHelp.jsx';
-
-var Readable = require('stream').Readable
 
 import uuid from 'uuid';
 
@@ -48,6 +46,7 @@ import BagLoaderViewer from './BagLoaderViewer';
 
 // uploading to NC
 import Uploader from '../back-end/Uploader';
+
 
 export default class App extends React.Component {
 
@@ -152,7 +151,6 @@ export default class App extends React.Component {
     }
 
     submitSIP() {
-	console.log('submitSIP', this.state, blob, file);
 
 	if (this.state.zip == undefined) {
 	    alert("Your research data package is empty. Please define your SIP first.");

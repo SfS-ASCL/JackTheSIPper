@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: AboutHelp.jsx
-// Time-stamp: <2018-10-24 10:25:02 (zinn)>
+// Time-stamp: <2018-10-25 09:56:53 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -77,10 +77,8 @@ class AboutHelpText extends React.Component {
               <li><a href="https://facebook.github.io/react/">ReactJS</a> (version 15.6.1)</li>
 	      <li><a href="https://nodejs.org/en/">Nodejs</a> (version 8.11.1)</li>
 	      <li><a href="https://www.npmjs.com">Javascript package manager npm</a> (version 5.6.0)</li>
-	      <li><a href="http://alt.js.org/docs/components/altContainer/">altjs</a> (version 0.18.6)</li>
 	      <li><a href="https://webpack.github.io">Webpack Javascript module bundler</a>(version 4.12.0)</li>
 	      <li><a href="http://www.json.org">JSON (JavaScript Object Notation)</a></li>
-              <li><a href="http://tika.apache.org/">Apache Tika (tika-server-1.16.jar)</a></li>
             </ul>
 	    
 	    <p>

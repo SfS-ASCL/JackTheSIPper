@@ -2,9 +2,18 @@
 // Jack The SIPper
 // 2018- Claus Zinn, University of Tuebingen
 // 
-// File: util.jsx
-// Time-stamp: <2018-10-10 11:46:00 (zinn)>
+// File: util.js
+// Time-stamp: <2018-10-25 15:14:14 (zinn)>
 // -------------------------------------------
+
+import xmlbuilder from 'xmlbuilder';
+
+/*
+import {instantiateTextCorpusProfile,
+	instantiateResourceProxyListInfo} from '../templates/TextCorpusProfile-CMDI1.2_template.js';
+*/
+
+var convert = require('xml-js');
 
 export const ncUser         = process.env.NC_USER;
 export const ncPass         = process.env.NC_PASS;
@@ -13,21 +22,8 @@ export const emailContact        = process.env.CONTACT;
 export const emailContactCommand = "mailto:"+emailContact+"?subject=SFB833 - Jack the SIPper";
 export const fileStorageServer   = '/nextcloud/';
 
-var convert = require('xml-js');
-
-export function sleep_inactive(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-export function sleep(millis)
+export function rewriteURL( fileURL )
 {
-    var date = new Date();
-    var curDate = null;
-    do { curDate = new Date(); }
-    while(curDate-date < millis);
-}
-
-export function rewriteURL( fileURL ) {
     const href = window.location.origin.concat(window.location.pathname);
     var corsLink = "";
     if ( fileURL.indexOf("https://weblicht.sfs.uni-tuebingen.de/nextcloud") !== -1 ) {
@@ -37,14 +33,11 @@ export function rewriteURL( fileURL ) {
     return href.concat(corsLink);                            
 }
 
-export function readCMDI( xmlData ) {
+export function readCMDI( xmlData )
+{
     // read xml data into js object
     const cmdiJS = convert.xml2js(xmlData, {compact: true, spaces: 4});
-
-    console.log('util/readCMDI', cmdiJS);
-    // read xml data into text:
     //	const cmdiJSON = convert.xml2json(xmlData, {compact: true, spaces: 4});
-    //	console.log('util/readCMDI', cmdiJSON);	
     
     // depending on the profile (todo: to be stored in the bag)
     const projectStr = cmdiJS["cmd:CMD"]["cmd:Components"]["cmdp:TextCorpusProfile"]["cmdp:Project"];
@@ -72,7 +65,6 @@ export function readCMDI( xmlData ) {
     
     let resourceProxyList =     cmdiJS["cmd:CMD"]["cmd:Resources"]["cmdp:ResourceProxyList"];
     let resourceProxyListInfo = cmdiJS["cmd:CMD"]["cmd:Components"]["cmdp:TextCorpusProfile"]["cmdp:ResourceProxyListInfo"];
-    
 
     return { "licence"   : licence,
 	     "researcher": researcher,
@@ -80,7 +72,153 @@ export function readCMDI( xmlData ) {
 	     "profile"   : profile,
 	     "resourceProxyList":     resourceProxyList,
 	     "resourceProxyListInfo": resourceProxyListInfo
-	   }
+	   };
 }
+
+
+export function getCMDIInstance( profile )
+{
+    let json = {};
+    switch (profile) {
+    case "textCorpus":
+	json = require('../profiles/instance_json/TextCorpusProfile_instance.json');	    
+	break;
+    case "lexicalResource":
+	json = require('../profiles/instance_json/LexicalResourceProfile_instance.json');	    	    
+	break;
+    case "speechCorpus":
+	json = require('../profiles/instance_json/SpeechCorpusProfile_instance.json');	    	    
+	break;
+    case "tool":
+	json = require('../profiles/instance_json/ToolProfile_instance.json');	    	    
+	break;
+    case "experiment":
+	json = require('../profiles/instance_json/ExperimentProfile_instance.json');	
+	break;
+    default:
+	// todo: create some simple OTHER profile.
+	json = require('../profiles/instance_json/TextCorpusProfile_instance.json');	    	
+    }
+
+    console.log('getCMDIInstance', json);
+    return json;
+}
+
+export function getProfilePath( profile ) {
+
+    let profilePath = undefined;
+    switch (profile) {
+    case "textCorpus":
+	profilePath = "cmdp:TextCorpusProfile";
+	break;
+    case "lexicalResource":
+	profilePath = "cmdp:LexicalResourceProfile";
+	break;
+    case "speechCorpus":
+	profilePath = "cmdp:SpeechCorpusProfile";
+	break;
+    case "tool":
+	profilePath = "cmdp:ToolProfile";
+	break;
+    case "experiment":
+	profilePath = "cmdp:ExperimentProfile";
+	break;
+    default:
+	// todo, create a simple OTHER profile
+	profilePath = "cmdp:TextCorpusProfile";
+    }
+    
+    return profilePath;
+}
+    
+export function attachProject( cmdi, profile, project ) {
+    console.log('attachProject', cmdi, profile, project);
+    let profilePath = getProfilePath( profile );
+    
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:ProjectName"] = project.name;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:ProjectTitle"] = project.name;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:Duration"]["cmdp:StartYear"] = project.status;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:Funder"]["cmdp:fundingAgency"] = project.context;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:Descriptions"]["cmdp:Description"] = project.descriptions;
+    
+    return cmdi;
+}
+
+export function attachResearchers( cmdi, profile, researchers ) {
+    let profilePath = getProfilePath( profile );
+
+    // only first researcher added here
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:firstname"] = researchers[0].firstname;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:lastname"] = researchers[0].lastname;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:email"] = researchers[0].email;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:telephoneNumber"] = researchers[0].phone;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:role"] = researchers[0].status;
+
+    // in Person slot; there should be multiple Person components
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:Person"]["cmdp:firstName"] = researchers[0].firstname;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:Person"]["cmdp:lastName"]  = researchers[0].lastname;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:Person"]["cmdp:role"]      = researchers[0].status;
+
+    for (var i = 0; i < researchers.length; i++) {
+	let researcher = researchers[i];
+	//TODO
+    }
+    
+    return cmdi;    
+}
+
+export function attachLicence( cmdi, profile, licence ) {
+    let profilePath = getProfilePath( profile );	
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Licence"] = licence;
+    return cmdi;    
+}
+
+export function attachResourceProxy( cmdi, profile, cmdiProxyListInfoFragment ) {
+    let profilePath = getProfilePath( profile );		
+    return cmdi;    
+}
+
+export function buildXML( cmdi )
+{
+    return xmlbuilder.create(cmdi, { encoding: 'utf-8' }).end({ pretty: true });
+}
+
+export function generateResourceProxyLists( fileInfo )
+{
+    let intermediateResult = [];
+    
+    let resourceProxyLists = [];
+    let resourceProxyListInfos = [];		
+    
+    if (fileInfo === undefined) return;
+    // 1. collect all json structures
+    for (var i = 0; i < fileInfo.length; i++) {
+	intermediateResult.push(
+	    instantiateResourceProxyListInfo(fileInfo[i].name,
+					     fileInfo[i].name, // <======= todo
+					     fileInfo[i].size,
+					     fileInfo[i].type,
+					     fileInfo[i].checksum)
+	)
+    }
+    
+    // 2. reshuffle to correct place
+    for (var i = 0; i < intermediateResult.length; i++) {
+	resourceProxyLists.push(    intermediateResult[i].ResourceProxyList);
+	resourceProxyListInfos.push(intermediateResult[i].ResourceProxyListInfo);
+    }
+    
+    const result = 	{
+	ResourceProxyList: resourceProxyLists,
+	ResourceProxyListInfo: resourceProxyListInfos
+    };
+    
+    console.log('util/generateResourceProxyLists', result);
+    
+    return result;
+}
+
+    
+
 
 

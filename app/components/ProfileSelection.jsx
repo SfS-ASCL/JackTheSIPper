@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: ProfileSelection.jsx
-// Time-stamp: <2018-10-09 09:03:55 (zinn)>
+// Time-stamp: <2018-10-25 14:17:41 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -33,10 +33,10 @@ export default class Resource extends React.Component {
     <RadioButton value="lexicalResource"  iconSize={20}>
       Lexical Resource
     </RadioButton>
-    <RadioButton value="speechData"  iconSize={20}>
-      Speech Data
+    <RadioButton value="speechCorpus"  iconSize={20}>
+      Speech Corpus
     </RadioButton>      
-    <RadioButton value="Tool"  iconSize={20}>
+    <RadioButton value="tool"  iconSize={20}>
       Tool
     </RadioButton>
     <RadioButton value="experiment"  iconSize={20}>

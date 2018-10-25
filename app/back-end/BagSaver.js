@@ -3,18 +3,24 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagSaver.jsx
-// Time-stamp: <2018-10-15 14:12:00 (zinn)>
+// Time-stamp: <2018-10-25 14:22:55 (zinn)>
 // -------------------------------------------
 
+import {softwareVersion,
+	getCMDIInstance,
+	attachProject,
+	attachResearchers,
+        attachLicence,
+	attachResourceProxy,
+	buildXML
+       } from './util';
+
 import BagIt from '../my-bag-it/index.js';
-import CMDIProducer from './CMDIProducer.js';
-import crypto from 'crypto';
 import md5 from 'md5';
 import shajs from 'sha.js';
 import path from 'path';
 import JSZip from 'jszip';
 import uuid from 'uuid';
-import {softwareVersion} from 'util';
 
 var FileSaver = require('file-saver');
 var fileReaderStream = require('filereader-stream')
@@ -43,11 +49,18 @@ export default class BagSaver {
     
     bagCMDI( bag, cmdiProxyListInfoFragment ) {
 
-	console.log('BagSaver/bagCMDI', bag, cmdiProxyListInfoFragment);
-	// generate CMDI file 
-	const cmdiProducer = new CMDIProducer( this.state );
-	const cmdi        = cmdiProducer.finaliseCMDI( cmdiProxyListInfoFragment );
-	const cmdiFile    = new File([cmdi], "cmdi.xml", {type: "application/xml"});
+	console.log('BagSaver/bagCMDI', bag, cmdiProxyListInfoFragment, this.state.profile, getCMDIInstance, softwareVersion);
+	
+	// generate CMDI file, step by step
+	const cmdi0 = getCMDIInstance( this.state.profile );
+	
+	const cmdi1 = attachProject( cmdi0,       this.state.profile, this.state.project );
+	const cmdi2 = attachResearchers( cmdi1,   this.state.profile, this.state.researchers );
+	const cmdi3 = attachLicence( cmdi2,       this.state.profile, this.state.licence );
+	const cmdi4 = attachResourceProxy( cmdi3, this.state.profile, cmdiProxyListInfoFragment );
+	const cmdiXML = buildXML( cmdi4 );
+	
+	const cmdiFile    = new File([cmdiXML], "cmdi.xml", {type: "application/xml"});
 	const that = this;
 	// add CMDI file to the bag
 	fileReaderStream(cmdiFile)
