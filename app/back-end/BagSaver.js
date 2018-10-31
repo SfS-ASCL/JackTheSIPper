@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagSaver.jsx
-// Time-stamp: <2018-10-25 14:22:55 (zinn)>
+// Time-stamp: <2018-10-31 14:11:17 (zinn)>
 // -------------------------------------------
 
 import {softwareVersion,
@@ -11,7 +11,7 @@ import {softwareVersion,
 	attachProject,
 	attachResearchers,
         attachLicence,
-	attachResourceProxy,
+	attachResourceProxyInfo,
 	buildXML
        } from './util';
 
@@ -57,7 +57,7 @@ export default class BagSaver {
 	const cmdi1 = attachProject( cmdi0,       this.state.profile, this.state.project );
 	const cmdi2 = attachResearchers( cmdi1,   this.state.profile, this.state.researchers );
 	const cmdi3 = attachLicence( cmdi2,       this.state.profile, this.state.licence );
-	const cmdi4 = attachResourceProxy( cmdi3, this.state.profile, cmdiProxyListInfoFragment );
+	const cmdi4 = attachResourceProxyInfo( cmdi3, this.state.profile, cmdiProxyListInfoFragment);
 	const cmdiXML = buildXML( cmdi4 );
 	
 	const cmdiFile    = new File([cmdiXML], "cmdi.xml", {type: "application/xml"});
@@ -104,7 +104,7 @@ export default class BagSaver {
 				'sha256',
 				{ 'Source-Organization': 'Tuebingen University',
 				  'Organization-Address': 'Wilhelmstrasse 19, 72074 Tuebingen, Germany',
-				  'Contact-Phone': '+1 408-555-1212',
+				  'Contact-Phone': '+49 07071 29-73969',
 				  'Contact-Email': 'claus.zinn@uni-tuebingen.de',
 				  'Bagging-Date' : that.bagDate(),
 				  'Contact-Name' : 'Claus Zinn',
@@ -163,12 +163,10 @@ export default class BagSaver {
 	if (head === undefined && !tail.length) {
 	    that.bagCMDI( bag, cmdiProxyListInfoFragment );
 	} else if (head.isDirectory) {
-	    //console.log('head I', head);	    
 	    bag.mkdir(head.path, function() {
 		that.bagHelper(bag, cmdiProxyListInfoFragment, tail)
 	    })
 	} else {
-	    //console.log('head II', head);
 	    fileReaderStream(head.file) // ;bag.createReadStream(head.file) fromBlob
 		.pipe(bag.createWriteStream(head.path, {}, function() {	    
 		    that.bagHelper(bag,

@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: Project.jsx
-// Time-stamp: <2018-10-09 09:04:01 (zinn)>
+// Time-stamp: <2018-10-31 10:08:01 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -31,7 +31,7 @@ export default class Project extends React.Component {
 	    },
 	];
 
-	const {name, context, status, description, ...props} = this.props.project;
+	const {name, affiliation, status, description, ...props} = this.props.project;
 
 	return (
 <div>
@@ -44,7 +44,7 @@ export default class Project extends React.Component {
       </div>
       <div>
         <label htmlFor="affiliation" className="d-block">Project Affiliation: </label>
-        <RadioGroup field="context" defaultValue={context}>
+        <RadioGroup field="affiliation" defaultValue={affiliation}>
 	  <table >
 	    <tbody>
 	      <tr>

@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-10-25 12:22:50 (zinn)>
+// Time-stamp: <2018-10-31 10:05:31 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -90,7 +90,7 @@ export default class App extends React.Component {
 	    project: {
 		name : "Second Language Acquisition in Parrots",
 		status: "ongoing",
-		context: "sfb833",
+		affiliation: "sfb833",
 		description: "The project investigates whether parrots from Taka-Tuka island have second language acquisition skills better than their peers from Madagasgar."
 	    },
 	    
