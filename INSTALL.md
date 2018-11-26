@@ -4,7 +4,7 @@
 
    ```git clone https://github.com/SfS-ASCL/JackTheSIPper.git ```
 
-2. Enter the directory LRSwitchboard, and perform
+2. Enter the directory JackTheSipper, and perform
 
    ```npm install ```
 

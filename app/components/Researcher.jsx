@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: Reseacher.jsx
-// Time-stamp: <2018-10-09 21:45:26 (zinn)>
+// Time-stamp: <2018-11-23 11:38:53 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -48,6 +48,7 @@ export default class Researcher extends React.Component {
 	];
 
 	const {id, firstName, lastName, email, phone, status, ...props} = this.props.researcher;
+	const selectedIndex = this.props.selectedIndex;
 	
 	return (
 <div>
@@ -75,17 +76,15 @@ export default class Researcher extends React.Component {
         <label htmlFor="phone">Phone: </label>
         <Text field="phone" id="phone" className="textBox" defaultValue={phone}/>
       </div>
-        <label htmlFor="status" className="d-block">Staff Status: </label>
-        <Select field="status" id="status" options={statusOptions}
-	className="mb-4" defaultValue={status}/>
-        <button type="submit" className="mb-4 btn btn-primary">
-          Save
-        </button>
-       <Button onClick={ () => this.removeResearcher( {id} )} bsStyle="primary">Remove Person</Button>
-       <Button onClick={ () => this.duplicateResearcher( {id} )} bsStyle="primary">Duplicate Person</Button>	          </form>
+      <label htmlFor="status" className="d-block">Staff Status: </label>
+      <Select field="status" id="status" options={statusOptions}
+	      className="mb-4" defaultValue={status}/>
+      <button type="submit" className="mb-4 btn btn-primary">Save</button>
+	    <Button onClick={ () => this.removeResearcher( {id} )} disabled={selectedIndex==0} bsStyle="primary">Remove Person</Button>
+      <Button onClick={ () => this.duplicateResearcher( {id} )} bsStyle="primary">Duplicate Person</Button>
+    </form>
     )}
   </Form>
-
 </div>
   )}
 }
