@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: AboutHelp.jsx
-// Time-stamp: <2018-10-25 09:56:53 (zinn)>
+// Time-stamp: <2018-11-26 09:10:41 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -45,14 +45,16 @@ class AboutHelpText extends React.Component {
 	  
             <h2>About</h2>
             <p>
-              Jack The SIPper is being developed 
-              within the <a href="http://www.clarin.eu/">SFB 833</a> project
-              as a means to help researchers get their research data organised and archived.
+              Jack The SIPper is being developed within
+              the <a href="https://www.sfb833.uni-tuebingen.de">SFB 833</a> project. It aims at
+              helping researchers to transfer their research data to
+              the <a href="https://talar.sfb833.uni-tuebingen.de">TALAR </a> research data
+              repository.
             </p>
             
           <h3>Credits</h3>
             <ul>
-              <li>Claus Zinn (main developer)</li>
+              <li>Dr Claus Zinn (main developer)</li>
   	      <li>
           Icons by <a href="http://glyphicons.com/">Glyphicons</a> and <a href="http://fontawesome.io/icons/">Font Awesome</a>.
 	  </li>
