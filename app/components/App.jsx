@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-11-26 09:41:28 (zinn)>
+// Time-stamp: <2018-11-26 10:40:57 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -385,7 +385,7 @@ export default class App extends React.Component {
 	  will be applied to all parts of your research data, but exceptions can be marked when you
 	  package your research data into a Submission Information Package (last step). 
 	</p>
-  	  Please consult the <a href="http://ufal.github.io/public-license-selector/">licence selector</a>.
+  	  Please consult the <a href="http://ufal.github.io/public-license-selector/" target="_blank">licence selector</a>.
 	<p>	
 	</p>
 
