@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: ProfileSelection.jsx
-// Time-stamp: <2018-10-25 14:17:41 (zinn)>
+// Time-stamp: <2018-11-26 09:37:20 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -17,6 +17,7 @@ export default class Resource extends React.Component {
     }
     
     render() {
+	const tabStyle = { width: '200px', border:'8pt' };	
 	const selectedProfile = this.props.selectedProfile
 	console.log('ProfileSelection', selectedProfile);
 	
@@ -26,8 +27,8 @@ export default class Resource extends React.Component {
   <RadioGroup 
 	    value={selectedProfile}
 	    onChange={ this.props.updateProfile }
-	    horizontal >
-    <RadioButton value="textCorpus"  iconSize={20}>
+     >
+    <RadioButton value="textCorpus"  iconSize={20} style={tabStyle} >
       Textcorpus
     </RadioButton>
     <RadioButton value="lexicalResource"  iconSize={20}>
@@ -42,9 +43,6 @@ export default class Resource extends React.Component {
     <RadioButton value="experiment"  iconSize={20}>
       Experiment
     </RadioButton>
-    <RadioButton value="other"  iconSize={20}>
-      Other
-    </RadioButton>			
   </RadioGroup>
 </div>
 );

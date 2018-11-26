@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-10-31 10:05:31 (zinn)>
+// Time-stamp: <2018-11-26 09:41:28 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -37,7 +37,6 @@ import DropArea from './DropArea.jsx';
 import Project from './Project.jsx';
 import Researchers from './Researchers.jsx';
 import Licence from './Licence.jsx';
-import CMDIViewer from './CMDIViewer.jsx';
 import ProfileSelection from './ProfileSelection.jsx';
 
 import BagSaver  from '../back-end/BagSaver';
