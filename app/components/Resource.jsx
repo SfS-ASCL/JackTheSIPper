@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: Resource.jsx
-// Time-stamp: <2018-10-09 09:02:38 (zinn)>
+// Time-stamp: <2018-11-27 09:54:21 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -12,26 +12,8 @@ import LicenceMenu from './LicenceMenu.jsx';
 export default class Resource extends React.Component {
     constructor(props) {
 	super(props);
-
-	this.setLicence             = this.setLicence.bind(this);	
-
-	this.state = {
-	    licence : {
-		licence : "MIT Licence",
-		threeLetterCode: "mit"
-	    }
-	}
     }
 
-    setLicence( licence ) {
-
-	this.setState(state => ({ 	
-	    licence : {
-		licence : licence.label,
-		threeLetterCode: licence.value
-	    }}));
-    }
-    
     render() {
 	const thStyle = {textAlign:'center'};
 	const colStyle = {width:'200px'};
@@ -44,17 +26,18 @@ export default class Resource extends React.Component {
             padding: 10,
 	    marginLeft: 20,
             width: 400,
-	    height:120,
+	    height:200,
 	    resize: 'none',
 	    transition: 'all 0.5s',
 	    display:'inline-block',
 	    verticalAlign: 'top'
 	};
 	
-	const title = this.props.fileInfo.title;
-	const size  = this.props.fileInfo.size;
-	const type  = this.props.fileInfo.type;
-        var date  = this.props.fileInfo.date.toString();
+	const title   = this.props.fileInfo.title;
+	const size    = this.props.fileInfo.size;
+	const type    = this.props.fileInfo.type;
+	const licence = this.props.fileInfo.licence;
+        var date      = this.props.fileInfo.date.toString();
 	// date = ( date == "noDate" ? today.toString() : date );
 	return (
             <div>
@@ -86,6 +69,14 @@ export default class Resource extends React.Component {
 		      { date }
 		    </td>		  
                   </tr>
+		  <tr>
+		    <td className="note">
+		      <b>licence</b> 
+		    </td>
+		    <td className="note">
+		      { licence }
+		    </td>		  
+                  </tr>		
 		</tbody>
 	      </table>
 	    </div>

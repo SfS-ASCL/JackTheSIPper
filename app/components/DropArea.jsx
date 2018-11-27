@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: DropArea.jsx
-// Time-stamp: <2018-11-27 09:36:37 (zinn)>
+// Time-stamp: <2018-11-27 09:52:45 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -141,10 +141,11 @@ export default class DropArea extends React.Component {
    		  <button>Info</button>
 		</a>
 		<ReactTooltip id={node.name} place='right' type='light' offset={{top: 200, left: 10}}>
-		  <Resource fileInfo={ { title: node.name,
-			                 size: node.size,
-				         type: node.type,
-				         date: node.date
+		  <Resource fileInfo={ { title  : node.name,
+			                 size   : node.size,
+				         type   : node.type,
+				         date   : node.date,
+					 licence: node.licence
 				       } }/>				
 		</ReactTooltip>
 		</div>;
