@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: DropArea.jsx
-// Time-stamp: <2018-10-09 09:03:31 (zinn)>
+// Time-stamp: <2018-11-27 09:36:37 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -14,6 +14,7 @@ import SortableTree, {
     changeNodeAtPath,
     addNodeUnderParent,
     removeNodeAtPath } from 'react-sortable-tree';
+import LicencePopup from './LicencePopup.jsx';
 
 import ReactTooltip from 'react-tooltip';
 import {findDOMNode} from 'react-dom';
@@ -56,6 +57,7 @@ export default class DropArea extends React.Component {
 							    isDirectory: false,
 							    size: size,
 							    type: type,
+							    licence: "MIT",
 							    date: dateReadable
 							},
 						      }).treeData
@@ -74,9 +76,6 @@ export default class DropArea extends React.Component {
 	const that = this.props.parent;
 	const tthis = this;
 	const canDrop = ({ node, nextParent, prevPath, nextPath }) => {
-
-	    console.log('DropArea/canDrop', node, nextParent, prevPath, nextPath);
-
 	    if (nextParent && (nextParent.isRoot)) {
 		return true
 	    }
@@ -117,6 +116,8 @@ export default class DropArea extends React.Component {
 		style={{ fontSize: '1.1rem' }}
 		value={node.name}
 		onChange={event => {
+
+		    console.log('generateNodeProps/onChange', event, node);
 		    const name = event.target.value;
 		    
 		    that.setState(state => ({
@@ -140,28 +141,35 @@ export default class DropArea extends React.Component {
    		  <button>Info</button>
 		</a>
 		<ReactTooltip id={node.name} place='right' type='light' offset={{top: 200, left: 10}}>
-		<Resource fileInfo={ { title: node.name,
-				       size: node.size,
-				       type: node.type,
-				       date: node.date
-				     } }/>				
+		  <Resource fileInfo={ { title: node.name,
+			                 size: node.size,
+				         type: node.type,
+				         date: node.date
+				       } }/>				
 		</ReactTooltip>
 		</div>;
 	    
 	    var licenseButton =
-		<button onClick={() => {
-		    that.setState(state => ({
-			currentNode: {
-			    title: node.name,
-			    size: node.size,
-			    type: node.type,
-			    date: node.date,
-			    licence: "to be requested"
-			}}))
-		}}
+		<LicencePopup licence={node.licence}
+			      updateLicence={(licence)  => {
+				  if (licence === null) {
+				      node.licence = "";
+				  } else {
+				      node.licence = licence.value
+				  }
+				  console.log('Metadata Licence for the given file has been changed to ', licence, node);
+				  that.setState(state => ({
+				      treeData: changeNodeAtPath({
+					  treeData: state.treeData,
+					  path,
+					  getNodeKey,
+					  newNode: { ...node },
+				      }),
+				  }));
+			      }}
 		>
 		Licence
-	    </button>;
+	    </LicencePopup>;
 	    
 	    var removeFolder =
 		<button onClick={() =>

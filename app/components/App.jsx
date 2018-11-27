@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-11-26 10:40:57 (zinn)>
+// Time-stamp: <2018-11-27 08:53:06 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -187,7 +187,7 @@ export default class App extends React.Component {
 	    showBagLoaderViewer: false
 	}))
     }
-    
+
     updateProject = (project) => {
 	console.log('App/updateProject', project);
 	this.setState( project );
@@ -403,7 +403,8 @@ export default class App extends React.Component {
 	  </small>
 	</p>
 	
-	<DropArea parent={this} fileTree={this.state.treeData} />
+        <DropArea parent={this} fileTree={this.state.treeData} />
+	      
       </TabPanel>	    
     </Tabs>
   </div>
