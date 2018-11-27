@@ -3,12 +3,10 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: util.js
-// Time-stamp: <2018-10-31 14:18:32 (zinn)>
+// Time-stamp: <2018-11-27 12:39:08 (zinn)>
 // -------------------------------------------
 
-import xmlbuilder from 'xmlbuilder';
 import uuid from 'uuid';
-
 var convert = require('xml-js');
 
 export const ncUser         = process.env.NC_USER;
@@ -170,9 +168,9 @@ export function attachLicence( cmdi, profile, licence ) {
 }
 
 // todo: needs specification/clarification and testing
-export function attachResourceProxyInfo( cmdi, profile, fileInfo ) {
+export function attachResourceProxyInfo( cmdi, profile, cmdiProxyListInfoFragment ) {
     let profilePath = getProfilePath( profile );
-    let proxyInf = generateResourceProxyInformation( fileInfo );
+    let proxyInf = generateResourceProxyInformation( cmdiProxyListInfoFragment );
     
     let resources = 
 	{
@@ -181,54 +179,59 @@ export function attachResourceProxyInfo( cmdi, profile, fileInfo ) {
             "ResourceRelationList": {"ResourceRelation": {"RelationType": "", "Res1": "", "Res2": ""}},
 	};
 
+    let proxyListInfoTree =
+	{
+	    "ResourceProxyInfo": proxyInf.ResourceProxyListInfo
+	};
+
     cmdi["cmd:CMD"]["cmd:Resources"] = resources;
-    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:ResourceProxyListInfo"] = proxyInf.ResourceProxyList;    
-    
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:ResourceProxyListInfo"] = proxyListInfoTree;
+//    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:ResourceProxyListInfo"] = proxyInf.ResourceProxyListInfo;    
+
     return cmdi;    
 }
 
 export function buildXML( cmdi )
 {
-    return xmlbuilder.create(cmdi, { encoding: 'utf-8' }).end({ pretty: true });
+    return convert.json2xml(cmdi, {compact: true, ignoreComment: true, spaces: 4});
 }
 
-export function generateResourceProxyInformation( fileInfo )
-{
+export function generateResourceProxyInformation( cmdiProxyListInfoFragment ) {
+
     let resourceProxyList = [];
     let resourceProxyInfo = [];
     
-    if (fileInfo === undefined) {
+    if (cmdiProxyListInfoFragment === undefined) {
 	// do Nothing
     } else {
-	for (var i = 0; i < fileInfo.length; i++) {
+	for (var i = 0; i < cmdiProxyListInfoFragment.length; i++) {
 	    let id = uuid.v4();
 	    resourceProxyList.push(
-		{
-		    "cmd:id" : id,
+		{ 
+		    "_attributes"      : { "cmd:id" : id },
 		    "cmd:ResourceType": {
-			"mimetype": fileInfo[i].type,
-			"content": "Resource"   
+			"_attributes" : { "mimetype": cmdiProxyListInfoFragment[i].type },
+			"_text"        : "Resource"
 		    },
 		    "cmd:ResourceRef": "HandleToBeInserted"+id
 		});
 	    
 	    resourceProxyInfo.push(
-		{
-		       "cmdp:ResourceProxyInfo": {
-			   "cmd:ref": id,
-			   "cmdp:ResProxItemName": id,   
-			   "cmdp:ResProxFileName": fileInfo[i].name, 
-			   "cmdp:FileSize": fileInfo[i].size,       
-			   "cmdp:SizeInfo": {
-			       "cmdp:TotalSize": {
-				   "cmdp:Size": fileInfo[i].size, 
-				   "cmdp:SizeUnit": "Bytes"
-			       }
-			   },
-			   "cmdp:Checksums": {
-			       "cmd:ref": fileInfo[i].checksum 
-			   }
-		       }
+		    {
+			"cmd:ref": id,
+			"cmdp:ResProxItemName": id,   
+			"cmdp:ResProxFileName": cmdiProxyListInfoFragment[i].name, 
+			"cmdp:FileSize": cmdiProxyListInfoFragment[i].size,       
+			"cmdp:SizeInfo": {
+			    "cmdp:TotalSize": {
+				"cmdp:Size": cmdiProxyListInfoFragment[i].size, 
+				"cmdp:SizeUnit": "Bytes"
+			    }
+			},
+			"cmdp:Checksums": {
+			    "cmd:ref": cmdiProxyListInfoFragment[i].checksum 
+			}
+
 		});
 	}
 
