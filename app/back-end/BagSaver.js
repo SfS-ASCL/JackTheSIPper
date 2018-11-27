@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagSaver.jsx
-// Time-stamp: <2018-10-31 14:11:17 (zinn)>
+// Time-stamp: <2018-11-27 13:36:10 (zinn)>
 // -------------------------------------------
 
 import {softwareVersion,
@@ -40,11 +40,11 @@ export default class BagSaver {
     }
 
     bagSize() {
-	return "260 GB";
+	return "260 GB (dummy size)";
     }
 
     bagDate() {
-	return "10.10.2018";
+	return "10.10.2018 (dummy date)";
     }    
     
     bagCMDI( bag, cmdiProxyListInfoFragment ) {
@@ -133,11 +133,11 @@ export default class BagSaver {
 	if (head === undefined && !(tail.length)) {
 	    return cmdiProxyListInfoFragment;
 	} else if (head.isDirectory) {
-	    cmdiProxyListInfoFragment.push( {path: path.join(currentPath, head.name),
-					     isDirectory: true,
-					     name: head.name,
-					     size: head.size,
-					     type: head.type });	    	    	    
+	    cmdiProxyListInfoFragment.push( {"path": path.join(currentPath, head.name),
+					     "isDirectory": true,
+					     "name": head.name,
+					     "size": head.size,
+					     "type": head.type });	    	    	    
 	    return this.flattenTree(currentPath,
 				    tail,
 				    this.flattenTree(path.join(currentPath, head.name),
@@ -145,12 +145,15 @@ export default class BagSaver {
 						     cmdiProxyListInfoFragment));
 	    
 	} else {
-	    cmdiProxyListInfoFragment.push( {path: path.join(currentPath, head.name),
-					     isDirectory: false,
-					     file: head.file,
-					     name: head.name,
-					     size: head.size,
-					     type: head.type });
+	    cmdiProxyListInfoFragment.push( {"path": path.join(currentPath, head.name),
+					     "isDirectory": false,
+					     "file": head.file,
+					     "name": head.name,
+					     "size": head.size,
+					     "type": head.type,
+					     "md5": md5(head.file),
+					     "sha256" : shajs('sha256').update(head.file).digest('hex')
+					    });
 	    return this.flattenTree(currentPath,
 				    tail,	    
 				    cmdiProxyListInfoFragment);
@@ -261,8 +264,6 @@ export default class BagSaver {
 	    c_binary = false;
 	}
 	*/
-	/* TODO INCOMPLETE!" */
-	/* ----------------- */
 	
 	if (tail.length) {
 	    mimetype = that.getMimetype(head.name, cmdiProxyListInfoFragment);
@@ -276,7 +277,6 @@ export default class BagSaver {
 	    
 	    bag.readFileNoCheck(fileNameFullPath, encoding, function (err, data) {
 		if (err) return console.log('Error reading this file', err, fileNameFullPath, data, bag, c_binary);
-		cmdiProxyListInfoFragment = that.addChecksum(head.checksum, head.name, cmdiProxyListInfoFragment)
 		zip.file(fileNameFullPath, data, {binary: c_binary});
 		that.generateZIPHelper(zip, bag, tail, cmdiProxyListInfoFragment);
 	    })
@@ -296,16 +296,17 @@ export default class BagSaver {
 	}
 	return undefined
     }
-    
-    // enrich given element in cmdiProxyListInfoFragment
+
+    /*
     addChecksum(checksum, fileNameFullPath, cmdiProxyListInfoFragment) {
+	const fileNameWithoutDataPrefix = fileNameFullPath.replace('data/', '');
 	for (var i = 0; i < cmdiProxyListInfoFragment.length; i++) {
-	    if (cmdiProxyListInfoFragment[i].name == fileNameFullPath) {
-		cmdiProxyListInfoFragment[i].sha256 = checksum;
-		break
+	    if (cmdiProxyListInfoFragment[i].name == fileNameWithoutDataPrefix) {
+		cmdiProxyListInfoFragment[i].sha = checksum;
+		break;
 	    }
 	}
 	return cmdiProxyListInfoFragment;
     }
-    
+    */
 }

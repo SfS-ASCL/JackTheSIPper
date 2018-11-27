@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: util.js
-// Time-stamp: <2018-11-27 12:39:08 (zinn)>
+// Time-stamp: <2018-11-27 13:33:32 (zinn)>
 // -------------------------------------------
 
 import uuid from 'uuid';
@@ -206,6 +206,7 @@ export function generateResourceProxyInformation( cmdiProxyListInfoFragment ) {
     } else {
 	for (var i = 0; i < cmdiProxyListInfoFragment.length; i++) {
 	    let id = uuid.v4();
+	    console.log('util/generate...', cmdiProxyListInfoFragment[i]);
 	    resourceProxyList.push(
 		{ 
 		    "_attributes"      : { "cmd:id" : id },
@@ -218,10 +219,9 @@ export function generateResourceProxyInformation( cmdiProxyListInfoFragment ) {
 	    
 	    resourceProxyInfo.push(
 		    {
-			"cmd:ref": id,
-			"cmdp:ResProxItemName": id,   
+			"_attributes" : { "ns1:ref": id },
+			"cmdp:ResProxItemName": "",   
 			"cmdp:ResProxFileName": cmdiProxyListInfoFragment[i].name, 
-			"cmdp:FileSize": cmdiProxyListInfoFragment[i].size,       
 			"cmdp:SizeInfo": {
 			    "cmdp:TotalSize": {
 				"cmdp:Size": cmdiProxyListInfoFragment[i].size, 
@@ -229,7 +229,8 @@ export function generateResourceProxyInformation( cmdiProxyListInfoFragment ) {
 			    }
 			},
 			"cmdp:Checksums": {
-			    "cmd:ref": cmdiProxyListInfoFragment[i].checksum 
+			    "sha1": cmdiProxyListInfoFragment[i].sha256,
+			    "md5" : cmdiProxyListInfoFragment[i].md5,
 			}
 
 		});
