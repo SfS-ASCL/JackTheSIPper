@@ -7,7 +7,7 @@ function convertFile( filename ) {
     const options = {compact: true, ignoreComment: true, spaces: 4};
     const xml = fs.readFileSync(filename+'.xml', 'utf8');
     const json = convert.xml2json(xml, options);
-    fs.writeFileSync(filename+'.js', json);
+    fs.writeFileSync(filename+'.json', json);
     console.log('Converted ', filename, '...');
 }
 

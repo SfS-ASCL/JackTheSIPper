@@ -3,13 +3,11 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: util.js
-// Time-stamp: <2018-11-28 12:06:59 (zinn)>
+// Time-stamp: <2018-11-28 12:56:22 (zinn)>
 // -------------------------------------------
 
 import uuid from 'uuid';
 var convert = require('xml-js');
-
-import {experimentProfile} from '../profiles/instance_xml/experimentProfile.js';
 
 export const ncUser         = process.env.NC_USER;
 export const ncPass         = process.env.NC_PASS;
@@ -79,33 +77,27 @@ export function getExperimentProfile() {
 
 export function getCMDIInstance( profile )
 {
-    return getExperimentProfile();
-
-    // dead
     let json = {};
      
     switch (profile) {
     case "textCorpus":
-	json = require('../profiles/instance_json/TextCorpusProfile_instance.json');
+	json = require('../profiles/instances/TextCorpusProfile.json');
 	break;
     case "lexicalResource":
-	json = require('../profiles/instance_json/LexicalResourceProfile_instance.json');
+	json = require('../profiles/instances/LexicalResourceProfile.json');
 	break;
     case "speechCorpus":
-	json = require('../profiles/instance_json/SpeechCorpusProfile_instance.json');	    	    
+	json = require('../profiles/instances/SpeechCorpusProfile.json');	    	    
 	break;
     case "tool":
-	json = require('../profiles/instance_json/ToolProfile_instance.json');
+	json = require('../profiles/instances/ToolProfile.json');
 	break;
     default:
-	json = require('../profiles/instance_json/ExperimentProfile_instance.json');
+	json = require('../profiles/instances/ExperimentProfile.json');
 	break;
     }
 
-    const jsonResult = convert.xml2json(xml, {compact: true, spaces: 4});
-    console.log('getCMDIInstance', json, jsonResult);
-    //return json;
-    return jsonResult;
+    return json;
 }
 
 export function errorHandler(e) {
