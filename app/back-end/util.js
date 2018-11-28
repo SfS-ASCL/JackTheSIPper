@@ -3,11 +3,13 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: util.js
-// Time-stamp: <2018-11-27 13:33:32 (zinn)>
+// Time-stamp: <2018-11-28 12:06:59 (zinn)>
 // -------------------------------------------
 
 import uuid from 'uuid';
 var convert = require('xml-js');
+
+import {experimentProfile} from '../profiles/instance_xml/experimentProfile.js';
 
 export const ncUser         = process.env.NC_USER;
 export const ncPass         = process.env.NC_PASS;
@@ -69,33 +71,68 @@ export function readCMDI( xmlData )
 	   };
 }
 
+export function getExperimentProfile() {
+    const profile = convert.xml2js(experimentProfile, {compact: true, spaces: 4});
+    console.log('util/getExperimentProfile', profile);
+    return profile;
+}
 
 export function getCMDIInstance( profile )
 {
+    return getExperimentProfile();
+
+    // dead
     let json = {};
+     
     switch (profile) {
     case "textCorpus":
-	json = require('../profiles/instance_json/TextCorpusProfile_instance.json');	    
+	json = require('../profiles/instance_json/TextCorpusProfile_instance.json');
 	break;
     case "lexicalResource":
-	json = require('../profiles/instance_json/LexicalResourceProfile_instance.json');	    	    
+	json = require('../profiles/instance_json/LexicalResourceProfile_instance.json');
 	break;
     case "speechCorpus":
 	json = require('../profiles/instance_json/SpeechCorpusProfile_instance.json');	    	    
 	break;
     case "tool":
-	json = require('../profiles/instance_json/ToolProfile_instance.json');	    	    
-	break;
-    case "experiment":
-	json = require('../profiles/instance_json/ExperimentProfile_instance.json');	
+	json = require('../profiles/instance_json/ToolProfile_instance.json');
 	break;
     default:
-	// todo: create some simple OTHER profile.
-	json = require('../profiles/instance_json/TextCorpusProfile_instance.json');	    	
+	json = require('../profiles/instance_json/ExperimentProfile_instance.json');
+	break;
     }
 
-    console.log('getCMDIInstance', json);
-    return json;
+    const jsonResult = convert.xml2json(xml, {compact: true, spaces: 4});
+    console.log('getCMDIInstance', json, jsonResult);
+    //return json;
+    return jsonResult;
+}
+
+export function errorHandler(e) {
+  var msg = '';
+
+  switch (e.code) {
+    case FileError.QUOTA_EXCEEDED_ERR:
+      msg = 'QUOTA_EXCEEDED_ERR';
+      break;
+    case FileError.NOT_FOUND_ERR:
+      msg = 'NOT_FOUND_ERR';
+      break;
+    case FileError.SECURITY_ERR:
+      msg = 'SECURITY_ERR';
+      break;
+    case FileError.INVALID_MODIFICATION_ERR:
+      msg = 'INVALID_MODIFICATION_ERR';
+      break;
+    case FileError.INVALID_STATE_ERR:
+      msg = 'INVALID_STATE_ERR';
+      break;
+    default:
+      msg = 'Unknown Error';
+      break;
+  };
+
+  console.log('Error: ' + msg);
 }
 
 export function getProfilePath( profile ) {

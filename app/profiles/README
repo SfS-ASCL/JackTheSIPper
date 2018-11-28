@@ -1,10 +1,14 @@
-1. get the latest CMDI 1.2 schemas from CLARIN component registry (XSD)
-   ./xsd
-   
-2. open an XSD in Oxygen to generate a sample XML file (with optionals)
-   ./instance_xml
-   
-3. use Oxygen to generate JSON for sample XML file
-   ./instance_json
+This directory holds the subdirs:
 
-4. the JSON instances are then manipulated by Jack The SIPPER for CMDI construction
+- xsd: XSDs from the CLARIN component registry for all relevant profiles
+- instances: xml-based instantiations of each profile
+
+and the conversion script 'convertAll.js'.
+
+Steps to generate JSON variants of 
+
+1. open an XSD in Oxygen to generate a sample XML file (with optionals)
+   ./instances
+   
+2. call the conversion script to generate JSON variants (in directory ../conversionScript):
+   node convertAll.js

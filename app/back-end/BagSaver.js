@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagSaver.jsx
-// Time-stamp: <2018-11-27 13:36:10 (zinn)>
+// Time-stamp: <2018-11-28 12:07:21 (zinn)>
 // -------------------------------------------
 
 import {softwareVersion,
@@ -12,7 +12,8 @@ import {softwareVersion,
 	attachResearchers,
         attachLicence,
 	attachResourceProxyInfo,
-	buildXML
+	buildXML,
+	errorHandler
        } from './util';
 
 import BagIt from '../my-bag-it/index.js';
@@ -36,7 +37,7 @@ export default class BagSaver {
 	this.generateZIPHelper = this.generateZIPHelper.bind(this);
 	this.bagCMDI = this.bagCMDI.bind(this);
 	this.bagSize = this.bagSize.bind(this);
-	this.bagDate = this.bagDate.bind(this);	
+	this.bagDate = this.bagDate.bind(this);
     }
 
     bagSize() {
@@ -49,10 +50,10 @@ export default class BagSaver {
     
     bagCMDI( bag, cmdiProxyListInfoFragment ) {
 
-	console.log('BagSaver/bagCMDI', bag, cmdiProxyListInfoFragment, this.state.profile, getCMDIInstance, softwareVersion);
+	console.log('BagSaver/bagCMDI', bag, cmdiProxyListInfoFragment, this.state.profile);
 	
 	// generate CMDI file, step by step
-	const cmdi0 = getCMDIInstance( this.state.profile );
+	const cmdi0 = this.getCMDIInstance( this.state.profile );
 	
 	const cmdi1 = attachProject( cmdi0,       this.state.profile, this.state.project );
 	const cmdi2 = attachResearchers( cmdi1,   this.state.profile, this.state.researchers );
@@ -81,6 +82,55 @@ export default class BagSaver {
 							    that.generateZIP( bag, cmdiProxyListInfoFragment ); 
 							})}));
 		}))
+    }
+
+    
+    // read CMDI template from file system
+    getCMDITemplate( profile ) {
+	let filename = ''
+	switch (profile) {
+	case "textCorpus":
+	    filename = '/Users/zinn/Projects/SFB833/code/jack/app/profiles/instance_xml/TextCorpusProfile_instance.xml';	    	
+	break;
+	case "lexicalResource":
+	    filename = '/Users/zinn/Projects/SFB833/code/jack/app/profiles/instance_xml/LexicalResourceProfile_instance.xml';
+	    break;
+	case "speechCorpus":
+	    filename = '/Users/zinn/Projects/SFB833/code/jack/app/profiles/instance_xml/SpeechCorpusProfile_instance.xml';	    	    
+	    break;
+	case "tool":
+	    filename = '/Users/zinn/Projects/SFB833/code/jack/app/profiles/instance_xml/ToolProfile_instance.xml';	    	    	
+	    break;
+	default:
+	    filename = '/Users/zinn/Projects/SFB833/code/jack/app/profiles/instance_xml/ExperimentProfile_instance.xml';		
+	    break;
+	}
+
+	var cb = function(d){console.log('cb', d);};
+	var fs = require('fs');
+	fs.readFile(filename, 'utf-8', function (err, data) {
+	    console.log('BagSaver/getCMDITemplate/readFile', data, err);
+	    if (err) return cb(err)
+	    cb(null, data)
+	});
+
+	/*
+	fs.root.getFile(filename, {}, function(fileEntry) {
+
+	    // Get a File object representing the file,
+	    // then use FileReader to read its contents.
+	    fileEntry.file(function(file) {
+		var reader = new FileReader();
+
+		reader.onloadend = function(e) {
+		    console.log('successfully read', filename, this.result);
+		};
+
+		reader.readAsText(filename);
+	    }, errorHandler);
+
+	}, errorHandler);
+	*/
     }
 	
     saveBag() {
@@ -112,10 +162,8 @@ export default class BagSaver {
 				  'Bag-Size'     : that.bagSize()
 				});
 		
-		console.log('BagSaver/saveBag tree', that.state.treeData);
 		const entryPoints = ( (that.state.treeData[0].children === undefined) ? [] : that.state.treeData[0].children );
 		const cmdiProxyListInfoFragment =  that.flattenTree('', entryPoints, []);
-		console.log('constructing', bag, '', cmdiProxyListInfoFragment);
 		that.bagHelper( bag,
 				cmdiProxyListInfoFragment,
 				cmdiProxyListInfoFragment);
@@ -205,8 +253,6 @@ export default class BagSaver {
 
 	const that = this;
 	const zip = new JSZip();
-
-	//console.log('BagSaver/generateZIP', bag, cmdiProxyListInfoFragment);	
 
 	// use this, rather than the manifest file?
 	bag.readdir('', function(err, data) {
