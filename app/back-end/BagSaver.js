@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagSaver.jsx
-// Time-stamp: <2018-11-29 14:59:01 (zinn)>
+// Time-stamp: <2018-11-29 15:03:57 (zinn)>
 // -------------------------------------------
 
 import {softwareVersion,
@@ -36,12 +36,7 @@ export default class BagSaver {
 	this.generateZIP = this.generateZIP.bind(this);
 	this.generateZIPHelper = this.generateZIPHelper.bind(this);
 	this.bagCMDI = this.bagCMDI.bind(this);
-	this.bagSize = this.bagSize.bind(this);
 	this.bagDate = this.bagDate.bind(this);
-    }
-
-    bagSize() {
-	return "260 GB (dummy size)";
     }
 
     bagDate() {
@@ -111,7 +106,7 @@ export default class BagSaver {
 				  'Bagging-Date' : that.bagDate(),
 				  'Contact-Name' : 'Claus Zinn',
 				  'Generated-By' : 'JackTheSIPper ' + softwareVersion,
-				  'Bag-Size'     : that.bagSize()
+				  'Bag-Size'     : 'willBeOverwritten' 
 				});
 		
 		const entryPoints = ( (that.state.treeData[0].children === undefined) ? [] : that.state.treeData[0].children );
