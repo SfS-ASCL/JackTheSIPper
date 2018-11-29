@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: Uploader.jsx
-// Time-stamp: <2018-10-10 11:45:54 (zinn)>
+// Time-stamp: <2018-11-29 13:39:11 (zinn)>
 // -------------------------------------------
 
 /* Uploads a file to the Nextcloud space. */
@@ -35,7 +35,7 @@ export default class Uploader {
 		.end((err, res) => {
 		    if (err) {
 			reject(err);
-			alert('Error in uploading resource to NC instance');
+			console.log('Error in uploading resource to NC instance');
 		    } else {
 			// 1b. Create a 'share link' action on the file you uploaded
 			Request
@@ -53,7 +53,7 @@ export default class Uploader {
 			    .end((err, res) => {
 				if (err) {
 				    reject(err);			
-				    alert('Error in creating a share-link with NEXTCLOUD'.concat(that.file.name));
+				    console.log('Error in creating a share-link with NEXTCLOUD'.concat(that.file.name));
 				} else {
 				    var parseString = require('xml2js').parseString;
 				    parseString(res.text, function (err, result) {

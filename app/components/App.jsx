@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-11-29 13:29:39 (zinn)>
+// Time-stamp: <2018-11-29 13:37:31 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -20,6 +20,7 @@ import AboutHelp from './AboutHelp.jsx';
 import UserHelp from './UserHelp.jsx';
 import AlertMissingInfo from './AlertMissingInfo.jsx';
 import AlertSubmitSuccessful from './AlertSubmitSuccessful.jsx';
+import AlertSubmitFailure from './AlertSubmitFailure.jsx';
 
 import uuid from 'uuid';
 
@@ -81,6 +82,7 @@ export default class App extends React.Component {
 	    showBagLoaderViewer: false,
 	    showAlertMissingInfo: false,
 	    showAlertSubmitSuccessful: false,
+	    showAlertSubmitFailure: false,
 	    researchers: [ {
 		id : uuid.v4(),
 		firstName : "Max",
@@ -180,8 +182,8 @@ export default class App extends React.Component {
 		console.log('App/submitSIP: SIP package has been uploaded to NC', that);
 	    },
 	    function(reject) {
+		that.setState( state => ( {showAlertSubmitFailure: true} ) );		
 		console('Jack The SIPper failed to upload your package.', reject);		
-		alert('Jack The SIPper failed to upload your package.');
 	    });	
     }
     
@@ -422,7 +424,10 @@ export default class App extends React.Component {
       : null }
     {this.state.showAlertSubmitSuccessful ?
     <AlertSubmitSuccessful  onCloseProp={ () => this.setState( {showAlertSubmitSuccessful: false} ) } />
-      : null }
+     : null }
+    {this.state.showAlertSubmitFailure ?
+    <AlertSubmitFailure     onCloseProp={ () => this.setState( {showAlertSubmitFailure:    false} ) } />
+      : null }	  
   </div>
   <footer id="footer">
     <div className="container">
