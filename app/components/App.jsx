@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-11-27 08:53:06 (zinn)>
+// Time-stamp: <2018-11-29 13:29:39 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -18,6 +18,8 @@ import { Button, ButtonToolbar } from 'react-bootstrap';
 import { softwareVersion, readCMDI } from '../back-end/util';
 import AboutHelp from './AboutHelp.jsx';
 import UserHelp from './UserHelp.jsx';
+import AlertMissingInfo from './AlertMissingInfo.jsx';
+import AlertSubmitSuccessful from './AlertSubmitSuccessful.jsx';
 
 import uuid from 'uuid';
 
@@ -76,7 +78,9 @@ export default class App extends React.Component {
 
 	this.state = {
 
-	    showBagLoaderViewer: false,	    
+	    showBagLoaderViewer: false,
+	    showAlertMissingInfo: false,
+	    showAlertSubmitSuccessful: false,
 	    researchers: [ {
 		id : uuid.v4(),
 		firstName : "Max",
@@ -151,9 +155,13 @@ export default class App extends React.Component {
 
     submitSIP() {
 
-	if (this.state.zip == undefined) {
-	    alert("Your research data package is empty. Please define your SIP first.");
-	    return
+	const that = this;
+	console.log('App/submitSIP', this.state);
+
+	// actually, a SIP consisting of an empty directory should not be good enough.
+	if (this.state.treeData[0].children === undefined) {
+	    this.setState( {showAlertMissingInfo: true} );
+	    return;
 	}
 
 	let blob = this.state.zip.zip;
@@ -168,10 +176,12 @@ export default class App extends React.Component {
 	let promiseUpload = uploader.uploadFile();
 	promiseUpload.then(
 	    function(resolve) {
-		alert('The SIP has been submitted');
+		that.setState( state => ( {showAlertSubmitSuccessful: true} ) );
+		console.log('App/submitSIP: SIP package has been uploaded to NC', that);
 	    },
 	    function(reject) {
-		console.log('Jack The SIPper failed to upload your package.', reject);
+		console('Jack The SIPper failed to upload your package.', reject);		
+		alert('Jack The SIPper failed to upload your package.');
 	    });	
     }
     
@@ -264,7 +274,7 @@ export default class App extends React.Component {
     }
 
     updateZip = (zip) => {
-	console.log('zip has been changed to ', zip);
+	console.log('App/updateZip: state zip has been changed to ', zip);
 	this.setState( state => ({
 	    "zip" : zip
 	}));
@@ -407,6 +417,12 @@ export default class App extends React.Component {
 	      
       </TabPanel>	    
     </Tabs>
+    {this.state.showAlertMissingInfo ?
+    <AlertMissingInfo       onCloseProp={ () => this.setState( {showAlertMissingInfo     : false} ) } />
+      : null }
+    {this.state.showAlertSubmitSuccessful ?
+    <AlertSubmitSuccessful  onCloseProp={ () => this.setState( {showAlertSubmitSuccessful: false} ) } />
+      : null }
   </div>
   <footer id="footer">
     <div className="container">

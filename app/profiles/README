@@ -12,3 +12,4 @@ Steps to generate JSON variants of
    
 2. call the conversion script to generate JSON variants (in directory ../conversionScript):
    node convertAll.js
+

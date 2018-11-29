@@ -3,17 +3,20 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: util.js
-// Time-stamp: <2018-11-28 12:56:22 (zinn)>
+// Time-stamp: <2018-11-29 10:13:27 (zinn)>
 // -------------------------------------------
 
 import uuid from 'uuid';
 var convert = require('xml-js');
 
-export const ncUser         = process.env.NC_USER;
-export const ncPass         = process.env.NC_PASS;
+export const ncUser              = process.env.NC_USER;
+export const ncPass              = process.env.NC_PASS;
 export const softwareVersion     = process.env.VERSION;
 export const emailContact        = process.env.CONTACT;
+export const emailArchiveContact = process.env.ARCHIVE_CONTACT;
+
 export const emailContactCommand = "mailto:"+emailContact+"?subject=SFB833 - Jack the SIPper";
+export const emailArchiveManagerCommand = "mailto:"+emailArchiveContact+"?subject=SFB833 - New research data received.";
 export const fileStorageServer   = '/nextcloud/';
 
 export function rewriteURL( fileURL )
