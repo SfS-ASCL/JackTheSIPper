@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: Reseacher.jsx
-// Time-stamp: <2018-11-23 11:38:53 (zinn)>
+// Time-stamp: <2018-12-03 15:08:48 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -13,17 +13,25 @@ import { Button } from 'react-bootstrap';
 export default class Researcher extends React.Component {
     constructor(props) {
 	super(props);
-	this.removeResearcher  = this.removeResearcher.bind(this);
+	const researcher = this.props.researcher;
+	
+	this.removeResearcher     = this.removeResearcher.bind(this);
 	this.duplicateResearcher  = this.duplicateResearcher.bind(this);
-
+	this.gotoNextTab          = this.gotoNextTab.bind(this);
     }
 
+    gotoNextTab() {
+	console.log('Researcher/gotoNextTab');
+	this.props.gotoNextTab();
+    }
+    
     removeResearcher( researcher ) {
 	this.props.removeResearcher( researcher.id )
     }
 
     duplicateResearcher( researcher ) {
-	this.props.duplicateResearcher( researcher.id )
+	console.log('Researcher/duplicateResearcher', researcher.values);
+	this.props.duplicateResearcher( researcher.values );
     }
 
     render() {
@@ -80,8 +88,14 @@ export default class Researcher extends React.Component {
       <Select field="status" id="status" options={statusOptions}
 	      className="mb-4" defaultValue={status}/>
       <button type="submit" className="mb-4 btn btn-primary">Save</button>
-	    <Button onClick={ () => this.removeResearcher( {id} )} disabled={selectedIndex==0} bsStyle="primary">Remove Person</Button>
-      <Button onClick={ () => this.duplicateResearcher( {id} )} bsStyle="primary">Duplicate Person</Button>
+      <Button onClick={ () => this.removeResearcher( {id} )} disabled={selectedIndex==0} bsStyle="primary">Remove Person</Button>
+      <Button onClick={ () => {
+	  formApi.submitForm();
+	  this.duplicateResearcher( formApi.getFormState() );
+      }} bsStyle="primary">Duplicate Person</Button>
+       <Button onClick={ () => {
+	   formApi.submitForm();
+	   this.gotoNextTab() }} bsStyle="primary">Next</Button>
     </form>
     )}
   </Form>

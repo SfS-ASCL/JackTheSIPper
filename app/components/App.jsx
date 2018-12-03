@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-11-29 13:37:31 (zinn)>
+// Time-stamp: <2018-12-03 15:12:07 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -205,26 +205,23 @@ export default class App extends React.Component {
 	this.setState( project );
     }
 
-    duplicateResearcher = (id) => {
-	console.log('App/duplicateResearcher', id);
-	var researchers = this.state.researchers;
-	var newResearchers = [];
-
-	for (var i = 0; i < researchers.length; i++) {
-	    if (id == researchers[i].id) {
-		newResearchers.push(researchers[i]);		
-		newResearchers.push( {
+    gotoNextTab = () => {
+	const currentTab = this.state.selectedIndex;
+	console.log('App/gotoNextTab', currentTab);
+	this.setState( { selectedIndex : currentTab+1 } );		
+    }
+    
+    duplicateResearcher = ( researcher ) => {
+	console.log('App/duplicateResearcher', researcher);
+	var newResearchers = this.state.researchers;
+	newResearchers.push( {
 		    id : uuid.v4(),
-		    firstName : researchers[i].firstName + "(copy)",
-		    lastName:   researchers[i].lastName + "(copy)",
-		    email:      researchers[i].email + "(copy)",
-		    phone:      researchers[i].phone + "(copy)",
+		    firstName : researcher.firstName + "(copy)",
+		    lastName:   researcher.lastName + "(copy)",
+		    email:      researcher.email + "(copy)",
+		    phone:      researcher.phone + "(copy)",
 		    status: "researcher"
 		} );
-	    } else {
-		newResearchers.push(researchers[i]);
-	    }
-	}
 	this.setState( { researchers : newResearchers } );	
     }
 
@@ -370,16 +367,18 @@ export default class App extends React.Component {
       <TabPanel>
 	<h2>Project information</h2>
 	<div>	    	    	    
-	  <Project project={project} updateProject={this.updateProject}/>
+	  <Project project={project} updateProject={this.updateProject}	gotoNextTab = {this.gotoNextTab} />
 	</div>
       </TabPanel>
       <TabPanel>
 	<div>	    	    
 	      <Researchers
-		researchers         = {researchers}
-		updateResearcher    = {this.updateResearcher}
-		removeResearcher    = {this.removeResearcher}		
-		duplicateResearcher = {this.duplicateResearcher}/>
+		 researchers         = {researchers}
+		 updateResearcher    = {this.updateResearcher}
+		 removeResearcher    = {this.removeResearcher}		
+		 duplicateResearcher = {this.duplicateResearcher}
+		 gotoNextTab         = {this.gotoNextTab}
+	      />
         </div>
       </TabPanel>
       <TabPanel>

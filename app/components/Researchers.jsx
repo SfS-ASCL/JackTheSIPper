@@ -3,13 +3,13 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: Reseachers.jsx
-// Time-stamp: <2018-11-23 17:23:01 (zinn)>
+// Time-stamp: <2018-12-03 15:01:27 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
 import Researcher from './Researcher.jsx';
 import uuid from 'uuid';
-import { ButtonToolbar, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
@@ -33,6 +33,8 @@ export default class Researchers extends React.Component {
 	const researchers         = this.props.researchers;
         const updateResearcher    = this.props.updateResearcher;
 	const duplicateResearcher = this.props.duplicateResearcher;
+	const gotoNextTab         = this.props.gotoNextTab;
+	
 	const tabStyle = { height: 548 };
 	
 	console.log('Researchers.jsx/render', researchers);
@@ -56,7 +58,8 @@ export default class Researchers extends React.Component {
 				 <TabPanel key={index}>
 				 <Researcher updateResearcher    = {updateResearcher}
 					     removeResearcher    = {removeResearcherHelper}
-					     duplicateResearcher = {duplicateResearcher}					     
+					     duplicateResearcher = {duplicateResearcher}
+					     gotoNextTab         = {gotoNextTab}
              				     key                 = {index}
 					     researcher          = {researcher}
 					     selectedIndex       = {this.state.selectedIndex}

@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagSaver.jsx
-// Time-stamp: <2018-11-29 15:03:57 (zinn)>
+// Time-stamp: <2018-11-30 12:19:52 (zinn)>
 // -------------------------------------------
 
 import {softwareVersion,
@@ -41,6 +41,7 @@ export default class BagSaver {
 
     bagDate() {
 	// 29.11.2018
+	const today = new Date();
 	return today.toLocaleDateString("de-DE");
     }    
     

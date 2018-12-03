@@ -3,21 +3,28 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: Project.jsx
-// Time-stamp: <2018-10-31 10:08:01 (zinn)>
+// Time-stamp: <2018-12-03 15:01:19 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
 import { Form, Text, TextArea, Radio, RadioGroup, Select, Checkbox } from 'react-form';
+import { Button } from 'react-bootstrap';
 
 export default class Project extends React.Component {
     constructor(props) {
 	super(props);
+	this.gotoNextTab = this.gotoNextTab.bind(this);
     }
 
     shouldComponentUpdate() {
         return true;
     }
-    
+
+    gotoNextTab() {
+	console.log('Project/gotoNextTab');
+	this.props.gotoNextTab();
+    }
+
     render() {
 
 	const statusOptions = [
@@ -81,9 +88,11 @@ export default class Project extends React.Component {
 		defaultValue={description}
 	style={{width: 500, height: 120}} />
        
-      <button type="submit" className="mb-4 btn btn-primary">
-        Save
-      </button>
+      <button type="submit" className="mb-4 btn btn-primary">Save</button>
+      <Button onClick={ () => {
+	formApi.submitForm();
+	this.gotoNextTab() }} bsStyle="primary">Next
+      </Button>	    
     </form>
     )}
   </Form>
