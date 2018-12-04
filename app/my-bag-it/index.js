@@ -95,7 +95,7 @@ BagIt.prototype.readFileNoCheck = function (name, opts, cb) {
 
 BagIt.prototype.readFile = function (name, opts, cb) {
 
-  console.log('bag-it/readFile at start', name, opts, cb);
+//  console.log('bag-it/readFile at start', name, opts, cb);
   if (typeof opts === 'function') return this.readFile(name, null, opts)
   if (typeof opts === 'string') opts = {encoding: opts}
   if (!opts) opts = {}
@@ -114,16 +114,16 @@ BagIt.prototype.readFile = function (name, opts, cb) {
     })
   }
 
-    console.log('bag-it/readFile: rs, verify', rs, verify);
+//    console.log('bag-it/readFile: rs, verify', rs, verify);
     
     collect(rs, function (err, bufs) {
-	console.log('bag-it/readFile collect at start', err, bufs);	
+//	console.log('bag-it/readFile collect at start', err, bufs);	
       if (err) return cb(err)
-      console.log('bag-it/readFile collect I', err);
+//      console.log('bag-it/readFile collect I', err);
       var buf = bufs.length === 1 ? bufs[0] : Buffer.concat(bufs)
-      console.log('bag-it/readFile collect II', buf);      
+//      console.log('bag-it/readFile collect II', buf);      
       var result = opts.encoding ? buf.toString(opts.encoding) : buf
-      console.log('bag-it/readFile collect III', result);
+//      console.log('bag-it/readFile collect III', result);
       if (!verify) return cb(null, result)
 
     self.getManifestEntry(name, function (err, entry) {
@@ -139,7 +139,7 @@ BagIt.prototype.readFile = function (name, opts, cb) {
 }
 
 BagIt.prototype.getManifestEntry = function (name, cb) {
-  console.log('bag-it/getManifestEntry', name, cb);
+//  console.log('bag-it/getManifestEntry', name, cb);
   this.readManifest(function (err, entries) {
     if (err) return cb(err)
     var entry = entries.filter(function (entry) {
@@ -208,7 +208,7 @@ BagIt.prototype._createWriteStreamHelper = function (name, opts) {
     };
 
     ws.end = function(buf) {
-	console.log('_createWriteStreamHelper/bytes total: ' + ws.bytes + ' for ' + name );
+//	console.log('_createWriteStreamHelper/bytes total: ' + ws.bytes + ' for ' + name );
     }
 
 
@@ -229,7 +229,7 @@ BagIt.prototype.createWriteStream = function (name, opts, cb) {
 	name = path.join(self.dataDir, name)
     }
 
-    console.log('bag/index.js', name);
+//    console.log('bag/index.js', name);
     
     var sha256 = null
     var md5 = null;
@@ -244,7 +244,7 @@ BagIt.prototype.createWriteStream = function (name, opts, cb) {
     
     var stream = through(
 	function (chunk, enc, cb) {
-	    console.log('through', chunk, enc);
+//	    console.log('through', chunk, enc);
 	    digest.update(chunk);
 	    digest_md5.update(chunk);
 	    cb(null, chunk)
@@ -253,7 +253,7 @@ BagIt.prototype.createWriteStream = function (name, opts, cb) {
 	    sha256 = digest.digest('hex');
 	    md5    = digest_md5.digest('hex');
 	    var data = `${sha256} ${path.relative(self.dir, name).split(path.sep).join('/')}\n`
-	    console.log('through/cb', data, self.manifest);
+//	    console.log('through/cb', data, self.manifest);
 	    fs.appendFile(self.manifest, data, cb)
 	}
     )

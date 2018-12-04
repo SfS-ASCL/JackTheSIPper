@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: util.js
-// Time-stamp: <2018-11-29 10:13:27 (zinn)>
+// Time-stamp: <2018-12-04 22:01:11 (zinn)>
 // -------------------------------------------
 
 import uuid from 'uuid';
@@ -206,14 +206,14 @@ export function attachResourceProxyInfo( cmdi, profile, cmdiProxyListInfoFragmen
     
     let resources = 
 	{
-	    "ResourceProxyList":{"ResourceProxy": proxyInf.ResourceProxyList},
-            "JournalFileProxyList": {"JournalFileProxy": {"JournalFileRef": ""}},
-            "ResourceRelationList": {"ResourceRelation": {"RelationType": "", "Res1": "", "Res2": ""}},
+	    "cmd:ResourceProxyList":{"cmd:ResourceProxy": proxyInf.ResourceProxyList},
+            "cmd:JournalFileProxyList": {"cmd:JournalFileProxy": {"cmd:JournalFileRef": ""}},
+            "cmd:ResourceRelationList": {},
 	};
 
     let proxyListInfoTree =
 	{
-	    "ResourceProxyInfo": proxyInf.ResourceProxyListInfo
+	    "cmdp:ResourceProxyInfo": proxyInf.ResourceProxyListInfo
 	};
 
     cmdi["cmd:CMD"]["cmd:Resources"] = resources;
@@ -238,31 +238,32 @@ export function generateResourceProxyInformation( cmdiProxyListInfoFragment ) {
     } else {
 	for (var i = 0; i < cmdiProxyListInfoFragment.length; i++) {
 	    let id = uuid.v4();
+	    let mid = "id_".concat(id);
 	    console.log('util/generate...', cmdiProxyListInfoFragment[i]);
 	    resourceProxyList.push(
 		{ 
-		    "_attributes"      : { "cmd:id" : id },
+		    "_attributes"      : { "id" : mid },
 		    "cmd:ResourceType": {
 			"_attributes" : { "mimetype": cmdiProxyListInfoFragment[i].type },
 			"_text"        : "Resource"
 		    },
-		    "cmd:ResourceRef": "HandleToBeInserted"+id
+		    "cmd:ResourceRef": "HandleToBeInserted@"+cmdiProxyListInfoFragment[i].name
 		});
 	    
 	    resourceProxyInfo.push(
 		    {
-			"_attributes" : { "ns1:ref": id },
+			"_attributes" : { "cmd:ref": mid }, // ns1:
 			"cmdp:ResProxItemName": "",   
 			"cmdp:ResProxFileName": cmdiProxyListInfoFragment[i].name, 
 			"cmdp:SizeInfo": {
 			    "cmdp:TotalSize": {
 				"cmdp:Size": cmdiProxyListInfoFragment[i].size, 
-				"cmdp:SizeUnit": "Bytes"
+				"cmdp:SizeUnit": "B"
 			    }
 			},
 			"cmdp:Checksums": {
-			    "sha1": cmdiProxyListInfoFragment[i].sha256,
-			    "md5" : cmdiProxyListInfoFragment[i].md5,
+			    "cmdp:md5" : cmdiProxyListInfoFragment[i].md5,
+			    "cmdp:sha1": cmdiProxyListInfoFragment[i].sha256
 			}
 
 		});

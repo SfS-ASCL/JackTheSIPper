@@ -13,7 +13,7 @@
             "xmlns:dcr": "http://www.isocat.org/ns/dcr",
             "xmlns:vc": "http://www.w3.org/2007/XMLSchema-versioning",
             "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-            "xsi:schemaLocation": "http://www.clarin.eu/cmd/1 file:/Users/zinn/Projects/SFB833/code/jack/profiles/TextCorpusProfile-CMDI1.2.xsd",
+	    "xsi:schemaLocation": "http://www.clarin.eu/cmd/1 https://infra.clarin.eu/CMDI/1.x/xsd/cmd-envelop.xsd http://www.clarin.eu/cmd/1/profiles/clarin.eu:cr1:p_1524652309874 https://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/1.x/profiles/clarin.eu:cr1:p_1524652309874/xsd",
             "CMDVersion": "1.2"
         },
         "cmd:Header": {
@@ -57,40 +57,7 @@
                     }
                 }
             },
-            "cmd:ResourceRelationList": {
-                "cmd:ResourceRelation": {
-                    "cmd:RelationType": {
-                        "_attributes": {
-                            "ConceptLink": "http://www.oxygenxml.com/"
-                        },
-                        "_text": "RelationType0"
-                    },
-                    "cmd:Resource": [
-                        {
-                            "_attributes": {
-                                "ref": "ID000"
-                            },
-                            "cmd:Role": {
-                                "_attributes": {
-                                    "ConceptLink": "http://www.oxygenxml.com/"
-                                },
-                                "_text": "Role0"
-                            }
-                        },
-                        {
-                            "_attributes": {
-                                "ref": "ID000"
-                            },
-                            "cmd:Role": {
-                                "_attributes": {
-                                    "ConceptLink": "http://www.oxygenxml.com/"
-                                },
-                                "_text": "Role1"
-                            }
-                        }
-                    ]
-                }
-            }
+            "cmd:ResourceRelationList": {}
         },
         "cmd:IsPartOfList": {
             "cmd:IsPartOf": {
@@ -99,16 +66,7 @@
         },
         "cmd:Components": {
             "cmdp:TextCorpusProfile": {
-                "_attributes": {
-                    "xml:base": "http://www.oxygenxml.com/",
-                    "cmd:ref": "ID000"
-                },
                 "cmdp:GeneralInfo": {
-                    "_attributes": {
-                        "xml:base": "http://www.oxygenxml.com/",
-                        "cmd:ref": "ID000",
-                        "cmd:ComponentId": "clarin.eu:cr1:c_1444726211569"
-                    },
                     "cmdp:ResourceName": {
                         "_attributes": {
                             "xml:lang": "en-US"
@@ -168,8 +126,6 @@
                     },
                     "cmdp:Location": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1444726211570"
                         },
                         "cmdp:Address": {
@@ -186,8 +142,6 @@
                         },
                         "cmdp:Country": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694493"
                             },
                             "cmdp:CountryName": {
@@ -202,15 +156,9 @@
                         },
                         "cmdp:AuthoritativeIDs": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1444726211568"
                             },
                             "cmdp:AuthoritativeID": {
-                                "_attributes": {
-                                    "xml:base": "http://www.oxygenxml.com/",
-                                    "cmd:ref": "ID000"
-                                },
                                 "cmdp:id": {
                                     "_text": "http://www.oxygenxml.com/"
                                 },
@@ -222,8 +170,6 @@
                     },
                     "cmdp:Descriptions": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                         },
                         "cmdp:Description": {
@@ -236,8 +182,6 @@
                     },
                     "cmdp:tags": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1342181139653"
                         },
                         "cmdp:tag": {
@@ -249,8 +193,6 @@
                     },
                     "cmdp:ModalityInfo": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1450777779938"
                         },
                         "cmdp:Modalities": {
@@ -258,8 +200,6 @@
                         },
                         "cmdp:Descriptions": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                             },
                             "cmdp:Description": {
@@ -274,8 +214,6 @@
                 },
                 "cmdp:Project": {
                     "_attributes": {
-                        "xml:base": "http://www.oxygenxml.com/",
-                        "cmd:ref": "ID000",
                         "cmd:ComponentId": "clarin.eu:cr1:c_1527668176007"
                     },
                     "cmdp:ProjectName": {
@@ -301,8 +239,6 @@
                     },
                     "cmdp:Funder": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1442920133047"
                         },
                         "cmdp:fundingAgency": {
@@ -313,15 +249,9 @@
                         },
                         "cmdp:AuthoritativeIDs": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1444726211568"
                             },
                             "cmdp:AuthoritativeID": {
-                                "_attributes": {
-                                    "xml:base": "http://www.oxygenxml.com/",
-                                    "cmd:ref": "ID000"
-                                },
                                 "cmdp:id": {
                                     "_text": "http://www.oxygenxml.com/"
                                 },
@@ -333,8 +263,6 @@
                     },
                     "cmdp:Institution": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1527668176006"
                         },
                         "cmdp:Department": {
@@ -347,17 +275,8 @@
                             "_text": "Url0"
                         },
                         "cmdp:Organisation": {
-                            "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000"
-                            }
                         },
                         "cmdp:Descriptions": {
-                            "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
-                                "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
-                            },
                             "cmdp:Description": {
                                 "_attributes": {
                                     "type": "short",
@@ -369,14 +288,10 @@
                     },
                     "cmdp:Cooperations": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1524652309891"
                         },
                         "cmdp:Descriptions": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                             },
                             "cmdp:Description": {
@@ -389,8 +304,6 @@
                         },
                         "cmdp:Cooperation": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1524652309884"
                             },
                             "cmdp:CooperationPartner": {
@@ -409,8 +322,6 @@
                     },
                     "cmdp:Person": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1447674760335"
                         },
                         "cmdp:firstName": {
@@ -424,15 +335,9 @@
                         },
                         "cmdp:AuthoritativeIDs": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1444726211568"
                             },
                             "cmdp:AuthoritativeID": {
-                                "_attributes": {
-                                    "xml:base": "http://www.oxygenxml.com/",
-                                    "cmd:ref": "ID000"
-                                },
                                 "cmdp:id": {
                                     "_text": "http://www.oxygenxml.com/"
                                 },
@@ -444,8 +349,6 @@
                     },
                     "cmdp:Descriptions": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                         },
                         "cmdp:Description": {
@@ -458,8 +361,6 @@
                     },
                     "cmdp:Duration": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1271859438116"
                         },
                         "cmdp:StartYear": {
@@ -472,14 +373,10 @@
                 },
                 "cmdp:Publications": {
                     "_attributes": {
-                        "xml:base": "http://www.oxygenxml.com/",
-                        "cmd:ref": "ID000",
                         "cmd:ComponentId": "clarin.eu:cr1:c_1444726211574"
                     },
                     "cmdp:Publication": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1444726211572"
                         },
                         "cmdp:PublicationTitle": {
@@ -493,15 +390,11 @@
                         },
                         "cmdp:Author": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1444726211573"
                             }
                         },
                         "cmdp:Descriptions": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                             },
                             "cmdp:Description": {
@@ -515,8 +408,6 @@
                     },
                     "cmdp:Descriptions": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                         },
                         "cmdp:Description": {
@@ -530,8 +421,6 @@
                 },
                 "cmdp:Creation": {
                     "_attributes": {
-                        "xml:base": "http://www.oxygenxml.com/",
-                        "cmd:ref": "ID000",
                         "cmd:ComponentId": "clarin.eu:cr1:c_1444726211575"
                     },
                     "cmdp:Topic": {
@@ -542,14 +431,10 @@
                     },
                     "cmdp:Creators": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1442920133044"
                         },
                         "cmdp:Person": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1447674760335"
                             },
                             "cmdp:firstName": {
@@ -563,10 +448,6 @@
                             }
                         },
                         "cmdp:Descriptions": {
-                            "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000"
-                            },
                             "cmdp:Description": {
                                 "_text": "Description7"
                             }
@@ -574,8 +455,6 @@
                     },
                     "cmdp:CreationToolInfo": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1290431694497"
                         },
                         "cmdp:CreationTool": {
@@ -601,8 +480,6 @@
                         },
                         "cmdp:Descriptions": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                             },
                             "cmdp:Description": {
@@ -616,8 +493,6 @@
                     },
                     "cmdp:Annotation": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1459844210459"
                         },
                         "cmdp:AnnotationMode": {
@@ -646,8 +521,6 @@
                         },
                         "cmdp:SegmentationUnits": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1459844210458"
                             },
                             "cmdp:SegmentationUnit": {
@@ -656,14 +529,10 @@
                         },
                         "cmdp:AnnotationTypes": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694568"
                             },
                             "cmdp:AnnotationType": {
                                 "_attributes": {
-                                    "xml:base": "http://www.oxygenxml.com/",
-                                    "cmd:ref": "ID000",
                                     "cmd:ComponentId": "clarin.eu:cr1:c_1290431694567"
                                 },
                                 "cmdp:AnnotationLevelType": {
@@ -676,15 +545,11 @@
                         },
                         "cmdp:AnnotationToolInfo": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694534"
                             }
                         },
                         "cmdp:Descriptions": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                             },
                             "cmdp:Description": {
@@ -698,8 +563,6 @@
                     },
                     "cmdp:Source": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1521028545541"
                         },
                         "cmdp:OriginalSource": {
@@ -716,15 +579,11 @@
                         },
                         "cmdp:MediaFiles": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1521028545542",
                                 "id": "id0"
                             },
                             "cmdp:MediaFile": {
                                 "_attributes": {
-                                    "xml:base": "http://www.oxygenxml.com/",
-                                    "cmd:ref": "ID000",
                                     "cmd:ComponentId": "clarin.eu:cr1:c_1521028545543"
                                 },
                                 "cmdp:CatalogueLink": {
@@ -747,8 +606,6 @@
                                 },
                                 "cmdp:Position": {
                                     "_attributes": {
-                                        "xml:base": "http://www.oxygenxml.com/",
-                                        "cmd:ref": "ID000",
                                         "cmd:ComponentId": "clarin.eu:cr1:c_1302702320463"
                                     },
                                     "cmdp:PositionType": {
@@ -766,14 +623,10 @@
                                 },
                                 "cmdp:Access": {
                                     "_attributes": {
-                                        "xml:base": "http://www.oxygenxml.com/",
-                                        "cmd:ref": "ID000",
                                         "cmd:ComponentId": "clarin.eu:cr1:c_1444726211578"
                                     },
                                     "cmdp:Contact": {
                                         "_attributes": {
-                                            "xml:base": "http://www.oxygenxml.com/",
-                                            "cmd:ref": "ID000",
                                             "cmd:ComponentId": "clarin.eu:cr1:c_1442920133041"
                                         },
                                         "cmdp:email": {
@@ -783,10 +636,6 @@
                                             "_text": "role2"
                                         },
                                         "cmdp:Address": {
-                                            "_attributes": {
-                                                "xml:base": "http://www.oxygenxml.com/",
-                                                "cmd:ref": "ID000"
-                                            },
                                             "cmdp:street": {
                                                 "_text": "street0"
                                             },
@@ -803,15 +652,11 @@
                         },
                         "cmdp:Derivation": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694503"
                             }
                         },
                         "cmdp:Descriptions": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                             },
                             "cmdp:Description": {
@@ -825,8 +670,6 @@
                     },
                     "cmdp:Descriptions": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                         },
                         "cmdp:Description": {
@@ -840,14 +683,10 @@
                 },
                 "cmdp:Documentations": {
                     "_attributes": {
-                        "xml:base": "http://www.oxygenxml.com/",
-                        "cmd:ref": "ID000",
                         "cmd:ComponentId": "clarin.eu:cr1:c_1454489235463"
                     },
                     "cmdp:Documentation": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1342181139641"
                         },
                         "cmdp:DocumentationType": {
@@ -867,20 +706,14 @@
                         },
                         "cmdp:DocumentationLanguages": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694561"
                             },
                             "cmdp:DocumentationLanguage": {
                                 "_attributes": {
-                                    "xml:base": "http://www.oxygenxml.com/",
-                                    "cmd:ref": "ID000",
                                     "cmd:ComponentId": "clarin.eu:cr1:c_1290431694560"
                                 },
                                 "cmdp:Language": {
                                     "_attributes": {
-                                        "xml:base": "http://www.oxygenxml.com/",
-                                        "cmd:ref": "ID000",
                                         "cmd:ComponentId": "clarin.eu:cr1:c_1271859438111"
                                     },
                                     "cmdp:LanguageName": {
@@ -891,8 +724,6 @@
                                     },
                                     "cmdp:ISO639": {
                                         "_attributes": {
-                                            "xml:base": "http://www.oxygenxml.com/",
-                                            "cmd:ref": "ID000",
                                             "cmd:ComponentId": "clarin.eu:cr1:c_1271859438110"
                                         },
                                         "cmdp:iso-639-3-code": {
@@ -907,8 +738,6 @@
                         },
                         "cmdp:Descriptions": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                             },
                             "cmdp:Description": {
@@ -922,8 +751,6 @@
                     },
                     "cmdp:Descriptions": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                         },
                         "cmdp:Description": {
@@ -937,8 +764,6 @@
                 },
                 "cmdp:TextCorpusContext": {
                     "_attributes": {
-                        "xml:base": "http://www.oxygenxml.com/",
-                        "cmd:ref": "ID000",
                         "cmd:ComponentId": "clarin.eu:cr1:c_1450777779936"
                     },
                     "cmdp:CorpusType": {
@@ -949,8 +774,6 @@
                     },
                     "cmdp:Descriptions": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                         },
                         "cmdp:Description": {
@@ -963,8 +786,6 @@
                     },
                     "cmdp:ValidationGrp": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1450777779937"
                         },
                         "cmdp:Validation": {
@@ -990,8 +811,6 @@
                         },
                         "cmdp:Descriptions": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                             },
                             "cmdp:Description": {
@@ -1005,8 +824,6 @@
                     },
                     "cmdp:SubjectLanguages": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1450777779941"
                         },
                         "cmdp:NumberOfLanguages": {
@@ -1014,14 +831,10 @@
                         },
                         "cmdp:SubjectLanguage": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1357720977479"
                             },
                             "cmdp:Language": {
                                 "_attributes": {
-                                    "xml:base": "http://www.oxygenxml.com/",
-                                    "cmd:ref": "ID000",
                                     "cmd:ComponentId": "clarin.eu:cr1:c_1271859438111"
                                 },
                                 "cmdp:LanguageName": {
@@ -1032,8 +845,6 @@
                                 },
                                 "cmdp:ISO639": {
                                     "_attributes": {
-                                        "xml:base": "http://www.oxygenxml.com/",
-                                        "cmd:ref": "ID000",
                                         "cmd:ComponentId": "clarin.eu:cr1:c_1271859438110"
                                     },
                                     "cmdp:iso-639-3-code": {
@@ -1047,8 +858,6 @@
                         },
                         "cmdp:Descriptions": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                             },
                             "cmdp:Description": {
@@ -1062,14 +871,10 @@
                     },
                     "cmdp:TypeSpecificSizeInfo": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1466690369343"
                         },
                         "cmdp:TypeSpecificSize": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1466690369344"
                             }
                         }
@@ -1077,8 +882,6 @@
                 },
                 "cmdp:Access": {
                     "_attributes": {
-                        "xml:base": "http://www.oxygenxml.com/",
-                        "cmd:ref": "ID000",
                         "cmd:ComponentId": "clarin.eu:cr1:c_1444726211578"
                     },
                     "cmdp:Availability": {
@@ -1111,8 +914,6 @@
                     },
                     "cmdp:Contact": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1442920133041"
                         },
                         "cmdp:firstname": {
@@ -1131,10 +932,6 @@
                             "_text": "role3"
                         },
                         "cmdp:Address": {
-                            "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000"
-                            },
                             "cmdp:street": {
                                 "_text": "street1"
                             },
@@ -1148,8 +945,6 @@
                     },
                     "cmdp:DeploymentToolInfo": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1290431694500"
                         },
                         "cmdp:DeploymentTool": {
@@ -1175,8 +970,6 @@
                         },
                         "cmdp:Descriptions": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                             },
                             "cmdp:Description": {
@@ -1190,8 +983,6 @@
                     },
                     "cmdp:Descriptions": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                         },
                         "cmdp:Description": {
@@ -1205,14 +996,10 @@
                 },
                 "cmdp:ResourceProxyListInfo": {
                     "_attributes": {
-                        "xml:base": "http://www.oxygenxml.com/",
-                        "cmd:ref": "ID000",
                         "cmd:ComponentId": "clarin.eu:cr1:c_1470820607607"
                     },
                     "cmdp:ResourceProxyInfo": {
                         "_attributes": {
-                            "xml:base": "http://www.oxygenxml.com/",
-                            "cmd:ref": "ID000",
                             "cmd:ComponentId": "clarin.eu:cr1:c_1361876010673"
                         },
                         "cmdp:ResProxItemName": {
@@ -1232,14 +1019,10 @@
                         },
                         "cmdp:SizeInfo": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1450777779942"
                             },
                             "cmdp:TotalSize": {
                                 "_attributes": {
-                                    "xml:base": "http://www.oxygenxml.com/",
-                                    "cmd:ref": "ID000",
                                     "cmd:ComponentId": "clarin.eu:cr1:c_1459844210452"
                                 },
                                 "cmdp:Size": {
@@ -1252,8 +1035,6 @@
                         },
                         "cmdp:Descriptions": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694486"
                             },
                             "cmdp:Description": {
@@ -1266,14 +1047,10 @@
                         },
                         "cmdp:LanguageScripts": {
                             "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000",
                                 "cmd:ComponentId": "clarin.eu:cr1:c_1290431694510"
                             },
                             "cmdp:LanguageScriptGrp": {
                                 "_attributes": {
-                                    "xml:base": "http://www.oxygenxml.com/",
-                                    "cmd:ref": "ID000",
                                     "cmd:ComponentId": "clarin.eu:cr1:c_1290431694509"
                                 },
                                 "cmdp:ScriptName": {
@@ -1291,10 +1068,6 @@
                             }
                         },
                         "cmdp:Checksums": {
-                            "_attributes": {
-                                "xml:base": "http://www.oxygenxml.com/",
-                                "cmd:ref": "ID000"
-                            }
                         }
                     }
                 }
