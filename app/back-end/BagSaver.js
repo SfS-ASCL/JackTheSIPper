@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagSaver.jsx
-// Time-stamp: <2018-12-04 09:49:46 (zinn)>
+// Time-stamp: <2018-12-04 15:24:47 (zinn)>
 // -------------------------------------------
 
 import {softwareVersion,
@@ -17,11 +17,11 @@ import {softwareVersion,
        } from './util';
 
 import BagIt from '../my-bag-it/index.js';
-import md5 from 'md5';
-import shajs from 'sha.js';
 import path from 'path';
 import JSZip from 'jszip';
 import uuid from 'uuid';
+import crypto from 'crypto';
+
 
 var FileSaver = require('file-saver');
 var fileReaderStream = require('filereader-stream')
@@ -75,10 +75,10 @@ export default class BagSaver {
 	    .pipe(bag.createWriteStream(
 		"metadata-cmdi.xml",
 		{},
-		function() {
+		function( sha256, md5 ) { // both ignored
 		    // finalize bag file
 		    bag.finalize( function () {
-			console.log('BagSaver/saveBag: bag has been finalized', bag);
+			console.log('BagSaver/saveBag: bag has been finalized', bag, sha256, md5);
 			// add cmdi to bag (and then generate ZIP)
 			that.generateZIP( bag, cmdiProxyListInfoFragment ); 
 		    })}));
@@ -115,9 +115,9 @@ export default class BagSaver {
 				});
 		
 		const entryPoints = ( (that.state.treeData[0].children === undefined) ? [] : that.state.treeData[0].children );
-		const cmdiProxyListInfoFragment =  that.flattenTree('', entryPoints, []);
+		const cmdiProxyListInfoFragment =  that.flattenTree(bag, '', entryPoints, []);
 		that.bagHelper( bag,
-				cmdiProxyListInfoFragment,
+				[], 
 				cmdiProxyListInfoFragment);
 	    }
 	})
@@ -128,7 +128,7 @@ export default class BagSaver {
        - returns flat list with 'proper' path information
     */
     
-    flattenTree(currentPath, [ head, ...tail ], cmdiProxyListInfoFragment) {
+    flattenTree(bag, currentPath, [ head, ...tail ], cmdiProxyListInfoFragment) {
 
 	if (head === undefined && !(tail.length)) {
 	    return cmdiProxyListInfoFragment;
@@ -138,9 +138,10 @@ export default class BagSaver {
 					     "name": head.name,
 					     "size": head.size,
 					     "type": head.type });	    	    	    
-	    return this.flattenTree(currentPath,
+	    return this.flattenTree(bag,
+				    currentPath,
 				    tail,
-				    this.flattenTree(path.join(currentPath, head.name),
+				    this.flattenTree(bag, path.join(currentPath, head.name),
 						     head.children,
 						     cmdiProxyListInfoFragment));
 	    
@@ -151,17 +152,23 @@ export default class BagSaver {
 					     "name": head.name,
 					     "size": head.size,
 					     "type": head.type,
-					     "md5": md5(head.file),
-					     "sha256" : shajs('sha256').update(head.file).digest('hex')
+					     "md5" :  null,   // to be defined later
+					     "sha256" : null
 					    });
-	    return this.flattenTree(currentPath,
+	    return this.flattenTree(bag,
+				    currentPath,
 				    tail,	    
 				    cmdiProxyListInfoFragment);
 	}
     }
-    
+
+    /*
+      second argument is constructed, with hash info (sha256, md5) enriched in bag routine
+      third argument is destructed for recursion
+     */
     bagHelper(bag, cmdiProxyListInfoFragment, [ head, ...tail ]) {
 	const that = this;
+	console.log('bagHelper', cmdiProxyListInfoFragment);
 	
 	if (head === undefined && !tail.length) {
 	    that.bagCMDI( bag, cmdiProxyListInfoFragment );
@@ -171,9 +178,11 @@ export default class BagSaver {
 	    })
 	} else {
 	    fileReaderStream(head.file) // ;bag.createReadStream(head.file) fromBlob
-		.pipe(bag.createWriteStream(head.path, {}, function() {	    
+		.pipe(bag.createWriteStream(head.path, {}, function( sha256, md5 ) {
+		    head.sha256 = sha256;
+		    head.md5 = md5;
 		    that.bagHelper(bag,
-				   cmdiProxyListInfoFragment,
+				   [head, ...cmdiProxyListInfoFragment],
 				   tail);
 		}))
 	}
@@ -235,12 +244,6 @@ export default class BagSaver {
 	    if (err) return console.log('Error reading manifest', err, bag)
 	    that.generateZIPHelper( zip, bag, entries, cmdiProxyListInfoFragment );
 	})
-	
-	// test to generate md5, sha256 with external libs.
-	bag.readFileNoCheck( bag.dir+'/bagit.txt', 'utf-8', function(err, data) {
-	    if (err) return console.log('Error reading bagit.txt file', err, bag)
-	    console.log('md5-ing bag-it.txt file', '/bag/bagit.txt', md5(data),  shajs('sha256').update(data).digest('hex'));
-	})
     }
 	
     generateZIPHelper(zip, bag, [ head, ...tail ], cmdiProxyListInfoFragment) {
@@ -294,17 +297,4 @@ export default class BagSaver {
 	}
 	return undefined
     }
-
-    /*
-    addChecksum(checksum, fileNameFullPath, cmdiProxyListInfoFragment) {
-	const fileNameWithoutDataPrefix = fileNameFullPath.replace('data/', '');
-	for (var i = 0; i < cmdiProxyListInfoFragment.length; i++) {
-	    if (cmdiProxyListInfoFragment[i].name == fileNameWithoutDataPrefix) {
-		cmdiProxyListInfoFragment[i].sha = checksum;
-		break;
-	    }
-	}
-	return cmdiProxyListInfoFragment;
-    }
-    */
 }

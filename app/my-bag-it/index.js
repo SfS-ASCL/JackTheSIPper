@@ -202,7 +202,8 @@ BagIt.prototype._createWriteStreamHelper = function (name, opts) {
 
     ws._write = function (chunk, encoding, done) {
 	ws.bytes += chunk.length;	
-	fs.writeFile(name, chunk, encoding);	
+	//fs.writeFile(name, chunk, encoding);	
+	fs.appendFile(name, chunk, encoding);	
 	done();
     };
 
@@ -230,8 +231,11 @@ BagIt.prototype.createWriteStream = function (name, opts, cb) {
 
     console.log('bag/index.js', name);
     
-  var hash = null
-  var digest = crypto.createHash(self.algo)
+    var sha256 = null
+    var md5 = null;
+    
+    var digest = crypto.createHash(self.algo);
+    var digest_md5 = crypto.createHash("md5");
 
     // not implemented by BrowserFS...
     // var ws = fs.createWriteStream(name, opts)
@@ -241,20 +245,22 @@ BagIt.prototype.createWriteStream = function (name, opts, cb) {
     var stream = through(
 	function (chunk, enc, cb) {
 	    console.log('through', chunk, enc);
-	    digest.update(chunk)
+	    digest.update(chunk);
+	    digest_md5.update(chunk);
 	    cb(null, chunk)
 	},
 	function (cb) {
-	    hash = digest.digest('hex')
-	    var data = `${hash} ${path.relative(self.dir, name).split(path.sep).join('/')}\n`
+	    sha256 = digest.digest('hex');
+	    md5    = digest_md5.digest('hex');
+	    var data = `${sha256} ${path.relative(self.dir, name).split(path.sep).join('/')}\n`
 	    console.log('through/cb', data, self.manifest);
 	    fs.appendFile(self.manifest, data, cb)
 	}
     )
     stream.pipe(ws)
     stream.on('finish', function () {
-	console.log('my-bag-it/index.js: --> createWriteStream: finished writing', name);
-	cb();
+	console.log('my-bag-it/index.js: --> createWriteStream: finished writing', name, sha256, md5);
+	cb( sha256, md5 ); 
     });
     return stream
 }

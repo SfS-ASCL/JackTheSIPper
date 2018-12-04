@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: DropArea.jsx
-// Time-stamp: <2018-11-27 09:52:45 (zinn)>
+// Time-stamp: <2018-12-04 10:10:32 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -57,7 +57,7 @@ export default class DropArea extends React.Component {
 							    isDirectory: false,
 							    size: size,
 							    type: type,
-							    licence: "MIT",
+							    licence: state.licence,
 							    date: dateReadable
 							},
 						      }).treeData
