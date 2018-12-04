@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagSaver.jsx
-// Time-stamp: <2018-11-30 12:19:52 (zinn)>
+// Time-stamp: <2018-12-04 09:49:46 (zinn)>
 // -------------------------------------------
 
 import {softwareVersion,
@@ -60,25 +60,28 @@ export default class BagSaver {
 	
 	const cmdiFile    = new File([cmdiXML], "cmdi.xml", {type: "application/xml"});
 	const that = this;
-	// add CMDI file to the bag
+	/* add CMDI file to the bag
+
+	   metadata is stored with the bag metadata at root
+	   /bag/bag-cmdi.xml
+	   /bag/.profile
+
+        For this, we need to change bag.createWriteStream. For the time being, there's a hack
+	in createWriteStream: if the name is prefixed with "metadata-", then path is set to empty.
+
+	*/
+
 	fileReaderStream(cmdiFile)
 	    .pipe(bag.createWriteStream(
-		"cmdi.xml",
+		"metadata-cmdi.xml",
 		{},
 		function() {
-		    // add .profile file to the bag
-		    let profileFile = new File([that.state.profile], ".profile", {type: "text/plain"});
-		    fileReaderStream(profileFile)
-			.pipe(bag.createWriteStream(".profile",
-						    {},
-						    function() {
-							// finalize bag file
-							bag.finalize( function () {
-							    console.log('BagSaver/saveBag: bag has been finalized', bag);
-							    // add cmdi to bag (and then generate ZIP)
-							    that.generateZIP( bag, cmdiProxyListInfoFragment ); 
-							})}));
-		}))
+		    // finalize bag file
+		    bag.finalize( function () {
+			console.log('BagSaver/saveBag: bag has been finalized', bag);
+			// add cmdi to bag (and then generate ZIP)
+			that.generateZIP( bag, cmdiProxyListInfoFragment ); 
+		    })}));
     }
 
     saveBag() {
@@ -107,7 +110,8 @@ export default class BagSaver {
 				  'Bagging-Date' : that.bagDate(),
 				  'Contact-Name' : 'Claus Zinn',
 				  'Generated-By' : 'JackTheSIPper ' + softwareVersion,
-				  'Bag-Size'     : 'willBeOverwritten' 
+				  'Bag-Size'     : 'willBeOverwritten',
+				  'Profile'      : that.state.profile
 				});
 		
 		const entryPoints = ( (that.state.treeData[0].children === undefined) ? [] : that.state.treeData[0].children );

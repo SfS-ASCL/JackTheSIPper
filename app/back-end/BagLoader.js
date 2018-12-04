@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagLoader.jsx
-// Time-stamp: <2018-10-12 11:15:17 (zinn)>
+// Time-stamp: <2018-12-04 09:43:40 (zinn)>
 // -------------------------------------------
 
 
@@ -104,14 +104,24 @@ export default class BagLoader {
 
     // read data/.profile
     readProfileFromZip(fs, bagDir) {
-	fs.readFile('/zip/'+bagDir+'/data/.profile', function(err, contents) {
-	    console.log('BagLoader/readProfileFromZip', contents.toString());
+	fs.readFile('/zip/'+bagDir+'/bag-info.txt', function(err, contents) {
+	    const fileContent = contents.toString();
+	    console.log('BagLoader/readProfileFromZip', fileContent);
+	    var lines = fileContent.split('\n');
+	    for(var line = 0; line < lines.length; line++){
+		var lineContent = lines[line].split(':');
+		if (lineContent[0] == "Profile") {
+		    console.log('Found profile', lineContent[1]);
+		} else {
+		    console.log('Profile not found in line:', lines[line]);
+		}
+	    }
 	})
     }
 
     // read data/cmdi.xml 
     readCMDIFromZip(fs, bagDir) {
-	fs.readFile('/zip/'+bagDir+'/data/cmdi.xml', function(err, contents) {
+	fs.readFile('/zip/'+bagDir+'/bag-cmdi.xml', function(err, contents) {
 	    var parseString = require('xml2js').parseString;
 	    parseString(contents, function (err, result) {
 		console.log(result);

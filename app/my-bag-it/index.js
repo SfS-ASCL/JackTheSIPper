@@ -219,8 +219,17 @@ BagIt.prototype.createWriteStream = function (name, opts, cb) {
   //    console.log('BagIt/createWriteStream', name, opts, cb);
   // TODO: support writing to fetch.txt + manifest but not data/
   var self = this
+    /* hack, see BagSaver.js */
+    if (name.substring(0,9) == "metadata-") {
+	name = name.substring(9, name.length);
+	name = "bag-".concat(name);
+	name = path.join(self.dir, name);
+    } else {
+	name = path.join(self.dataDir, name)
+    }
 
-    name = path.join(self.dataDir, name)
+    console.log('bag/index.js', name);
+    
   var hash = null
   var digest = crypto.createHash(self.algo)
 
@@ -231,15 +240,14 @@ BagIt.prototype.createWriteStream = function (name, opts, cb) {
     
     var stream = through(
 	function (chunk, enc, cb) {
-	    //console.log('through', chunk, enc);
+	    console.log('through', chunk, enc);
 	    digest.update(chunk)
 	    cb(null, chunk)
 	},
 	function (cb) {
 	    hash = digest.digest('hex')
-	    // TODO: check if old file hash is in manifest
 	    var data = `${hash} ${path.relative(self.dir, name).split(path.sep).join('/')}\n`
-	    //console.log('through/cb', data, self.manifest);
+	    console.log('through/cb', data, self.manifest);
 	    fs.appendFile(self.manifest, data, cb)
 	}
     )

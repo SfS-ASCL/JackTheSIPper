@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-12-03 15:12:07 (zinn)>
+// Time-stamp: <2018-12-04 09:31:20 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -55,7 +55,7 @@ export default class App extends React.Component {
     constructor(props) {
 	super(props);
 
-	this.onDropBagFile        = this.onDropBagFile.bind(this);
+	this.onDropBagFile = this.onDropBagFile.bind(this);
 	
 	this.clearSIP      = this.clearSIP.bind(this);
 	this.loadSIP       = this.loadSIP.bind(this);
@@ -124,6 +124,7 @@ export default class App extends React.Component {
     }
        
     onDropBagFile(acceptedFiles, rejectedFiles) {
+	console.log('App/onDropBagFile', acceptedFiles, rejectedFiles);
 	const that = this;
 	const bagFile = acceptedFiles[0];
     	this.setState( (state) => 
