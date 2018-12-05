@@ -3,24 +3,36 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: Licence.jsx
-// Time-stamp: <2018-10-09 09:03:41 (zinn)>
+// Time-stamp: <2018-12-05 10:16:17 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
 import createClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import { Button, ButtonToolbar } from 'react-bootstrap';
 
 export default class Licence extends React.Component {
     constructor(props) {
 	super(props);
 
+	this.gotoPreviousTab = this.gotoPreviousTab.bind(this);
+	this.gotoNextTab = this.gotoNextTab.bind(this);
+	
 	this.state = {
 	    searchable: true,
 	    clearable: true,
 	}
     }
 
+    gotoPreviousTab() {
+	this.props.gotoPreviousTab();
+    }
+
+    gotoNextTab() {
+	this.props.gotoNextTab();
+    }
+    
     updateValue(newValue) {
 	console.log('updateValue', newValue);
 	this.setState({
@@ -69,7 +81,17 @@ export default class Licence extends React.Component {
 	        options={choices}
 	        value={this.props.licence}
 	        onChange={this.props.updateLicence}
-	      />
+		 />
+		<div><p />
+		  <ButtonToolbar >		
+		    <Button onClick={ () => {
+		      this.gotoPreviousTab() }} bsStyle="primary">Previous
+		    </Button>
+		    <Button onClick={ () => {
+		      this.gotoNextTab() }} bsStyle="primary">Next
+		    </Button>		    
+		  </ButtonToolbar>			    
+	      </div>
 	    </div>
 	);
     }

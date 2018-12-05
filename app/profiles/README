@@ -13,3 +13,10 @@ Steps to generate JSON variants of
 2. call the conversion script to generate JSON variants (in directory ../conversionScript):
    node convertAll.js
 
+3. To get Oxygen to validate the XML that results from BagSaver, the results from step 2 need to be manually edited.
+
+- remove all references to id000
+- remove many attributes
+- replace references to local versions (schemaLocation) to profiles manually...
+(maybe step2 can be enhaned do these edits automatically in the future...)
+

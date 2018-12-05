@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-12-04 09:31:20 (zinn)>
+// Time-stamp: <2018-12-05 10:10:34 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -208,8 +208,12 @@ export default class App extends React.Component {
 
     gotoNextTab = () => {
 	const currentTab = this.state.selectedIndex;
-	console.log('App/gotoNextTab', currentTab);
 	this.setState( { selectedIndex : currentTab+1 } );		
+    }
+
+    gotoPreviousTab = () => {
+	const currentTab = this.state.selectedIndex;
+	this.setState( { selectedIndex : currentTab-1 } );		
     }
     
     duplicateResearcher = ( researcher ) => {
@@ -368,7 +372,9 @@ export default class App extends React.Component {
       <TabPanel>
 	<h2>Project information</h2>
 	<div>	    	    	    
-	  <Project project={project} updateProject={this.updateProject}	gotoNextTab = {this.gotoNextTab} />
+	  <Project project         = {project}
+		   updateProject   = {this.updateProject}
+		   gotoNextTab     = {this.gotoNextTab} />	  
 	</div>
       </TabPanel>
       <TabPanel>
@@ -378,6 +384,7 @@ export default class App extends React.Component {
 		 updateResearcher    = {this.updateResearcher}
 		 removeResearcher    = {this.removeResearcher}		
 		 duplicateResearcher = {this.duplicateResearcher}
+		 gotoPreviousTab     = {this.gotoPreviousTab} 
 		 gotoNextTab         = {this.gotoNextTab}
 	      />
         </div>
@@ -386,8 +393,10 @@ export default class App extends React.Component {
 	    <h2>Profile Selection</h2>
 	<div>	    
 	    <ProfileSelection style={{ float: "left" }}
-	        updateProfile={this.updateProfile}
-    	        selectedProfile={this.state.profile} />
+			      updateProfile   = {this.updateProfile}
+			      gotoPreviousTab = {this.gotoPreviousTab}
+			      gotoNextTab     = {this.gotoNextTab}
+    			      selectedProfile = {this.state.profile} />
 	</div>
       </TabPanel>
       <TabPanel>
@@ -402,7 +411,10 @@ export default class App extends React.Component {
 	</p>
 
 	<div>
-            <Licence licence={this.state.licence} updateLicence={this.updateLicence} />
+          <Licence licence         = {this.state.licence}
+		   updateLicence   = {this.updateLicence}
+		   gotoPreviousTab = {this.gotoPreviousTab}		   
+		   gotoNextTab     = {this.gotoNextTab} />
 	</div>
       </TabPanel>
       <TabPanel>
@@ -415,7 +427,9 @@ export default class App extends React.Component {
 	  </small>
 	</p>
 	
-        <DropArea parent={this} fileTree={this.state.treeData} />
+        <DropArea parent={this}
+		  gotoPreviousTab = {this.gotoPreviousTab}		   
+		  fileTree={this.state.treeData} />
 	      
       </TabPanel>	    
     </Tabs>

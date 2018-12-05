@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: util.js
-// Time-stamp: <2018-12-04 22:01:11 (zinn)>
+// Time-stamp: <2018-12-04 22:45:18 (zinn)>
 // -------------------------------------------
 
 import uuid from 'uuid';
@@ -174,15 +174,15 @@ export function attachResearchers( cmdi, profile, researchers ) {
     let profilePath = getProfilePath( profile );
 
     // only first researcher added here
-    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:firstname"] = researchers[0].firstname;
-    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:lastname"] = researchers[0].lastname;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:firstname"] = researchers[0].firstName;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:lastname"] = researchers[0].lastName;
     cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:email"] = researchers[0].email;
     cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:telephoneNumber"] = researchers[0].phone;
     cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Access"]["cmdp:Contact"]["cmdp:role"] = researchers[0].status;
 
     // in Person slot; there should be multiple Person components
-    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:Person"]["cmdp:firstName"] = researchers[0].firstname;
-    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:Person"]["cmdp:lastName"]  = researchers[0].lastname;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:Person"]["cmdp:firstName"] = researchers[0].firstName;
+    cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:Person"]["cmdp:lastName"]  = researchers[0].lastName;
     cmdi["cmd:CMD"]["cmd:Components"][profilePath]["cmdp:Project"]["cmdp:Person"]["cmdp:role"]      = researchers[0].status;
 
     for (var i = 0; i < researchers.length; i++) {

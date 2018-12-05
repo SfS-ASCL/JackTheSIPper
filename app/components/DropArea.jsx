@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: DropArea.jsx
-// Time-stamp: <2018-12-04 10:10:32 (zinn)>
+// Time-stamp: <2018-12-05 10:44:58 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -15,6 +15,7 @@ import SortableTree, {
     addNodeUnderParent,
     removeNodeAtPath } from 'react-sortable-tree';
 import LicencePopup from './LicencePopup.jsx';
+import { Button, ButtonToolbar } from 'react-bootstrap';
 
 import ReactTooltip from 'react-tooltip';
 import {findDOMNode} from 'react-dom';
@@ -23,9 +24,14 @@ export default class DropArea extends React.Component {
     constructor(props) {
 	super(props);
 	this.onDrop      = this.onDrop.bind(this);
-	this.dropzoneRef = undefined;		
+	this.dropzoneRef = undefined;
+	this.gotoPreviousTab      = this.gotoPreviousTab.bind(this);
     }
 
+    gotoPreviousTab() {
+	this.props.gotoPreviousTab();
+    }
+    
     onDrop(files) {
 
 	console.log('DropArea/onDrop', files);
@@ -92,8 +98,6 @@ export default class DropArea extends React.Component {
 	
         var dropzoneStyle = { display: 'none' };
 	const getNodeKey = ({ treeIndex }) => treeIndex;
-
-	console.log('DropArea/render', that, tthis, canDrop);
 	
 	return (
   <div>
@@ -103,6 +107,18 @@ export default class DropArea extends React.Component {
       Drop your file, or click to select the file to upload.
     </Dropzone>
 
+    <div>
+      <table>
+	<tbody>	  
+	  <tr>
+	    <td>
+	      <ButtonToolbar >
+		<Button onClick={ () => {
+		  this.gotoPreviousTab() }} bsStyle="primary">Previous
+		</Button>
+	      </ButtonToolbar>
+	    </td>	  	    
+	    <td>
     <div style={{ float: "left", height: 600, width: 960 }}>
       <SortableTree
 	treeData={that.state.treeData} 
@@ -240,6 +256,11 @@ export default class DropArea extends React.Component {
 		   }
 	}}
 		/>
+    </div>
+	    </td>
+	  </tr>
+	</tbody>
+      </table>
     </div>
   </div>
 	)

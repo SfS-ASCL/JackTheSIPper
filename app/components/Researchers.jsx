@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: Reseachers.jsx
-// Time-stamp: <2018-12-03 15:01:27 (zinn)>
+// Time-stamp: <2018-12-05 10:11:23 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
@@ -33,6 +33,7 @@ export default class Researchers extends React.Component {
 	const researchers         = this.props.researchers;
         const updateResearcher    = this.props.updateResearcher;
 	const duplicateResearcher = this.props.duplicateResearcher;
+	const gotoPreviousTab     = this.props.gotoPreviousTab;	
 	const gotoNextTab         = this.props.gotoNextTab;
 	
 	const tabStyle = { height: 548 };
@@ -59,6 +60,7 @@ export default class Researchers extends React.Component {
 				 <Researcher updateResearcher    = {updateResearcher}
 					     removeResearcher    = {removeResearcherHelper}
 					     duplicateResearcher = {duplicateResearcher}
+					     gotoPreviousTab     = {gotoPreviousTab}
 					     gotoNextTab         = {gotoNextTab}
              				     key                 = {index}
 					     researcher          = {researcher}

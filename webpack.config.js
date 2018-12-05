@@ -127,7 +127,7 @@ const common = {
 	    'process.env': {
 //                'NODE_ENV': JSON.stringify('production'),
                 'NODE_ENV'        : JSON.stringify('development'),		
-		'VERSION'         : JSON.stringify('v0.2.2'),
+		'VERSION'         : JSON.stringify('v0.2.3'),
 		'CONTACT'         : JSON.stringify('claus.zinn@uni-tuebingen.de'),
 		'ARCHIVE_CONTACT' : JSON.stringify('clarin-repository@uni-tuebingen.de'),		
 		'NC_USER'         : JSON.stringify('sfb833_admin'),

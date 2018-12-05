@@ -3,12 +3,12 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: Reseacher.jsx
-// Time-stamp: <2018-12-03 15:08:48 (zinn)>
+// Time-stamp: <2018-12-05 10:16:12 (zinn)>
 // -------------------------------------------
 
 import React from 'react';
 import { Form, Text, TextArea, Radio, RadioGroup, Select, Checkbox } from 'react-form';
-import { Button } from 'react-bootstrap';
+import { Button, ButtonToolbar } from 'react-bootstrap';
 
 export default class Researcher extends React.Component {
     constructor(props) {
@@ -17,14 +17,19 @@ export default class Researcher extends React.Component {
 	
 	this.removeResearcher     = this.removeResearcher.bind(this);
 	this.duplicateResearcher  = this.duplicateResearcher.bind(this);
+	this.gotoPreviousTab      = this.gotoPreviousTab.bind(this);
 	this.gotoNextTab          = this.gotoNextTab.bind(this);
     }
 
+    gotoPreviousTab() {
+	this.props.gotoPreviousTab();
+    }
+
     gotoNextTab() {
-	console.log('Researcher/gotoNextTab');
 	this.props.gotoNextTab();
     }
-    
+
+
     removeResearcher( researcher ) {
 	this.props.removeResearcher( researcher.id )
     }
@@ -87,15 +92,22 @@ export default class Researcher extends React.Component {
       <label htmlFor="status" className="d-block">Staff Status: </label>
       <Select field="status" id="status" options={statusOptions}
 	      className="mb-4" defaultValue={status}/>
-      <button type="submit" className="mb-4 btn btn-primary">Save</button>
-      <Button onClick={ () => this.removeResearcher( {id} )} disabled={selectedIndex==0} bsStyle="primary">Remove Person</Button>
-      <Button onClick={ () => {
+      <ButtonToolbar >
+        <button type="submit" className="mb-4 btn btn-primary">Save</button>
+	<Button onClick={ () => this.removeResearcher( {id} )} disabled={selectedIndex==0} bsStyle="primary">Remove Person</Button>
+	<Button onClick={ () => {
 	  formApi.submitForm();
 	  this.duplicateResearcher( formApi.getFormState() );
-      }} bsStyle="primary">Duplicate Person</Button>
-       <Button onClick={ () => {
-	   formApi.submitForm();
-	   this.gotoNextTab() }} bsStyle="primary">Next</Button>
+	  }} bsStyle="primary">Duplicate Person</Button>
+	<Button onClick={ () => {
+	    formApi.submitForm();
+	    this.gotoPreviousTab() }} bsStyle="primary">Previous
+	</Button>
+	<Button onClick={ () => {
+	    formApi.submitForm();
+	    this.gotoNextTab() }} bsStyle="primary">Next
+	</Button>	    
+      </ButtonToolbar>	
     </form>
     )}
   </Form>
