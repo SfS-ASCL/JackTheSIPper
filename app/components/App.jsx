@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-12-05 10:10:34 (zinn)>
+// Time-stamp: <2018-12-05 11:10:57 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -142,11 +142,9 @@ export default class App extends React.Component {
     clearSIP() {
 	this.setState( state => ({ sipClearedP: true }));
 	this.setState( state => ({ treeData: [{ name: 'SIP', isDirectory: false, isRoot: true}]})); 
-	console.log('App/clearSIP');
     }
 
     loadSIP() {
-	console.log('loadSIP');
 	this.dropzoneReference.open( )
     }
 
@@ -159,7 +157,6 @@ export default class App extends React.Component {
     submitSIP() {
 
 	const that = this;
-	console.log('App/submitSIP', this.state);
 
 	// actually, a SIP consisting of an empty directory should not be good enough.
 	if (this.state.treeData[0].children === undefined) {
@@ -202,7 +199,6 @@ export default class App extends React.Component {
     }
 
     updateProject = (project) => {
-	console.log('App/updateProject', project);
 	this.setState( project );
     }
 
@@ -217,7 +213,6 @@ export default class App extends React.Component {
     }
     
     duplicateResearcher = ( researcher ) => {
-	console.log('App/duplicateResearcher', researcher);
 	var newResearchers = this.state.researchers;
 	newResearchers.push( {
 		    id : uuid.v4(),
@@ -233,7 +228,6 @@ export default class App extends React.Component {
     removeResearcher = (id) => {
 
 	var researchers = this.state.researchers;
-	console.log('App/removeResearcher', id, researchers);
 
 	var newResearchers = [];
 
@@ -249,7 +243,6 @@ export default class App extends React.Component {
     
     updateResearcher = (researcher) => {
 
-	console.log('App/updateResearcher', researcher);
 	var researchers = this.state.researchers;
 	var newResearchers = [];
 
@@ -264,21 +257,18 @@ export default class App extends React.Component {
     }
 
     updateProfile(value) {
-	console.log('Metadata Profile has been changed to', value);
 	this.setState(state => ({
 	    profile: value
 	}));
     }
 
     updateLicence = (licence) => {
-	console.log('Metadata Licence has been changed to ', licence.value);
 	this.setState( state => ({
 	    licence : licence.value
 	}));
     }
 
     updateZip = (zip) => {
-	console.log('App/updateZip: state zip has been changed to ', zip);
 	this.setState( state => ({
 	    "zip" : zip
 	}));

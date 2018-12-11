@@ -3,7 +3,7 @@
 
 STATUS="-dev"
 #STATUS="-pro"
-VERSION="0.2.3${STATUS}"
+VERSION="0.2.4${STATUS}"
 NAME="clauszinn/jackthesipper"
 REPOSITORY="hub.docker.com"
 #IMAGE_NAME="${REPOSITORY}/${NAME}:${VERSION}"
