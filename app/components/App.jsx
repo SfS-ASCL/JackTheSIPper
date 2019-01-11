@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: App.jsx
-// Time-stamp: <2018-12-05 11:10:57 (zinn)>
+// Time-stamp: <2018-12-18 15:19:28 (zinn)>
 // -------------------------------------------
 
 'use strict';
@@ -181,7 +181,7 @@ export default class App extends React.Component {
 	    },
 	    function(reject) {
 		that.setState( state => ( {showAlertSubmitFailure: true} ) );		
-		console('Jack The SIPper failed to upload your package.', reject);		
+		console.log('Jack The SIPper failed to upload your package.', reject);		
 	    });	
     }
     

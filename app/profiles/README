@@ -9,6 +9,9 @@ Steps to generate JSON variants of
 
 1. open an XSD in Oxygen to generate a sample XML file (with optionals)
    ./instances
+
+NOTE: Those sample files contain misleading information in the elements: MdCreationDate, StartYear,
+CompletionYear, ResourceClass, SegmentationUnit, ISO639. Some of them were manually corrected.
    
 2. call the conversion script to generate JSON variants (in directory ../conversionScript):
    node convertAll.js

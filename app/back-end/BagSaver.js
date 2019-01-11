@@ -3,7 +3,7 @@
 // 2018- Claus Zinn, University of Tuebingen
 // 
 // File: BagSaver.jsx
-// Time-stamp: <2018-12-04 15:24:47 (zinn)>
+// Time-stamp: <2018-12-12 12:21:27 (zinn)>
 // -------------------------------------------
 
 import {softwareVersion,
@@ -20,7 +20,7 @@ import BagIt from '../my-bag-it/index.js';
 import path from 'path';
 import JSZip from 'jszip';
 import uuid from 'uuid';
-import crypto from 'crypto';
+import cryptojs from 'crypto-js';
 
 
 var FileSaver = require('file-saver');
@@ -48,6 +48,22 @@ export default class BagSaver {
     bagCMDI( bag, cmdiProxyListInfoFragment ) {
 
 	console.log('BagSaver/bagCMDI', bag, cmdiProxyListInfoFragment, this.state.profile);
+
+	/*
+
+	var cipherText = cryptojs.AES.encrypt('clarin-plus', 'do not hack me').toString();
+	console.log('cipherText', cipherText);
+
+	var bytes  = cryptojs.AES.decrypt(cipherText, 'do not hack me');
+	var originalText = bytes.toString(cryptojs.enc.Utf8);
+	console.log('originalText', originalText);	
+
+	*/
+	
+	var hash = cryptojs.SHA256("Message");
+	console.log('sha256', hash.toString());
+
+	// 2f77668a9dfbf8d5848b9eeb4a7145ca94c6ed9236e4a773f6dcafa5132b2f91
 	
 	// generate CMDI file, step by step
 	const cmdi0 = getCMDIInstance( this.state.profile );

@@ -101,13 +101,13 @@
                         "_text": "Version0"
                     },
                     "cmdp:LifeCycleStatus": {
-                        "_text": "planned"
+                        "_text": "archived"
                     },
                     "cmdp:StartYear": {
-                        "_text": "2006"
+                        "_text": "StartYear0"
                     },
                     "cmdp:CompletionYear": {
-                        "_text": "2006"
+                        "_text": "CompletionYear0"
                     },
                     "cmdp:PublicationDate": {
                         "_text": "PublicationDate0"
@@ -346,7 +346,7 @@
                         },
                         "cmdp:SegmentationUnits": {
                             "cmdp:SegmentationUnit": {
-                                "_text": "grapheme"
+                                "_text": ""
                             }
                         },
                         "cmdp:AnnotationTypes": {
@@ -450,7 +450,7 @@
                                     },
                                     "cmdp:ISO639": {
                                         "cmdp:iso-639-3-code": {
-                                            "_text": "aaa"
+                                            "_text": "eng"
                                         }
                                     }
                                 }

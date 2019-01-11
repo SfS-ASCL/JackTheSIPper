@@ -107,7 +107,7 @@
                         "_text": "ResourceTitle0"
                     },
                     "cmdp:ResourceClass": {
-                        "_text": "Lexicon"
+                        "_text": "Experimental Data"
                     },
                     "cmdp:Version": {
                         "_attributes": {
@@ -116,13 +116,13 @@
                         "_text": "Version0"
                     },
                     "cmdp:LifeCycleStatus": {
-                        "_text": "planned"
+                        "_text": "archived"
                     },
                     "cmdp:StartYear": {
-                        "_text": "2006"
+                        "_text": "StartYear0"
                     },
                     "cmdp:CompletionYear": {
-                        "_text": "2006"
+                        "_text": "CompletionYear0"
                     },
                     "cmdp:PublicationDate": {
                         "_text": "PublicationDate0"
